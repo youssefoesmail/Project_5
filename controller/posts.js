@@ -1,3 +1,7 @@
+
+const {pool} = require ("../models/db")
+
+
 const getAllPost = (req,res) => {
     pool
     .query(`SELECT * FROM posts`)
