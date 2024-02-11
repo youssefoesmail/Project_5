@@ -1,11 +1,21 @@
 const { pool } = require("../models/db");
-const register = (req, res) => {
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const register = async (req, res) => {
   const { first_name, last_name, email, password } = req.body;
+  const bcryptPassword = await bcrypt.hash(password, process.env.SALT);
+  const role_id = "1";
   const query = `INSERT INTO users (first_name,
           last_name,
           email,
-          password) VALUES ($1,$2,$3,$4) RETURNING *`;
-  const values = [first_name, last_name, email, password];
+          password,role_id) VALUES ($1,$2,$3,$4,$5) RETURNING *`;
+  const values = [
+    first_name,
+    last_name,
+    email.toLowerCase(),
+    bcryptPassword,
+    role_id,
+  ];
   pool
     .query(query, values)
     .then((result) => {
