@@ -18,7 +18,7 @@ const getAllPost = (req, res) => {
     });
 };
 
-const deletePostById = (req,res)=>{
+const deletePostById = (req, res) => {
   const id = req.params.id;
   const query = `UPDATE posts SET is_deleted=1 WHERE id=$1;`;
   const data = [id];
@@ -32,14 +32,16 @@ const deletePostById = (req,res)=>{
         });
       } else {
         throw new Error("Error happened while deleting post");
-      }}).catch((err) => {
-        res.status(500).json({
-          success: false,
-          message: "Server error",
-          err: err,
-        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
       });
-    }
+    });
+};
 const updatePost = (req, res) => {
   const { id } = req.params;
   const { body, photo, video } = req.body;
@@ -53,7 +55,6 @@ const updatePost = (req, res) => {
         message: "updated post successfully",
         result: result.rows,
       });
-
     })
     .catch((err) => {
       res.status(500).json({
@@ -89,7 +90,6 @@ const getPostById = (req, res) => {
 module.exports = {
   getAllPost,
   updatePost,
-  getPostById,deletePostById
+  getPostById,
+  deletePostById,
 };
-
-
