@@ -1,14 +1,15 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    photo VARCHAR,
+    photo VARCHAR ,
     cover VARCHAR,
-    first_name VARCHAR,
+    first_name VARCHAR ,
     last_name VARCHAR,
     email VARCHAR UNIQUE,
     password VARCHAR(12),
     role VARCHAR,
     created_at TIMESTAMP
-);
+    is_deleted
+    );
 CREATE TABLE page (
     id SERIAL PRIMARY KEY,
     photo VARCHAR,
