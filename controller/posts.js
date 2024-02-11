@@ -18,6 +18,24 @@ const getAllPost = (req, res) => {
       });
     });
 };
+
+
+const deletePostById = (req,res)=>{
+  const id = req.params.id;
+  const query = `UPDATE posts SET is_deleted=1 WHERE id=$1;`;
+  const data = [id];
+  pool
+    .query(query, data)
+    .then((result) => {
+      if (result.rowCount !== 0) {
+        res.status(200).json({
+          success: true,
+          message: `Post with id: ${id} deleted successfully`,
+        });
+      } else {
+        throw new Error("Error happened while deleting post");
+      }
+
 const updatePost = (req, res) => {
   const { id } = req.params;
   const { body, photo, video } = req.body;
@@ -31,16 +49,20 @@ const updatePost = (req, res) => {
         message: "updated post successfully",
         result: result.rows,
       });
+
     })
     .catch((err) => {
       res.status(500).json({
         success: false,
-        message: "server Error",
-        err: err.message,
+        message: "Server error",
+        err: err,
       });
     });
-};
+}
+
 module.exports = {
-  getAllPost,
-  updatePost,
-};
+    getAllPost,
+    deletePostById,updatePost,
+}
+
+
