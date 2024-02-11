@@ -36,7 +36,9 @@ CREATE TABLE comment (
     post_id INTEGER story_id INTEGER,
     reels_id INTEGER created_at TIMESTAMP,
     is_deleted SMALLINT DEFAULT 0,
-    FOREIGN KEY post_id REFERENCES posts(id) FOREIGN KEY story_id REFERENCES story(id) FOREIGN KEY reels_id REFERENCES reels(id)
+    FOREIGN KEY post_id REFERENCES posts(id) 
+    FOREIGN KEY story_id REFERENCES story(id) 
+    FOREIGN KEY reels_id REFERENCES reels(id)
 );
 CREATE TABLE story (
     id SERIAL PRIMARY KEY,
@@ -61,4 +63,24 @@ CREATE TABLE follows (
     created_at TIMESTAMP,
     FOREIGN Key following_user_id REFERENCES users(id),
     FOREIGN Key followed_user_id REFERENCES users(id)
+);
+CREATE TABLE likes (
+    like_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    post_id INT REFERENCES posts(post_id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE notifications (
+    notification_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    is_read BOOLEAN DEFAULT FALSE
+);
+CREATE TABLE messages (
+    message_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    conversation_id INT REFERENCES conversations(conversation_id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
