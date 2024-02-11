@@ -34,8 +34,14 @@ const deletePostById = (req,res)=>{
         });
       } else {
         throw new Error("Error happened while deleting post");
-      }
-
+      }}).catch((err) => {
+        res.status(500).json({
+          success: false,
+          message: "Server error",
+          err: err,
+        });
+      });
+    }
 const updatePost = (req, res) => {
   const { id } = req.params;
   const { body, photo, video } = req.body;
