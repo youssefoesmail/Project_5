@@ -1,9 +1,9 @@
 const pool = require("../models/db");
 
 const createNewStory = (req, res) => {
-  const { photo, video } = req.body;
-  const query = `INSERT INTO story (photo || video) VALUES ($1,$2) RETURNING *`;
-  const values = [photo, video];
+  const { photo_video } = req.body;
+  const query = `INSERT INTO story (photo_video) VALUES ($1) RETURNING *`;
+  const values = [photo_video];
   pool
     .query(query, values)
     .then((result) => {
