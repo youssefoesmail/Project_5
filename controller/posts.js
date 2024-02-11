@@ -1,5 +1,6 @@
 const { pool } = require("../models/db");
 
+//
 const getAllPost = (req, res) => {
   pool
     .query(`SELECT * FROM posts`)
@@ -18,6 +19,8 @@ const getAllPost = (req, res) => {
       });
     });
 };
+
+// Update post by postid
 const updatePost = (req, res) => {
   const { id } = req.params;
   const { body, photo, video } = req.body;
@@ -40,7 +43,31 @@ const updatePost = (req, res) => {
       });
     });
 };
+
+// getPostById for any user
+const getPostById = (req, res) => {
+  const { id } = req.params;
+  const values = [id];
+  const query = `SELECT posts.video, posts.body, posts.photo, posts.created_at, users.first_name, users.last_name FROM posts INNER JOIN users ON users.id = posts.user_id WHERE posts.id = $1; `;
+  pool
+    .query(query, values)
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: `The post with id: ${id}`,
+        post: result.rows,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        error: err,
+      });
+    });
+};
 module.exports = {
   getAllPost,
   updatePost,
+  getPostById,
 };
