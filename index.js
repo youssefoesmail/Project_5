@@ -7,8 +7,9 @@ app.use(express.json());
 app.use(cors());
 const postRouter = require("./routes/posts");
 const userRouter = require("./routes/users");
+const storyRouter = require("./routes/story");
 app.use("/posts", postRouter);
-
+app.use("/story", storyRouter);
 app.use("*", (req, res) => res.status(404).json("NO content at this path"));
 
 app.use("/users", userRouter);
