@@ -40,7 +40,6 @@ const login = (req, res) => {
   const query = `SELECT *
   FROM users
   WHERE email=$1;`;
-  /* sdfsdfsdf */
   pool
     .query(query, values)
     .then(async (result) => {
