@@ -1,7 +1,7 @@
-const {pool} = require('../models/db');
+const { pool } = require("../models/db");
 
-const getAllPost = (req,res) => {
-    pool
+const getAllPost = (req, res) => {
+  pool
     .query(`SELECT * FROM posts`)
     .then((result) => {
       res.status(200).json({
@@ -19,6 +19,7 @@ const getAllPost = (req,res) => {
     });
 };
 
+
 const deletePostById = (req,res)=>{
   const id = req.params.id;
   const query = `UPDATE posts SET is_deleted=1 WHERE id=$1;`;
@@ -34,6 +35,21 @@ const deletePostById = (req,res)=>{
       } else {
         throw new Error("Error happened while deleting post");
       }
+
+const updatePost = (req, res) => {
+  const { id } = req.params;
+  const { body, photo, video } = req.body;
+  const query = `UPDATE posts SET body = COALESCE($1,body), photo = COALESCE($2, photo),video = COALESCE($3, video) WHERE id=$4 AND is_deleted = 0  RETURNING *`;
+  const values = [body, photo, video, id];
+  pool
+    .query(query, values)
+    .then((result) => {
+      res.status(201).json({
+        success: true,
+        message: "updated post successfully",
+        result: result.rows,
+      });
+
     })
     .catch((err) => {
       res.status(500).json({
@@ -46,5 +62,7 @@ const deletePostById = (req,res)=>{
 
 module.exports = {
     getAllPost,
-    deletePostById
+    deletePostById,updatePost,
 }
+
+
