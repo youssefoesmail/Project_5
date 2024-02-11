@@ -9,13 +9,14 @@ const getAllStories = (req,res)=>{
       res.status(200).json({
         success: true,
         message: "All the stories",
-      }).catch((err) => {
-      res.status(500).json({
-        success: false,
-        message: "Server error",
-        err: err,
+      })}).catch((err) => {
+        res.status(500).json({
+          success: false,
+          message: "Server error",
+          err: err,
+        });
       });
-
+    }
 const createNewStory = (req, res) => {
   const { photo_video } = req.body;
   const query = `INSERT INTO story (photo_video) VALUES ($1) RETURNING *`;
@@ -38,6 +39,4 @@ const createNewStory = (req, res) => {
     });
 }
 
-module.exports={
-    getAllStories,createNewStory,
-}
+module.exports={getAllStories,createNewStory}
