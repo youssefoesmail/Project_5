@@ -1,9 +1,10 @@
+
 const express = require('express');
-const { getAllStories } = require('../controller/story');
-
-const storyRouter= express.Router();
-
+const { getAllStories,createNewStory } = require('../controller/story');
+const storyRouter = express.Router();
+storyRouter.post("/", createNewStory);
 storyRouter.get('/',getAllStories);
-
-
-module.exports=storyRouter;
+storyRouter.use("*", (req, res) => {
+  res.json("storyRouter is working");
+});
+module.exports = storyRouter;
