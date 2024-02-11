@@ -1,10 +1,10 @@
 const express = require("express");
-const { getAllPost } = require("../controller/Posts");
-
+const {getAllPost,deletePostById}=require('../controller/posts')
 
 const postRouter = express.Router();
 postRouter.get("/",getAllPost)
-// postRouter.get("/",getallPost);
+postRouter.delete('/:id',deletePostById)
+
 
 postRouter.use("*", (req, res) => {
     res.json("postRouter is working");
