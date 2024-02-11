@@ -66,8 +66,32 @@ const getPostById = (req, res) => {
       });
     });
 };
+
+// deletePostById for the user who created the post
+const deletePostById = (req, res) => {
+  const { id } = req.params;
+  const values = [id];
+  const query = `DELETE FROM posts WHERE id = $1 RETURNING*;`;
+  pool
+    .query(query, values)
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: `posts with id: ${id} deleted successfully`,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        error: err,
+      });
+    });
+};
+
 module.exports = {
   getAllPost,
   updatePost,
   getPostById,
+  deletePostById,
 };
