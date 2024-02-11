@@ -87,9 +87,35 @@ const getPostById = (req, res) => {
       });
     });
 };
+
+const CreateNewPost = (req,res)=>{
+  const { body, video,photo } = req.body;
+  const user_id = req.token.userId;
+  const query = `INSERT INTO posts (body, video,photo,user_id) VALUES ($1,$2,$3,$4) RETURNING *;`;
+  const data = [body, video,photo,user_id];
+  pool
+    .query(query, data)
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: "Post created successfully",
+        result: result.rows[0],
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
+      });
+    });
+};
+
+
 module.exports = {
   getAllPost,
   updatePost,
   getPostById,
   deletePostById,
+  CreateNewPost,
 };
