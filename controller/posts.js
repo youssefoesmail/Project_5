@@ -1,5 +1,4 @@
 const { pool } = require("../models/db");
-
 const getAllPost = (req, res) => {
   pool
     .query(`SELECT * FROM posts`)
@@ -19,8 +18,7 @@ const getAllPost = (req, res) => {
     });
 };
 
-
-const deletePostById = (req,res)=>{
+const deletePostById = (req, res) => {
   const id = req.params.id;
   const query = `UPDATE posts SET is_deleted=1 WHERE id=$1;`;
   const data = [id];
@@ -34,14 +32,16 @@ const deletePostById = (req,res)=>{
         });
       } else {
         throw new Error("Error happened while deleting post");
-      }}).catch((err) => {
-        res.status(500).json({
-          success: false,
-          message: "Server error",
-          err: err,
-        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
       });
-    }
+    });
+};
 const updatePost = (req, res) => {
   const { id } = req.params;
   const { body, photo, video } = req.body;
@@ -55,7 +55,6 @@ const updatePost = (req, res) => {
         message: "updated post successfully",
         result: result.rows,
       });
-
     })
     .catch((err) => {
       res.status(500).json({
@@ -64,7 +63,8 @@ const updatePost = (req, res) => {
         err: err,
       });
     });
-}
+};
+
 
 const createNewPost = (req, res) => {
   const { title, description } = req.body;
@@ -78,12 +78,27 @@ const createNewPost = (req, res) => {
         success: true,
         message: "Post created successfully",
         result: result.rows[0],
+
+// getPostById for any user
+const getPostById = (req, res) => {
+  const { id } = req.params;
+  const values = [id];
+  const query = `SELECT posts.video, posts.body, posts.photo, posts.created_at, users.first_name, users.last_name FROM posts INNER JOIN users ON users.id = posts.user_id WHERE posts.id = $1; `;
+  pool
+    .query(query, values)
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: `The post with id: ${id}`,
+        post: result.rows,
+
       });
     })
     .catch((err) => {
       res.status(500).json({
         success: false,
         message: "Server error",
+
         err: err,
       });
     });
@@ -108,6 +123,26 @@ const getPostByAuthor = (req, res) => {
           result: result.rows,
         });
       }
+
+        error: err,
+      });
+    });
+};
+
+const CreateNewPost = (req,res)=>{
+  const { body, video,photo } = req.body;
+  const user_id = req.token.userId;
+  const query = `INSERT INTO posts (body, video,photo,user_id) VALUES ($1,$2,$3,$4) RETURNING *;`;
+  const data = [body, video,photo,user_id];
+  pool
+    .query(query, data)
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: "Post created successfully",
+        result: result.rows[0],
+      });
+
     })
     .catch((err) => {
       res.status(500).json({
@@ -117,6 +152,7 @@ const getPostByAuthor = (req, res) => {
       });
     });
 };
+
 module.exports = {
     getAllPost,
     deletePostById,
@@ -126,3 +162,12 @@ module.exports = {
 }
 
 
+
+
+module.exports = {
+  getAllPost,
+  updatePost,
+  getPostById,
+  deletePostById,
+  CreateNewPost,
+};
