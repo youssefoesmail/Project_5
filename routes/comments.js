@@ -4,11 +4,11 @@ const express = require("express");
 const { createNewComment } = require("../controller/comments");
 
 //middleware
-const authentication = require("../middleware/Authentication");
-const authorization = require("../middleware/Authorization");
+// const authentication = require("../middleware/Authentication");
+// const authorization = require("../middleware/Authorization");
 
 const commentsRouter = express.Router();
 
-commentsRouter.post("/:id",authentication,authorization("CREATE_COMMENT"),createNewComment);
+commentsRouter.post("/:id",createNewComment);
 
 module.exports = commentsRouter;
