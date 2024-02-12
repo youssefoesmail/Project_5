@@ -41,7 +41,7 @@ CREATE TABLE comment (
     reels_id INTEGER,
     created_at TIMESTAMP DEFAULT NOW(),
     is_deleted SMALLINT DEFAULT 0,
-    FOREIGN KEY post_id REFERENCES posts(id),
+    FOREIGN KEY post_id REFERENCES posts(id),   
     FOREIGN KEY story_id REFERENCES story(id),
     FOREIGN KEY reels_id REFERENCES reels(id)
 );

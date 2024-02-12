@@ -11,8 +11,8 @@ const storyRouter = require("./routes/story");
 const commentsRouter = require("./routes/comments");
 const rolesRouter = require("./routes/roles");
 app.use("/users", userRouter);
-app.use("/posts",postRouter)
-app.use('/stories',storyRouter);
+app.use("/posts", postRouter);
+app.use("/story", storyRouter);
 app.use("/roles", rolesRouter);
 app.use("/comments", commentsRouter);
 const PORT = process.env.PORT || 5000;

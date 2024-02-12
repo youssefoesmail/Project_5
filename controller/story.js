@@ -1,8 +1,8 @@
 const { pool } = require("../models/db");
 
-const getAllStories = (req, res) => {
-  const query = `SELECT * FROM stories a WHERE is_deleted=0;`;
 
+const getAllStories = (req,res)=>{
+    const query = `SELECT * FROM story a WHERE is_deleted=0;`;
   pool
     .query(query)
     .then((result) => {
@@ -51,7 +51,7 @@ const getStoryById = (req, res) => {
       if (result.rows.length === 0) {
         res.status(404).json({
           success: false,
-          message: `no story whith this id: ${id}`,
+          message: `no story with this id: ${id}`,
         });
       } else {
         res.status(200).json({
