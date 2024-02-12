@@ -1,8 +1,7 @@
 const { pool } = require("../models/db");
 
-
-const getAllStories = (req,res)=>{
-    const query = `SELECT * FROM story a WHERE is_deleted=0;`;
+const getAllStories = (req, res) => {
+  const query = `SELECT * FROM story a WHERE is_deleted=0;`;
   pool
     .query(query)
     .then((result) => {
@@ -71,29 +70,34 @@ const getStoryById = (req, res) => {
 };
 
 //make the user delete his stroy
-const DeleteStoryById = (req,res) => {
-  const {id} = req.params;
+const DeleteStoryById = (req, res) => {
+  const { id } = req.params;
   const query = `UPDATE story SET is_deleted=1 WHERE id=$1;`;
   const data = [id];
   pool
-  .query(query,data)
-  .then((result) => {
-    if (result.rowCount !== 0) {
-      res.status(200).json({
-        success: true,
-        message: `Article with id: ${id} deleted successfully`,
+    .query(query, data)
+    .then((result) => {
+      if (result.rowCount !== 0) {
+        res.status(200).json({
+          success: true,
+          message: `Article with id: ${id} deleted successfully`,
+        });
+      } else {
+        throw new Error("Error happened while deleting article");
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
       });
-    } else {
-      throw new Error("Error happened while deleting article");
-    }
-  })
-  .catch((err) => {
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-      err: err,
     });
-  });
-}
+};
 
-module.exports = { getAllStories, createNewStory, getStoryById };
+module.exports = {
+  getAllStories,
+  createNewStory,
+  getStoryById,
+  DeleteStoryById,
+};
