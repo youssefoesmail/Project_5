@@ -133,4 +133,4 @@ const createTable = (req, res) => {
 };
 // createTable()
 
-module.exports = pool;
+module.exports = {pool};
