@@ -1,5 +1,4 @@
 const express = require("express");
-
 const {
   getAllPost,
   updatePost,
@@ -17,9 +16,20 @@ postRouter.get("/", getAllPost);
 // postRouter.delete("/:id", deletePostById);
 // postRouter.post("/",createNewPost);
 // postRouter.get("/search_1", getPostByAuthor);
-
-
-
+postRouter.get("/:id", getPostById);
+postRouter.put("/:id", updatePost);
+postRouter.delete("/:id", deletePostById);
+postRouter.post(
+  "/",
+  createNewPost
+);
+postRouter.get("/search_1", getPostByAuthor);
+// postRouter.post(
+//   "/",
+//   authentication,
+//   authorization("CREATE_POST"),
+//   createNewPost
+// );
 module.exports = postRouter;
 postRouter.get("*", (req, res) => {
   res.send("postRouter is working");
