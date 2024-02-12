@@ -6,7 +6,8 @@ CREATE TABLE users (
         last_name VARCHAR NOT NULL,
         email VARCHAR UNIQUE NOT NULL,
         password VARCHAR(12) NOT NULL,
-        role VARCHAR,
+        role_id VARCHAR,
+        FOREIGN Key role_id REFERENCES roles(id),
         created_at TIMESTAMP DEFAULT NOW(),
         is_deleted SMALLINT DEFAULT 0
     );
