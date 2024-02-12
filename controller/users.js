@@ -1,10 +1,9 @@
-
 const { pool } = require("../models/db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const register = async (req, res) => {
   const { first_name, last_name, email, password } = req.body;
-  const bcryptPassword = await bcrypt.hash(password, process.env.SALT);
+  const bcryptPassword = await bcrypt.hash(password, 7);
   const role_id = "1";
   const query = `INSERT INTO users (first_name,
           last_name,
@@ -34,56 +33,55 @@ const register = async (req, res) => {
     });
 };
 const login = (req, res) => {
-    const password = req.body.password;
-    const email = req.body.email;
-    const query = `SELECT * FROM users WHERE email = $1`;
-    const data = [email.toLowerCase()];
-    pool
-      .query(query, data)
-      .then((result) => {
-        if (result.rows.length) {
-          bcrypt.compare(password, result.rows[0].password, (err, response) => {
-            if (err) res.json(err);
-            if (response) {
-              const payload = {
+  const password = req.body.password;
+  const email = req.body.email;
+  const query = `SELECT * FROM users WHERE email = $1`;
+  const data = [email.toLowerCase()];
+  pool
+    .query(query, data)
+    .then((result) => {
+      if (result.rows.length) {
+        bcrypt.compare(password, result.rows[0].password, (err, response) => {
+          if (err) res.json(err);
+          if (response) {
+            const payload = {
+              userId: result.rows[0].id,
+              country: result.rows[0].country,
+              role: result.rows[0].role_id,
+            };
+            const options = { expiresIn: "1d" };
+            const secret = process.env.SECRET;
+            const token = jwt.sign(payload, secret, options);
+            if (token) {
+              return res.status(200).json({
+                token,
+                success: true,
+                message: `Valid login credentials`,
                 userId: result.rows[0].id,
-                country: result.rows[0].country,
-                role: result.rows[0].role_id,
-              };
-              const options = { expiresIn: "1d" };
-              const secret = process.env.SECRET;
-              const token = jwt.sign(payload, secret, options);
-              if (token) {
-                return res.status(200).json({
-                  token,
-                  success: true,
-                  message: `Valid login credentials`,
-                  userId:result.rows[0].id
-                });
-              } else {
-                throw Error;
-              }
-            } else {
-              res.status(403).json({
-                success: false,
-                message: `The email doesn’t exist or the password you’ve entered is incorrect`,
               });
+            } else {
+              throw Error;
             }
-          });
-        } else throw Error;
-      })
-      .catch((err) => {
-        res.status(403).json({
-          success: false,
-          message:
-            "The email doesn’t exist or the password you’ve entered is incorrect",
-          err,
+          } else {
+            res.status(403).json({
+              success: false,
+              message: `The email doesn’t exist or the password you’ve entered is incorrect`,
+            });
+          }
         });
+      } else throw Error;
+    })
+    .catch((err) => {
+      res.status(403).json({
+        success: false,
+        message:
+          "The email doesn’t exist or the password you’ve entered is incorrect",
+        err,
       });
-  };
+    });
+};
 
 module.exports = {
   login,
   register,
 };
-
