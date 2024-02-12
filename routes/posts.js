@@ -1,5 +1,4 @@
 const express = require("express");
-
 const {
   getAllPost,
   updatePost,
@@ -17,10 +16,9 @@ postRouter.put("/:id", updatePost);
 postRouter.delete("/:id", deletePostById);
 postRouter.post(
   "/",
-  createNewPost
+ createNewPost
 );
 postRouter.get("/search_1", getPostByAuthor);
-=======
 postRouter.post(
   "/",
   authentication,
@@ -28,9 +26,7 @@ postRouter.post(
   createNewPost
 );
 postRouter.get("/search_1", getPostByAuthor);
-
 postRouter.use("*", (req, res) => {
   res.json("postRouter is working");
 });
-
 module.exports = postRouter;

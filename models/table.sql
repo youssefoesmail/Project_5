@@ -150,3 +150,80 @@ INSERT INTO
   role_permission (role_id, permission_id)
 VALUES
   (1, 4);
+ CREATE TABLE comment_reel(
+        id SERIAL PRIMARY KEY,
+        comment VARCHAR,
+        commenter INTEGER,
+       reel_id INTEGER,
+        created_at TIMESTAMP DEFAULT NOW(),
+        is_deleted SMALLINT DEFAULT 0,
+        FOREIGN KEY (reel_id) REFERENCES reels(id) );
+   CREATE TABLE reels (
+        id SERIAL PRIMARY KEY,
+        video VARCHAR NOT NULL,
+        user_id INTEGER,
+        created_at TIMESTAMP DEFAULT NOW(),
+        FOREIGN Key (user_id) REFERENCES users(id),
+        is_deleted SMALLINT DEFAULT 0 );
+         CREATE TABLE comment_story(
+        id SERIAL PRIMARY KEY,
+        comment VARCHAR,
+        commenter INTEGER,
+        story_id INTEGER,
+        created_at TIMESTAMP DEFAULT NOW(),
+        is_deleted SMALLINT DEFAULT 0,
+        FOREIGN KEY (story_id) REFERENCES story(id) );
+         CREATE TABLE story (
+        id SERIAL PRIMARY KEY,
+        photo_video VARCHAR,
+        commenter INTEGER,
+        comment VARCHAR,
+        created_at TIMESTAMP DEFAULT NOW(),
+        end_at TIMESTAMP,
+        FOREIGN KEY (commenter) REFERENCES users(id),
+        is_deleted SMALLINT DEFAULT 0 );
+         CREATE TABLE comment_posts(
+        id SERIAL PRIMARY KEY,
+        comment VARCHAR,
+        commenter INTEGER,
+        post_id INTEGER,
+        created_at TIMESTAMP DEFAULT NOW(),
+        is_deleted SMALLINT DEFAULT 0,
+        FOREIGN KEY (post_id) REFERENCES posts(id)
+    );
+    
+  CREATE TABLE posts (
+        id SERIAL PRIMARY KEY,
+        video VARCHAR,
+        body VARCHAR,
+        user_id INTEGER,
+        photo VARCHAR,
+        created_at TIMESTAMP DEFAULT NOW(),
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        is_deleted SMALLINT DEFAULT 0);
+   
+  
+
+   
+    CREATE TABLE notifications (
+        notification_id SERIAL PRIMARY KEY,
+        user_id INT,
+        content TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW(),
+        is_read BOOLEAN DEFAULT FALSE,
+FOREIGN KEY(user_id)REFERENCES users(id) ON DELETE CASCADE
+    );
+    CREATE TABLE pages (
+        id SERIAL PRIMARY KEY,
+        photo VARCHAR,
+        cover VARCHAR,
+        user_id INTEGER,
+        name_Page VARCHAR NOT NULL,
+        role_id INT,
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (role_id) REFERENCES roles(id),
+is_deleted SMALLINT DEFAULT 0,
+        created_at TIMESTAMP DEFAULT NOW()
+    );
+    
+  
