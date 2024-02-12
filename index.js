@@ -12,9 +12,9 @@ const commentsRouter = require("./routes/comments");
 const rolesRouter = require("./routes/role");
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
-app.use("/story", storyRouter);
-app.use("/roles", rolesRouter);
-app.use("/comments", commentsRouter);
+// app.use("/story", storyRouter);
+// app.use("/roles", rolesRouter);
+// app.use("/comments", commentsRouter);
 const PORT = process.env.PORT || 5000;
 app.use("*", (req, res) => res.status(404).json("NO content at this path"));
 app.listen(PORT, () => {
