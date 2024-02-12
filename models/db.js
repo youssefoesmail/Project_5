@@ -121,15 +121,16 @@ const createTable = (req, res) => {
     );`
     )
     .then((result) => {
-      res.status(201).json({
+      res.json({
         message: "created",
       });
     })
     .catch((err) => {
-      res.status(500).json({
+      res.json({
         err: err.message,
       });
     });
 };
+// createTable()
 
 module.exports = pool;

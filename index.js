@@ -9,7 +9,7 @@ const postRouter = require("./routes/posts");
 const userRouter = require("./routes/users");
 const storyRouter = require("./routes/story");
 const commentsRouter = require("./routes/comments");
-const rolesRouter = require("./routes/roles");
+const rolesRouter = require("./routes/role");
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/story", storyRouter);
