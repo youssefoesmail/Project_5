@@ -1,4 +1,5 @@
 const { pool } = require("../models/db");
+
 const getAllPost = (req, res) => {
   pool
     .query(`SELECT * FROM posts`)
@@ -42,6 +43,7 @@ const deletePostById = (req, res) => {
       });
     });
 };
+
 const updatePost = (req, res) => {
   const { id } = req.params;
   const { body, photo, video } = req.body;
@@ -52,7 +54,7 @@ const updatePost = (req, res) => {
     .then((result) => {
       res.status(201).json({
         success: true,
-        message: "updated post successfully",
+        message: "Updated post successfully",
         result: result.rows,
       });
     })
@@ -65,12 +67,11 @@ const updatePost = (req, res) => {
     });
 };
 
-
 const createNewPost = (req, res) => {
-  const { title, description } = req.body;
+  const { body, video, photo } = req.body;
   const user_id = req.token.userId;
-  const query = `INSERT INTO posts (body, video, photo,user_id) VALUES ($1,$2,$3,$4) RETURNING *;`;
-  const data = [body, video, photo,user_id];
+  const query = `INSERT INTO posts (body, video, photo, user_id) VALUES ($1, $2, $3, $4) RETURNING *;`;
+  const data = [body, video, photo, user_id];
   pool
     .query(query, data)
     .then((result) => {
@@ -78,31 +79,60 @@ const createNewPost = (req, res) => {
         success: true,
         message: "Post created successfully",
         result: result.rows[0],
-
-// getPostById for any user
-const getPostById = (req, res) => {
-  const { id } = req.params;
-  const values = [id];
-  const query = `SELECT posts.video, posts.body, posts.photo, posts.created_at, users.first_name, users.last_name FROM posts INNER JOIN users ON users.id = posts.user_id WHERE posts.id = $1; `;
-  pool
-    .query(query, values)
-    .then((result) => {
-      res.status(200).json({
-        success: true,
-        message: `The post with id: ${id}`,
-        post: result.rows,
-
       });
     })
     .catch((err) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-
         err: err,
       });
     });
 };
+
+const getPostById = (req, res) => {
+  const { id } = req.params;
+  const values = [id];
+  const query = `
+    SELECT
+      posts.video,
+      posts.body,
+      posts.photo,
+      posts.created_at,
+      users.first_name,
+      users.last_name
+    FROM
+      posts
+    INNER JOIN
+      users ON users.id = posts.user_id
+    WHERE
+      posts.id = $1;`;
+
+  pool
+    .query(query, values)
+    .then((result) => {
+      if (result.rows.length === 0) {
+        res.status(404).json({
+          success: false,
+          message: `No post found with id: ${id}`,
+        });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: `Post with id: ${id}`,
+          post: result.rows[0],
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
+      });
+    });
+};
+
 const getPostByAuthor = (req, res) => {
   const user_id = req.query.user;
   const query = `SELECT * FROM posts WHERE user_id = $1 AND is_deleted=0;`;
@@ -123,51 +153,18 @@ const getPostByAuthor = (req, res) => {
           result: result.rows,
         });
       }
-
-        error: err,
-      });
-    });
-};
-
-const CreateNewPost = (req,res)=>{
-  const { body, video,photo } = req.body;
-  const user_id = req.token.userId;
-  const query = `INSERT INTO posts (body, video,photo,user_id) VALUES ($1,$2,$3,$4) RETURNING *;`;
-  const data = [body, video,photo,user_id];
-  pool
-    .query(query, data)
-    .then((result) => {
-      res.status(200).json({
-        success: true,
-        message: "Post created successfully",
-        result: result.rows[0],
-      });
-
     })
     .catch((err) => {
       res.status(500).json({
-        success: false,
-        message: "Server error",
-        err: err,
+        err: err.message,
       });
     });
 };
-
-module.exports = {
-    getAllPost,
-    deletePostById,
-    updatePost,
-    createNewPost,
-    getPostByAuthor,
-}
-
-
-
-
 module.exports = {
   getAllPost,
-  updatePost,
-  getPostById,
   deletePostById,
-  CreateNewPost,
+  updatePost,
+  createNewPost,
+  getPostByAuthor,
+  getPostById,
 };
