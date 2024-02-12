@@ -2,7 +2,7 @@ const { pool } = require("../models/db");
 
 const getAllPost = (req, res) => {
   pool
-    .query(`SELECT * FROM posts`)
+    .query(`select * from posts`)
     .then((result) => {
       res.status(200).json({
         success: true,

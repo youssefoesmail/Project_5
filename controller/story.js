@@ -70,7 +70,7 @@ const getStoryById = (req, res) => {
 };
 
 //make the user delete his stroy
-const DeleteStoryById = (req, res) => {
+const deleteStoryById = (req, res) => {
   const { id } = req.params;
   const query = `UPDATE story SET is_deleted=1 WHERE id=$1;`;
   const data = [id];
@@ -99,5 +99,5 @@ module.exports = {
   getAllStories,
   createNewStory,
   getStoryById,
-  DeleteStoryById,
+  deleteStoryById,
 };
