@@ -38,5 +38,33 @@ const createNewStory = (req, res) => {
       });
     });
 }
+const getStoryById = (req, res) => {
+  const id = req.params.id;
+    const query = `SELECT * FROM story WHERE id = $1 AND is_deleted=0;`;
+  const data = [id];
 
-module.exports={getAllStories,createNewStory}
+  pool
+    .query(query, data)
+    .then((result) => {
+      if (result.rows.length === 0) {
+        res.status(404).json({
+          success: false,
+          message: `no story whith this id: ${id}`,
+        });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: `The story with id: ${id}`,
+          result: result.rows,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
+      });
+    });
+};
+module.exports={getAllStories,createNewStory,getStoryById}

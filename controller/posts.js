@@ -65,6 +65,20 @@ const updatePost = (req, res) => {
     });
 };
 
+
+const createNewPost = (req, res) => {
+  const { title, description } = req.body;
+  const user_id = req.token.userId;
+  const query = `INSERT INTO posts (body, video, photo,user_id) VALUES ($1,$2,$3,$4) RETURNING *;`;
+  const data = [body, video, photo,user_id];
+  pool
+    .query(query, data)
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: "Post created successfully",
+        result: result.rows[0],
+
 // getPostById for any user
 const getPostById = (req, res) => {
   const { id } = req.params;
@@ -77,12 +91,39 @@ const getPostById = (req, res) => {
         success: true,
         message: `The post with id: ${id}`,
         post: result.rows,
+
       });
     })
     .catch((err) => {
       res.status(500).json({
         success: false,
         message: "Server error",
+
+        err: err,
+      });
+    });
+};
+const getPostByAuthor = (req, res) => {
+  const user_id = req.query.user;
+  const query = `SELECT * FROM posts WHERE user_id = $1 AND is_deleted=0;`;
+  const data = [user_id];
+
+  pool
+    .query(query, data)
+    .then((result) => {
+      if (result.rows.length === 0) {
+        res.status(404).json({
+          success: false,
+          message: `The user: ${user_id} has no posts`,
+        });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: `All posts for the user: ${user_id}`,
+          result: result.rows,
+        });
+      }
+
         error: err,
       });
     });
@@ -101,6 +142,7 @@ const CreateNewPost = (req,res)=>{
         message: "Post created successfully",
         result: result.rows[0],
       });
+
     })
     .catch((err) => {
       res.status(500).json({
@@ -110,6 +152,16 @@ const CreateNewPost = (req,res)=>{
       });
     });
 };
+
+module.exports = {
+    getAllPost,
+    deletePostById,
+    updatePost,
+    createNewPost,
+    getPostByAuthor,
+}
+
+
 
 
 module.exports = {
