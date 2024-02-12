@@ -85,3 +85,49 @@ CREATE TABLE notifications (
     created_at TIMESTAMP DEFAULT NOW(),
     is_read BOOLEAN DEFAULT FALSE
 );
+
+-- create roles and permessions 
+INSERT INTO
+  roles (role)
+VALUES
+  ('Admin');
+
+INSERT INTO
+  permissions (permission)
+VALUES
+  ('CREATE_POST');
+
+INSERT INTO
+  permissions (permission)
+VALUES
+  ('CREATE_COMMENT');
+
+INSERT INTO
+  permissions (permission)
+VALUES
+  ('CREATE_REEL');
+
+INSERT INTO
+  permissions (permission)
+VALUES
+  ('CREATE_STORY');
+
+INSERT INTO
+  role_permission (role_id, permission_id)
+VALUES
+  (1, 1);
+
+INSERT INTO
+  role_permission (role_id, permission_id)
+VALUES
+  (1, 2);
+
+INSERT INTO
+  role_permission (role_id, permission_id)
+VALUES
+  (1, 3);
+
+INSERT INTO
+  role_permission (role_id, permission_id)
+VALUES
+  (1, 4);
