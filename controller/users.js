@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const register = async (req, res) => {
   const { firstname, lastname, email, password } = req.body;
-  const bcryptPassword = await bcrypt.hash(password, process.env.SALT);
+  const bcryptPassword = await bcrypt.hash(password, 7);
   const role_id = "1";
   const query = `INSERT INTO users (firstname,
     lastname,
