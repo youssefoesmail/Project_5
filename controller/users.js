@@ -1,11 +1,13 @@
 const { pool } = require("../models/db");
 const bcrypt = require("bcryptjs");
-
+const saltRounds = parseInt(process.env.SALT);
 const jwt = require("jsonwebtoken");
 const register = async (req, res) => {
   const { firstname, lastname, email, password } = req.body;
-  const bcryptPassword = await bcrypt.hash(password, process.env.SALT);
-  const role_id = "1";
+  const bcryptPassword = bcrypt.hash(password, saltRounds);
+
+  console.log("SAT",bcryptPassword);
+  const role_id =1 ;
   const query = `INSERT INTO users (firstname,
     lastname,
     email, 
@@ -15,7 +17,7 @@ const register = async (req, res) => {
     lastname,
     email.toLowerCase(),
     bcryptPassword,
-    role_id,
+    role_id
   ];
   pool
     .query(query, values)
