@@ -5,7 +5,7 @@ const {
   deletePostById,
   createNewPost,
   getPostByAuthor,
-  getPostById,
+  getPostById
 } = require("../controller/posts");
 const authentication = require("../middleware/Authentication");
 const authorization = require("../middleware/Authorization");
@@ -14,15 +14,11 @@ postRouter.get("/", getAllPost);
 // postRouter.get("/:id", getPostById);
 // postRouter.put("/:id", updatePost);
 // postRouter.delete("/:id", deletePostById);
-// postRouter.post("/",createNewPost);
+postRouter.post("/", authentication, createNewPost);
 // postRouter.get("/search_1", getPostByAuthor);
 postRouter.get("/:id", getPostById);
 postRouter.put("/:id", updatePost);
 postRouter.delete("/:id", deletePostById);
-postRouter.post(
-  "/",
- createNewPost
-);
 // postRouter.get("/search_1", getPostByAuthor);
 // postRouter.post(
 //   "/",
