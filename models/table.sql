@@ -117,3 +117,53 @@ CREATE TABLE notifications (
   is_read BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+INSERT INTO
+  roles (role)
+VALUES
+  ('Admin');
+
+INSERT INTO
+  permissions (permission)
+VALUES
+  ('CREATE_POST');
+
+  INSERT INTO
+  permissions (permission)
+VALUES
+  ('CREATE_COMMENT');
+
+  INSERT INTO
+  permissions (permission)
+VALUES
+  ('CREATE_REEL');
+
+  INSERT INTO
+  permissions (permission)
+VALUES
+  ('CREATE_STORY');
+
+INSERT INTO
+  permissions (permission)
+VALUES
+  ('CREATE_COMMENT');
+
+INSERT INTO
+  role_permission (role_id, permission_id)
+VALUES
+  (1, 1);
+
+INSERT INTO
+  role_permission (role_id, permission_id)
+VALUES
+  (1, 2);
+
+  INSERT INTO
+  role_permission (role_id, permission_id)
+VALUES
+  (1, 3);
+
+  INSERT INTO
+  role_permission (role_id, permission_id)
+VALUES
+  (1, 4);
