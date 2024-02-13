@@ -7,14 +7,14 @@ const getAllPost = (req, res) => {
       res.status(200).json({
         success: true,
         message: "All the posts",
-        articles: result.rows,
+        articles: result.rows
       });
     })
     .catch((err) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        error: err,
+        error: err
       });
     });
 };
@@ -29,7 +29,7 @@ const deletePostById = (req, res) => {
       if (result.rowCount !== 0) {
         res.status(200).json({
           success: true,
-          message: `Post with id: ${id} deleted successfully`,
+          message: `Post with id: ${id} deleted successfully`
         });
       } else {
         throw new Error("Error happened while deleting post");
@@ -39,7 +39,7 @@ const deletePostById = (req, res) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err,
+        err: err
       });
     });
 };
@@ -55,14 +55,14 @@ const updatePost = (req, res) => {
       res.status(201).json({
         success: true,
         message: "Updated post successfully",
-        result: result.rows,
+        result: result.rows
       });
     })
     .catch((err) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err,
+        err: err
       });
     });
 };
@@ -78,18 +78,18 @@ const createNewPost = (req, res) => {
       res.status(200).json({
         success: true,
         message: "Post created successfully",
-        result: result.rows[0],
+        result: result.rows[0]
       });
     })
     .catch((err) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err,
+        err: err
       });
     });
 };
-
+// we have a problem in join statement
 const getPostById = (req, res) => {
   const { id } = req.params;
   const values = [id];
@@ -99,8 +99,8 @@ const getPostById = (req, res) => {
       posts.body,
       posts.photo,
       posts.created_at,
-      users.first_name,
-      users.last_name
+      users.firstname,
+      users.lastname
     FROM
       posts
     INNER JOIN
@@ -114,13 +114,13 @@ const getPostById = (req, res) => {
       if (result.rows.length === 0) {
         res.status(404).json({
           success: false,
-          message: `No post found with id: ${id}`,
+          message: `No post found with id: ${id}`
         });
       } else {
         res.status(200).json({
           success: true,
           message: `Post with id: ${id}`,
-          post: result.rows[0],
+          post: result.rows[0]
         });
       }
     })
@@ -128,7 +128,7 @@ const getPostById = (req, res) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err,
+        err: err.message
       });
     });
 };
@@ -144,19 +144,19 @@ const getPostByAuthor = (req, res) => {
       if (result.rows.length === 0) {
         res.status(404).json({
           success: false,
-          message: `The user: ${user_id} has no posts`,
+          message: `The user: ${user_id} has no posts`
         });
       } else {
         res.status(200).json({
           success: true,
           message: `All posts for the user: ${user_id}`,
-          result: result.rows,
+          result: result.rows
         });
       }
     })
     .catch((err) => {
       res.status(500).json({
-        err: err.message,
+        err: err.message
       });
     });
 };
@@ -166,5 +166,5 @@ module.exports = {
   updatePost,
   createNewPost,
   getPostByAuthor,
-  getPostById,
+  getPostById
 };
