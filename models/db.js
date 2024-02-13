@@ -135,3 +135,4 @@ const createTable = (req, res) => {
 // createTable()
 
 module.exports = {pool};
+  

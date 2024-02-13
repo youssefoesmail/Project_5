@@ -324,24 +324,25 @@ CREATE TABLE users(
   PRIMARY KEY (id)
 );
 CREATE TABLE follows (
+  id SERIAL PRIMARY KEY,
   following_user_id INTEGER,
   followed_user_id INTEGER,
   created_at TIMESTAMP DEFAULT NOW(),
-  FOREIGN Key following_user_id REFERENCES users(id),
-  FOREIGN Key followed_user_id REFERENCES users(id),
-  is_deleted SMALLINT DEFAULT 0
+  is_deleted SMALLINT DEFAULT 0,
+  FOREIGN KEY (following_user_id) REFERENCES users(id),
+  FOREIGN KEY (followed_user_id) REFERENCES users(id)
 );
 CREATE TABLE likes (
   like_id SERIAL PRIMARY KEY,
-  user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
-  post_id INT REFERENCES posts(post_id) ON DELETE CASCADE,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
   created_at TIMESTAMP DEFAULT NOW()
 );
 CREATE TABLE notifications (
   notification_id SERIAL PRIMARY KEY,
-  user_id INT,
+  user_id INTEGER,
   content TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   is_read BOOLEAN DEFAULT FALSE,
-  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
