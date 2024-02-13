@@ -1,22 +1,21 @@
 const { pool } = require("../models/db");
-const bcrypt = require("bcryptjs");
-const saltRounds = parseInt(process.env.SALT);
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const register = async (req, res) => {
-  const { firstname, lastname, email, password } = req.body;
-  const bcryptPassword = bcrypt.hash(password, saltRounds);
-
-  console.log("SAT",bcryptPassword);
-  const role_id =1 ;
+  const { firstname, lastname, email, country, age, password } = req.body;
+  const bcryptPassword = await bcrypt.hash(password, 7);
+  const role_id = "1";
   const query = `INSERT INTO users (firstname,
     lastname,
     email, 
-    password,role_id) VALUES ($1,$2,$3,$4,$5) RETURNING *`;
+    password,country,age,role_id) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`;
   const values = [
     firstname,
     lastname,
     email.toLowerCase(),
     bcryptPassword,
+    country,
+    age,
     role_id
   ];
   pool
@@ -25,14 +24,14 @@ const register = async (req, res) => {
       res.status(200).json({
         success: true,
         message: "created email successfully",
-        result: result.rows[0],
+        result: result.rows[0]
       });
     })
     .catch((err) => {
       res.status(409).json({
         success: false,
         massage: "The email already exited",
-        err: err.message,
+        err: err.message
       });
     });
 };
@@ -51,7 +50,7 @@ const login = (req, res) => {
             const payload = {
               userId: result.rows[0].id,
               country: result.rows[0].country,
-              role: result.rows[0].role_id,
+              role: result.rows[0].role_id
             };
             const options = { expiresIn: "1d" };
             const secret = process.env.SECRET;
@@ -61,7 +60,7 @@ const login = (req, res) => {
                 token,
                 success: true,
                 message: `Valid login credentials`,
-                userId: result.rows[0].id,
+                userId: result.rows[0].id
               });
             } else {
               throw Error;
@@ -69,7 +68,7 @@ const login = (req, res) => {
           } else {
             res.status(403).json({
               success: false,
-              message: `The email doesn’t exist or the password you’ve entered is incorrect`,
+              message: `The email doesn’t exist or the password you’ve entered is incorrect`
             });
           }
         });
@@ -80,12 +79,12 @@ const login = (req, res) => {
         success: false,
         message:
           "The email doesn’t exist or the password you’ve entered is incorrect",
-        err,
+        err
       });
     });
 };
 
 module.exports = {
   login,
-  register,
+  register
 };
