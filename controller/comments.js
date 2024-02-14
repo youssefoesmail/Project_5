@@ -210,6 +210,35 @@ const updateCommentStoryById = (req, res) => {
     });
 };
 
+const updateCommentReelById = (req, res) => {
+  const id = req.params.id;
+  let { comment } = req.body;
+  const commenter = req.token.userId;
+
+  const query = `UPDATE comment_reel SET comment = COALESCE($1,comment) WHERE commenter=$2 AND id=$3 AND is_deleted = 0  RETURNING *;`;
+  const values = [comment || null,commenter, id];
+  pool
+    .query(query, values)
+    .then((result) => {
+      if (result.rows.length !== 0) {
+        res.status(200).json({
+          success: true,
+          message: `comment with id: ${id} updated successfully `,
+          result: result.rows[0],
+        });
+      } else {
+        throw new Error("Error happened while updating article");
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
+      });
+    });
+};
+
 module.exports = {
   createNewCommentPost,
   createNewCommentStory,
@@ -219,4 +248,5 @@ module.exports = {
   getCommentByReelsId,
   updateCommentPostById,
   updateCommentStoryById,
+  updateCommentReelById,
 };
