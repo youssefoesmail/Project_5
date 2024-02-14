@@ -77,6 +77,30 @@ const createNewCommentStory = (req, res) => {
       });
     });
 };
+const getCommentByStoryId = (req, res) => {
+  const { id } = req.params;
+  const query = `SELECT comment_story.comment, comment_story.post_id, users.firstName, comment_story.commenter
+  FROM comment_story
+  JOIN users ON users.id = comment_story.commenter
+  WHERE comment_story.story_id =$1 AND comment_story.is_deleted = 0;`;
+  const value = [id];
+  pool
+    .query(query, value)
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: `All comments for story: ${id}`,
+        result: result.rows
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err
+      });
+    });
+};
 const createNewCommentReels = (req, res) => {
   const reel_id = req.params.id;
   const commenter = req.token.userId;
