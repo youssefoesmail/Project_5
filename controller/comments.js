@@ -1,4 +1,4 @@
-const {pool} = require("../models/db");
+const { pool } = require("../models/db");
 
 const createNewCommentPost = (req, res) => {
   const post_id = req.params.id;
@@ -15,14 +15,14 @@ const createNewCommentPost = (req, res) => {
       res.status(201).json({
         success: true,
         message: "Comment created successfully",
-        result: result.rows[0]
+        result: result.rows[0],
       });
     })
     .catch((err) => {
       res.status(404).json({
         success: false,
         message: "Server error",
-        err: err
+        err: err,
       });
     });
 };
@@ -39,14 +39,14 @@ const getCommentByPostId = (req, res) => {
       res.status(200).json({
         success: true,
         message: `All comments for posts: ${id}`,
-        result: result.rows
+        result: result.rows,
       });
     })
     .catch((err) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err
+        err: err,
       });
     });
 };
@@ -66,14 +66,14 @@ const createNewCommentStory = (req, res) => {
       res.status(201).json({
         success: true,
         message: "Comment created successfully",
-        result: result.rows[0]
+        result: result.rows[0],
       });
     })
     .catch((err) => {
       res.status(404).json({
         success: false,
         message: "Server error",
-        err: err
+        err: err,
       });
     });
 };
@@ -90,14 +90,14 @@ const getCommentByStoryId = (req, res) => {
       res.status(200).json({
         success: true,
         message: `All comments for story: ${id}`,
-        result: result.rows
+        result: result.rows,
       });
     })
     .catch((err) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err
+        err: err,
       });
     });
 };
@@ -116,14 +116,14 @@ const createNewCommentReels = (req, res) => {
       res.status(201).json({
         success: true,
         message: "Comment created successfully",
-        result: result.rows[0]
+        result: result.rows[0],
       });
-    }) 
+    })
     .catch((err) => {
       res.status(404).json({
         success: false,
         message: "Server error",
-        err: err
+        err: err,
       });
     });
 };
@@ -140,14 +140,42 @@ const getCommentByReelsId = (req, res) => {
       res.status(200).json({
         success: true,
         message: `All comments for story: ${id}`,
-        result: result.rows
+        result: result.rows,
       });
     })
     .catch((err) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err
+        err: err,
+      });
+    });
+};
+
+const updateCommentPostById = (req, res) => {
+  const id = req.params.id;
+  let { comment } = req.body;
+
+  const query = `UPDATE comment_posts SET comment = COALESCE($1,comment) WHERE id=$2 AND is_deleted = 0  RETURNING *;`;
+  const values = [comment || null, id];
+  pool
+    .query(query, values)
+    .then((result) => {
+      if (result.rows.length !== 0) {
+        res.status(200).json({
+          success: true,
+          message: `comment with id: ${id} updated successfully `,
+          result: result.rows[0],
+        });
+      } else {
+        throw new Error("Error happened while updating article");
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
       });
     });
 };
@@ -158,5 +186,6 @@ module.exports = {
   createNewCommentReels,
   getCommentByPostId,
   getCommentByStoryId,
-  getCommentByReelsId
+  getCommentByReelsId,
+  updateCommentPostById,
 };

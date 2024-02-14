@@ -5,7 +5,8 @@ const {
   createNewCommentReels,
   getCommentByPostId,
   getCommentByStoryId,
-  getCommentByReelsId
+  getCommentByReelsId,
+  updateCommentPostById,
 } = require("../controller/comments");
 
 //controllers
@@ -21,5 +22,6 @@ commentsRouter.post("/reels/:id", authentication, createNewCommentReels);
 commentsRouter.get("/post/:id", getCommentByPostId);
 commentsRouter.get("/story/:id", getCommentByStoryId);
 commentsRouter.get("/reels/:id", getCommentByReelsId);
+commentsRouter.put("/post/:id", updateCommentPostById);
 
 module.exports = commentsRouter;
