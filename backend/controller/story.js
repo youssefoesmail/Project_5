@@ -1,4 +1,4 @@
-const { pool } = require("../models/db");
+const { pool } = require("../backend/models/db");
 
 const getAllStories = (req, res) => {
   const query = `SELECT * FROM story a WHERE is_deleted=0;`;

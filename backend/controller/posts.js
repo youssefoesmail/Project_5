@@ -1,4 +1,4 @@
-const { pool } = require("../models/db");
+const { pool } = require("../backend/models/db");
 
 const getAllPost = (req, res) => {
   pool
