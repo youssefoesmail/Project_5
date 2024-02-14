@@ -26,7 +26,7 @@ const CreateLike = (req,res)=>{
 const deleteLike = (req,res)=>{
     const post_id =req.params.id;
     const values = [post_id]
-    const query = `UPDATE likes SET is_deleted=1 WHERE post_id =$1;`;
+    const query = `DELETE FROM likes WHERE post_id =$1;`;
 
     pool.query(query,values).then((result) => {
         res.status(200).json({
