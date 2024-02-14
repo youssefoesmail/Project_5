@@ -7,7 +7,7 @@ const getAllPost = (req, res) => {
       res.status(200).json({
         success: true,
         message: "All the posts",
-        articles: result.rows
+        posts: result.rows
       });
     })
     .catch((err) => {
@@ -194,5 +194,5 @@ module.exports = {
   createNewPost,
   getPostByAuthor,
   getPostById,
-  getAllPostsUser,
+  getAllPostsUser
 };
