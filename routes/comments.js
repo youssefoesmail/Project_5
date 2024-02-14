@@ -23,7 +23,7 @@ commentsRouter.post("/reels/:id", authentication, createNewCommentReels);
 commentsRouter.get("/post/:id", getCommentByPostId);
 commentsRouter.get("/story/:id", getCommentByStoryId);
 commentsRouter.get("/reels/:id", getCommentByReelsId);
-commentsRouter.put("/post/:id", updateCommentPostById);
+commentsRouter.put("/post/:id",authentication, updateCommentPostById);
 commentsRouter.put("/story/:id", authentication, updateCommentStoryById);
 
 module.exports = commentsRouter;
