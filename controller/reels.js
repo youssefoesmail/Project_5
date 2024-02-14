@@ -75,5 +75,6 @@ const deletedReels = (req, res) => {
 };
 module.exports = {
   createNewReels,
-  getAllReels
+  getAllReels,
+  deletedReels
 };
