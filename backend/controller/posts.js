@@ -135,12 +135,13 @@ const getPostById = (req, res) => {
 
 const getPostByAuthor = (req, res) => {
   const user_id = req.query.user;
-  const query = `SELECT * FROM posts WHERE user_id = $1 AND is_deleted=0;`;
+  const query = `SELECT * FROM posts WHERE user_id =$1 AND is_deleted=0;`;
   const data = [user_id];
 
   pool
     .query(query, data)
     .then((result) => {
+      console.log(result);
       if (result.rows.length === 0) {
         res.status(404).json({
           success: false,
@@ -187,6 +188,36 @@ const getAllPostsUser = (req, res) => {
       });
     });
 };
+
+//! this function will be used for User related to his followers
+const getAllPostsFollowers = (req, res) => {
+  const user_id = req.params.id;
+  const query = `SELECT * FROM posts WHERE user_id = $1 AND is_deleted=0;`;
+  const data = [user_id];
+
+  pool
+    .query(query, data)
+    .then((result) => {
+      if (result.rows.length === 0) {
+        res.status(404).json({
+          success: false,
+          message: `The user: ${user_id} has no posts`
+        });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: `All posts for the user: ${user_id}`,
+          result: result.rows
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        err: err.message
+      });
+    });
+};
+
 module.exports = {
   getAllPost,
   deletePostById,
@@ -194,5 +225,6 @@ module.exports = {
   createNewPost,
   getPostByAuthor,
   getPostById,
-  getAllPostsUser
+  getAllPostsUser,
+  getAllPostsFollowers,
 };
