@@ -49,6 +49,30 @@ const getAllReels = (req, res) => {
       });
     });
 };
+const deletedReels = (req, res) => {
+  const { id } = req.params;
+  const query = `UPDATE reels SET is_deleted=1 WHERE id=$1;`;
+  const data = [id];
+  pool
+    .query(query, data)
+    .then((result) => {
+      if (result.rowCount !== 0) {
+        res.status(200).json({
+          success: true,
+          message: `reels with id: ${id} deleted successfully`
+        });
+      } else {
+        throw new Error("Error happened while deleting reels");
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err
+      });
+    });
+};
 module.exports = {
   createNewReels,
   getAllReels
