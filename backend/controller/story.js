@@ -98,7 +98,7 @@ const deleteStoryById = (req, res) => {
 
 // getStoryByAuthor
 const getStoryByAuthor = (req, res) => {
-  const commenter = req.query.user;
+  const commenter = req.token.userId;
   const query = `SELECT * FROM story WHERE commenter = $1 AND is_deleted=0;`;
   const values = [commenter];
   pool
