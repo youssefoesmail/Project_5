@@ -30,6 +30,26 @@ const createNewReels = (req, res) => {
 //     FOREIGN Key (user_id) REFERENCES users(id),
 //     is_deleted SMALLINT DEFAULT 0
 //   );
+const getAllReels = (req, res) => {
+  const query = `SELECT * FROM reels`;
+  pool
+    .query(query)
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: "All the reels",
+        articles: result.rows
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        error: err
+      });
+    });
+};
 module.exports = {
-  createNewReels
+  createNewReels,
+  getAllReels
 };
