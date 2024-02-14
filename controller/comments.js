@@ -81,5 +81,6 @@ const createNewCommentReels = (req, res) => {
 
 module.exports = {
   createNewCommentPost,
-  createNewCommentStory
+  createNewCommentStory,
+  createNewCommentReels
 };
