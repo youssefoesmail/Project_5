@@ -6,7 +6,8 @@ const {
   createNewPost,
   getPostByAuthor,
   getPostById,
-  getAllPostsUser
+  getAllPostsUser,
+  getAllPostsFollowers
 } = require("../controller/posts");
 const authentication = require("../middleware/Authentication");
 const authorization = require("../middleware/Authorization");
@@ -23,6 +24,7 @@ postRouter.get("/:id", authentication, getPostById);
 postRouter.put("/:id", authentication, updatePost);
 postRouter.delete("/:id", authentication, deletePostById);
 postRouter.get("/authorPosts/:user_id", authentication, getAllPostsUser);
+postRouter.get('/followers/:id',authentication,getAllPostsFollowers);
 
 postRouter.use("*", (req, res) => {
   res.json("postRouter is working");
