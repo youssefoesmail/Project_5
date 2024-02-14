@@ -20,8 +20,9 @@ const getAllStories = (req, res) => {
 };
 const createNewStory = (req, res) => {
   const { photo_video } = req.body;
-  const query = `INSERT INTO story (photo_video) VALUES ($1) RETURNING *`;
-  const values = [photo_video];
+  const commenter = req.token.userId;
+  const query = `INSERT INTO story (photo_video,commenter) VALUES ($1,$2) RETURNING *`;
+  const values = [photo_video,commenter];
   pool
     .query(query, values)
     .then((result) => {

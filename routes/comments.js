@@ -10,16 +10,16 @@ const {
 
 //controllers
 //middleware
-// const authentication = require("../middleware/Authentication");
+const authentication = require("../middleware/Authentication");
 // const authorization = require("../middleware/Authorization");
 
 const commentsRouter = express.Router();
 
-commentsRouter.post("/post/:id", createNewCommentPost);
-commentsRouter.post("/story/:id", createNewCommentStory);
-commentsRouter.post("/reels/:id", createNewCommentReels);
-commentsRouter.get("/", getCommentByPostId);
-commentsRouter.get("/", getCommentByStoryId);
-commentsRouter.get("/", getCommentByReelsId);
+commentsRouter.post("/post/:id", authentication, createNewCommentPost);
+commentsRouter.post("/story/:id", authentication, createNewCommentStory);
+commentsRouter.post("/reels/:id", authentication, createNewCommentReels);
+commentsRouter.get("/post/:id", getCommentByPostId);
+commentsRouter.get("/story/:id", getCommentByStoryId);
+commentsRouter.get("/reels/:id", getCommentByReelsId);
 
 module.exports = commentsRouter;

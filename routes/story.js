@@ -2,10 +2,11 @@ const express = require("express");
 const {
   getAllStories,
   createNewStory,
-  deleteStoryById,
+  deleteStoryById
 } = require("../controller/story");
+const authentication = require("../middleware/Authentication");
 const storyRouter = express.Router();
-storyRouter.post("/", createNewStory);
+storyRouter.post("/", authentication, createNewStory);
 storyRouter.get("/", getAllStories);
 storyRouter.delete("/:id", deleteStoryById);
 storyRouter.use("*", (req, res) => {
