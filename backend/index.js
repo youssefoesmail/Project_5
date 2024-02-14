@@ -11,12 +11,16 @@ const storyRouter = require("./routes/story");
 const commentsRouter = require("./routes/comments");
 const rolesRouter = require("./routes/role");
 const reelsRouter = require("./routes/reels");
+const followerRouter = require("./routes/follower");
+const likeRouter = require("./routes/like");
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/reels", reelsRouter);
 app.use("/story", storyRouter);
 app.use("/roles", rolesRouter);
 app.use("/comments", commentsRouter);
+app.use("/followers",followerRouter);
+app.use('/likes',likeRouter);
 const PORT = process.env.PORT || 5000;
 app.use("*", (req, res) => res.status(404).json("NO content at this path"));
 app.listen(PORT, () => {
