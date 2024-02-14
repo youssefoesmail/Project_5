@@ -79,7 +79,7 @@ const createNewCommentStory = (req, res) => {
 };
 const getCommentByStoryId = (req, res) => {
   const { id } = req.params;
-    const query = `SELECT comment_story.comment, comment_story.story_id, users.firstName, comment_story.commenter
+  const query = `SELECT comment_story.comment, comment_story.story_id, users.firstName, comment_story.commenter
     FROM comment_story
     JOIN users ON users.id = comment_story.commenter
     WHERE comment_story.story_id =$1 AND comment_story.is_deleted = 0;`;
@@ -152,9 +152,11 @@ const getCommentByReelsId = (req, res) => {
     });
 };
 
-
 module.exports = {
   createNewCommentPost,
   createNewCommentStory,
-  createNewCommentReels
+  createNewCommentReels,
+  getCommentByPostId,
+  getCommentByStoryId,
+  getCommentByReelsId
 };

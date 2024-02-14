@@ -2,7 +2,10 @@ const express = require("express");
 const {
   createNewCommentPost,
   createNewCommentStory,
-  createNewCommentReels
+  createNewCommentReels,
+  getCommentByPostId,
+  getCommentByStoryId,
+  getCommentByReelsId
 } = require("../controller/comments");
 
 //controllers
@@ -12,8 +15,11 @@ const {
 
 const commentsRouter = express.Router();
 
-commentsRouter.post("/:id", createNewCommentPost);
-commentsRouter.post("/:id", createNewCommentStory);
-commentsRouter.post("/:id", createNewCommentReels);
+commentsRouter.post("/post/:id", createNewCommentPost);
+commentsRouter.post("/story/:id", createNewCommentStory);
+commentsRouter.post("/reels/:id", createNewCommentReels);
+commentsRouter.get("/", getCommentByPostId);
+commentsRouter.get("/", getCommentByStoryId);
+commentsRouter.get("/", getCommentByReelsId);
 
 module.exports = commentsRouter;
