@@ -1,4 +1,4 @@
-const pool = require("../models/db");
+const {pool} = require("../models/db");
 
 const createNewCommentPost = (req, res) => {
   const post_id = req.params.id;
@@ -118,7 +118,7 @@ const createNewCommentReels = (req, res) => {
         message: "Comment created successfully",
         result: result.rows[0]
       });
-    })
+    }) 
     .catch((err) => {
       res.status(404).json({
         success: false,
