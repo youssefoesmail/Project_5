@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setPosts,
   createNewPost,
-  updatePostById
+  updatePostById,
+  deletePost
 } from "../redux/post/postSlice";
 import axios from "axios";
 const Posts = () => {
@@ -78,49 +79,61 @@ const Posts = () => {
       {posts.map((elem) => {
         return (
           <>
-            <h1>{elem.body}</h1>
-
-            {update ? (
-              <>
+            <div>
+              <option>
                 {" "}
-                <input
-                  placeholder="body"
-                  onChange={(e) => {
-                    setBody(e.target.value);
-                  }}
-                />
-                <input
-                  placeholder="Body"
-                  onChange={(e) => {
-                    setPhoto(e.target.value);
-                  }}
-                />
-                <input
-                  placeholder="Body"
-                  onChange={(e) => {
-                    setVideo(e.target.value);
-                  }}
-                />
-                <button
-                  onClick={() => {
-                    axios("", {});
-                    setUpdate(!update);
-                  }}
-                >
-                  UpdateInformtion
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={() => {
-                    setUpdate(!update);
-                  }}
-                >
-                  update
-                </button>
-              </>
-            )}
+                <h1>{elem.body}</h1>
+                {update ? (
+                  <>
+                    {" "}
+                    <input
+                      placeholder="body"
+                      onChange={(e) => {
+                        setBody(e.target.value);
+                      }}
+                    />
+                    <input
+                      placeholder="Body"
+                      onChange={(e) => {
+                        setPhoto(e.target.value);
+                      }}
+                    />
+                    <input
+                      placeholder="Body"
+                      onChange={(e) => {
+                        setVideo(e.target.value);
+                      }}
+                    />
+                    <button
+                      onClick={() => {
+                        axios("", {});
+                        setUpdate(!update);
+                        dispatch(updatePostById());
+                      }}
+                    >
+                      UpdateInformtion
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        setUpdate(!update);
+                      }}
+                    >
+                      update
+                    </button>
+                  </>
+                )}
+              </option>
+              <button
+                onClick={() => {
+                  axios.delete(`/${elem.id}`,{});
+                }}
+              >
+                deletePost
+              </button>
+            </div>{" "}
           </>
         );
       })}
