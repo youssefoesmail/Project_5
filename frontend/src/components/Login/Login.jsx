@@ -84,6 +84,14 @@ const Login = () => {
           Login
         </button>
 
+        <button
+          onClick={(e) => {
+            history("/register");
+          }}
+        >
+          I dont have account
+        </button>
+
         {status
           ? message && <div className="SuccessMessage">{message}</div>
           : message && <div className="ErrorMessage">{message}</div>}
