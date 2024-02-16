@@ -83,8 +83,24 @@ const login = (req, res) => {
       });
     });
 };
+const getUserById = (req, res) => {
+  const { id } = req.params;
+  pool
+    .query(`SELECT * FROM users WHERE id=$1`, [id])
+    .then((result) => {
+      console.log(result.rows);
+      res.status(200).json({
+        message: "users",
+        result: result.rows
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 module.exports = {
   login,
-  register
+  register,
+  getUserById
 };
