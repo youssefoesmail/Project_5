@@ -22,7 +22,7 @@ postRouter.post(
 postRouter.get("/search_1/", authentication, getPostByAuthor);
 postRouter.get("/:id", authentication, getPostById);
 postRouter.put("/:id", authentication, updatePost);
-postRouter.delete("/:id", deletePostById);
+postRouter.delete("/:id", authentication, deletePostById);
 postRouter.get("/authorPosts/:user_id", authentication, getAllPostsUser);
 postRouter.get('/followers/:id',authentication,getAllPostsFollowers);
 
