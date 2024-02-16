@@ -20,6 +20,27 @@ const Posts = () => {
       posts: state.posts.posts
     };
   });
+  const handleCreateNewPost = () => {
+    const NewPost = {
+      body: body,
+      photo: photo || null,
+      video: video || null
+    };
+
+    axios
+      .post("http://localhost:5000/posts", NewPost, {
+        headers: {
+          authorization: `Bearer ${auth.token}`
+        }
+      })
+      .then((result) => {
+        console.log(result);
+        dispatch(createNewPost(result.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const handleDeletePost = (postId) => {
     axios
       .delete(`http://localhost:5000/posts/${postId}`, {
@@ -35,26 +56,7 @@ const Posts = () => {
         console.log(err);
       });
   };
-  const handleCreateNewPost = () => {
-    const NewPost = {
-      body: body,
-      photo: photo || null,
-      video: video || null
-    };
-  };
-  axios
-    .post("http://localhost:5000/posts", NewPost, {
-      headers: {
-        authorization: `Bearer ${auth.token}`
-      }
-    })
-    .then((result) => {
-      console.log(result);
-      dispatch(createNewPost(result.data));
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+
   const handleUpdatePost = (postId) => {
     const updatePost = {
       body,
@@ -69,7 +71,7 @@ const Posts = () => {
       })
       .then((result) => {
         setUpdate(!update);
-        dispatch(updatePostById({ id: postId, ...updatedData }));
+        dispatch(updatePostById({ id: postId, ...updatePost }));
       })
       .catch((err) => {
         console.log(err);
@@ -98,22 +100,22 @@ const Posts = () => {
         onChange={(e) => {
           setBody(e.target.value);
         }}
-      />{" "}
+      />
       <input
-        placeholder="Body"
+        placeholder="photo"
         onChange={(e) => {
           setPhoto(e.target.value);
         }}
       />
       <input
-        placeholder="Body"
+        placeholder="video"
         onChange={(e) => {
           setVideo(e.target.value);
         }}
       />
       <button
         onClick={() => {
-          createNewPost();
+          handleCreateNewPost();
           clearInput();
         }}
       >
@@ -169,7 +171,7 @@ const Posts = () => {
               </>
               <button
                 onClick={() => {
-                  deletePost(elem.id);
+                  handleDeletePost(elem.id);
                 }}
               >
                 deletePost
@@ -180,5 +182,6 @@ const Posts = () => {
       })}
     </div>
   );
-}
+};
+
 export default Posts;
