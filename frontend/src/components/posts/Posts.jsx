@@ -55,131 +55,131 @@ const Posts = () => {
     .catch((err) => {
       console.log(err);
     });
-const handleUpdatePost = (postId) => {
-  const updatePost = {
-    body,
-    photo,
-    video
+  const handleUpdatePost = (postId) => {
+    const updatePost = {
+      body,
+      photo,
+      video
+    };
+    axios
+      .put(`http://localhost:5000/posts/${postId}`, updatePost, {
+        headers: {
+          authorization: `Bearer ${auth.token}`
+        }
+      })
+      .then((result) => {
+        setUpdate(!update);
+        dispatch(updatePostById({ id: postId, ...updatedData }));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
-  axios
-    .put(`http://localhost:5000/posts/${postId}`, updatePost, {
-      headers: {
-        authorization: `Bearer ${auth.token}`
-      }
-    })
-    .then((result) => {
-      setUpdate(!update);
-      dispatch(updatePostById({ id: postId, ...updatedData }));
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-const clearInput = () => {
-  setBody("");
-  setPhoto("");
-  setVideo("");
-};
-useEffect(() => {
-  axios
-    .get("http://localhost:5000/posts")
-    .then((result) => {
-      console.log(result.data.posts);
-      dispatch(setPosts(result.data.posts));
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}, []);
-return (
-  <div>
-    <input
-      placeholder="Body"
-      onChange={(e) => {
-        setBody(e.target.value);
-      }}
-    />
-    <input
-      placeholder="Body"
-      onChange={(e) => {
-        setPhoto(e.target.value);
-      }}
-    />
-    <input
-      placeholder="Body"
-      onChange={(e) => {
-        setVideo(e.target.value);
-      }}
-    />
-    <button
-      onClick={() => {
-        createNewPost();
-        clearInput();
-      }}
-    >
-      createNewPost
-    </button>
-    {posts.map((elem) => {
-      return (
-        <>
-          <div key={elem.id}>
-            <>
-              {" "}
-              <h1>{elem.body}</h1>
-              {update ? (
-                <>
-                  {" "}
-                  <input
-                    placeholder="body"
-                    onChange={(e) => {
-                      setBody(e.target.value);
-                    }}
-                  />
-                  <input
-                    placeholder="Body"
-                    onChange={(e) => {
-                      setPhoto(e.target.value);
-                    }}
-                  />
-                  <input
-                    placeholder="Body"
-                    onChange={(e) => {
-                      setVideo(e.target.value);
-                    }}
-                  />
-                  <button
-                    onClick={() => {
-                      handleUpdatePost(elem.id);
-                    }}
-                  >
-                    UpdateInformtion
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => {
-                      setUpdate(!update);
-                    }}
-                  >
-                    update
-                  </button>
-                </>
-              )}
-            </>
-            <button
-              onClick={() => {
-                deletePost(elem.id);
-              }}
-            >
-              deletePost
-            </button>
-          </div>{" "}
-        </>
-      );
-    })}
-  </div>
-);
+  const clearInput = () => {
+    setBody("");
+    setPhoto("");
+    setVideo("");
+  };
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/posts")
+      .then((result) => {
+        console.log(result.data.posts);
+        dispatch(setPosts(result.data.posts));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+  return (
+    <div>
+      <input
+        placeholder="Body"
+        onChange={(e) => {
+          setBody(e.target.value);
+        }}
+      />
+      <input
+        placeholder="Body"
+        onChange={(e) => {
+          setPhoto(e.target.value);
+        }}
+      />
+      <input
+        placeholder="Body"
+        onChange={(e) => {
+          setVideo(e.target.value);
+        }}
+      />
+      <button
+        onClick={() => {
+          createNewPost();
+          clearInput();
+        }}
+      >
+        createNewPost
+      </button>
+      {posts.map((elem) => {
+        return (
+          <>
+            <div key={elem.id}>
+              <>
+                {" "}
+                <h1>{elem.body}</h1>
+                {update ? (
+                  <>
+                    {" "}
+                    <input
+                      placeholder="body"
+                      onChange={(e) => {
+                        setBody(e.target.value);
+                      }}
+                    />
+                    <input
+                      placeholder="Body"
+                      onChange={(e) => {
+                        setPhoto(e.target.value);
+                      }}
+                    />
+                    <input
+                      placeholder="Body"
+                      onChange={(e) => {
+                        setVideo(e.target.value);
+                      }}
+                    />
+                    <button
+                      onClick={() => {
+                        handleUpdatePost(elem.id);
+                      }}
+                    >
+                      UpdateInformtion
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        setUpdate(!update);
+                      }}
+                    >
+                      update
+                    </button>
+                  </>
+                )}
+              </>
+              <button
+                onClick={() => {
+                  deletePost(elem.id);
+                }}
+              >
+                deletePost
+              </button>
+            </div>{" "}
+          </>
+        );
+      })}
+    </div>
+  );
 };
 
 export default Posts;
