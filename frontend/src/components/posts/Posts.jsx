@@ -6,6 +6,7 @@ import {
   updatePostById,
   deletePost
 } from "../redux/post/postSlice";
+import { token } from "../redux/auth/userSlice";
 import axios from "axios";
 const Posts = () => {
   const [body, setBody] = useState("");
@@ -13,132 +14,172 @@ const Posts = () => {
   const [video, setVideo] = useState("");
   const [update, setUpdate] = useState(false);
   const dispatch = useDispatch();
-  const { posts } = useSelector((state) => {
+  const { posts, auth } = useSelector((state) => {
     return {
+      auth: state.auth,
       posts: state.posts.posts
     };
   });
-  useEffect(() => {
+  const handleDeletePost = (postId) => {
     axios
-      .get("http://localhost:5000/posts")
+      .delete(`http://localhost:5000/posts/${postId}`, {
+        headers: {
+          authorization: `Bearer ${auth.token}`
+        }
+      })
       .then((result) => {
-        console.log(result.data.posts);
-        dispatch(setPosts(result.data.posts));
+        console.log(result);
+        dispatch(deletePost(postId));
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
-  return (
-    <div>
-      <input
-        placeholder="Body"
-        onChange={(e) => {
-          setBody(e.target.value);
-        }}
-      />{" "}
-      <input
-        placeholder="Body"
-        onChange={(e) => {
-          setPhoto(e.target.value);
-        }}
-      />
-      <input
-        placeholder="Body"
-        onChange={(e) => {
-          setVideo(e.target.value);
-        }}
-      />
-      <button
-        onClick={() => {
-          axios
-            .post(
-              "http://localhost:5000/posts",
-              {
-                body: body,
-                photo: photo || null,
-                video: video || null
-              },
-              {
-                headers: {
-                  authorization: `Bearer ${token}`
-                }
-              }
-            )
-            .then((result) => {
-              console.log(result);
-              dispatch(createNewPost(result));
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }}
-      >
-        createNewPost
-      </button>
-      {posts.map((elem) => {
-        return (
-          <>
-            <div>
-              <option>
-                {" "}
-                <h1>{elem.body}</h1>
-                {update ? (
-                  <>
-                    {" "}
-                    <input
-                      placeholder="body"
-                      onChange={(e) => {
-                        setBody(e.target.value);
-                      }}
-                    />
-                    <input
-                      placeholder="Body"
-                      onChange={(e) => {
-                        setPhoto(e.target.value);
-                      }}
-                    />
-                    <input
-                      placeholder="Body"
-                      onChange={(e) => {
-                        setVideo(e.target.value);
-                      }}
-                    />
-                    <button
-                      onClick={() => {
-                        axios("", {});
-                        setUpdate(!update);
-                        dispatch(updatePostById());
-                      }}
-                    >
-                      UpdateInformtion
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      onClick={() => {
-                        setUpdate(!update);
-                      }}
-                    >
-                      update
-                    </button>
-                  </>
-                )}
-              </option>
-              <button
-                onClick={() => {
-                  axios.delete(`/${elem.id}`,{});
-                }}
-              >
-                deletePost
-              </button>
-            </div>{" "}
-          </>
-        );
-      })}
-    </div>
-  );
+  };
+  const handleCreateNewPost = () => {
+    const NewPost = {
+      body: body,
+      photo: photo || null,
+      video: video || null
+    };
+  };
+  axios
+    .post("http://localhost:5000/posts", NewPost, {
+      headers: {
+        authorization: `Bearer ${auth.token}`
+      }
+    })
+    .then((result) => {
+      console.log(result);
+      dispatch(createNewPost(result.data));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
+const handleUpdatePost = (postId) => {
+  const updatePost = {
+    body,
+    photo,
+    video
+  };
+  axios
+    .put(`http://localhost:5000/posts/${postId}`, updatePost, {
+      headers: {
+        authorization: `Bearer ${auth.token}`
+      }
+    })
+    .then((result) => {
+      setUpdate(!update);
+      dispatch(updatePostById({ id: postId, ...updatedData }));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+const clearInput = () => {
+  setBody("");
+  setPhoto("");
+  setVideo("");
+};
+useEffect(() => {
+  axios
+    .get("http://localhost:5000/posts")
+    .then((result) => {
+      console.log(result.data.posts);
+      dispatch(setPosts(result.data.posts));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}, []);
+return (
+  <div>
+    <input
+      placeholder="Body"
+      onChange={(e) => {
+        setBody(e.target.value);
+      }}
+    />{" "}
+    <input
+      placeholder="Body"
+      onChange={(e) => {
+        setPhoto(e.target.value);
+      }}
+    />
+    <input
+      placeholder="Body"
+      onChange={(e) => {
+        setVideo(e.target.value);
+      }}
+    />
+    <button
+      onClick={() => {
+        createNewPost();
+        clearInput();
+      }}
+    >
+      createNewPost
+    </button>
+    {posts.map((elem) => {
+      return (
+        <>
+          <div key={elem.id}>
+            <>
+              {" "}
+              <h1>{elem.body}</h1>
+              {update ? (
+                <>
+                  {" "}
+                  <input
+                    placeholder="body"
+                    onChange={(e) => {
+                      setBody(e.target.value);
+                    }}
+                  />
+                  <input
+                    placeholder="Body"
+                    onChange={(e) => {
+                      setPhoto(e.target.value);
+                    }}
+                  />
+                  <input
+                    placeholder="Body"
+                    onChange={(e) => {
+                      setVideo(e.target.value);
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      handleUpdatePost(elem.id);
+                    }}
+                  >
+                    UpdateInformtion
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      setUpdate(!update);
+                    }}
+                  >
+                    update
+                  </button>
+                </>
+              )}
+            </>
+            <button
+              onClick={() => {
+                deletePost(elem.id);
+              }}
+            >
+              deletePost
+            </button>
+          </div>{" "}
+        </>
+      );
+    })}
+  </div>
+);
 
 export default Posts;
