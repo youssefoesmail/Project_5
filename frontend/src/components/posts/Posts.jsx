@@ -55,7 +55,6 @@ const Posts = () => {
     .catch((err) => {
       console.log(err);
     });
-};
 const handleUpdatePost = (postId) => {
   const updatePost = {
     body,
@@ -99,7 +98,7 @@ return (
       onChange={(e) => {
         setBody(e.target.value);
       }}
-    />{" "}
+    />
     <input
       placeholder="Body"
       onChange={(e) => {
@@ -181,5 +180,6 @@ return (
     })}
   </div>
 );
+};
 
 export default Posts;
