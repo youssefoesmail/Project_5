@@ -9,7 +9,7 @@ const postSlice = createSlice({
       state.posts = action.payload;
     },
     createNewPost: (state, action) => {
-      state.posts.unshift(action.payload);
+      state.posts = [action.payload, ...state.posts];
     },
     updatePostById: (state, action) => {
       state.posts = state.posts.map((elem, ind) => {
@@ -20,11 +20,7 @@ const postSlice = createSlice({
       });
     },
     deletePost: (state, action) => {
-      state.posts = state.posts.filter((elem, ind) => {
-        if (elem.id !== action.payload.id) {
-          return elem;
-        }
-      });
+      state.posts = state.posts.filter((elem) => elem.id !== action.payload.id);
     }
   }
 });
