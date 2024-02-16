@@ -6,6 +6,7 @@ import {
   updatePostById,
   deletePost
 } from "../redux/post/postSlice";
+import { token } from "../redux/auth/userSlice";
 import axios from "axios";
 const Posts = () => {
   const [body, setBody] = useState("");
@@ -13,8 +14,9 @@ const Posts = () => {
   const [video, setVideo] = useState("");
   const [update, setUpdate] = useState(false);
   const dispatch = useDispatch();
-  const { posts } = useSelector((state) => {
+  const { posts, auth } = useSelector((state) => {
     return {
+      auth: state.auth,
       posts: state.posts.posts
     };
   });
@@ -61,13 +63,13 @@ const Posts = () => {
               },
               {
                 headers: {
-                  authorization: `Bearer ${token}`
+                  authorization: `Bearer ${auth.token}`
                 }
               }
             )
             .then((result) => {
               console.log(result);
-              dispatch(createNewPost(result));
+              dispatch(createNewPost(result.data));
             })
             .catch((err) => {
               console.log(err);
@@ -80,7 +82,7 @@ const Posts = () => {
         return (
           <>
             <div>
-              <option>
+              <>
                 {" "}
                 <h1>{elem.body}</h1>
                 {update ? (
@@ -106,9 +108,27 @@ const Posts = () => {
                     />
                     <button
                       onClick={() => {
-                        axios("", {});
-                        setUpdate(!update);
-                        dispatch(updatePostById());
+                        axios
+                          .put(
+                            `http://localhost:5000/posts/${elem.id}`,
+                            {
+                              photo: photo,
+                              body: body,
+                              video: video
+                            },
+                            {
+                              headers: {
+                                authorization: `Bearer ${auth.token}`
+                              }
+                            }
+                          )
+                          .then((result) => {
+                            setUpdate(!update);
+                            dispatch(updatePostById(elem.id));
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                          });
                       }}
                     >
                       UpdateInformtion
@@ -125,10 +145,22 @@ const Posts = () => {
                     </button>
                   </>
                 )}
-              </option>
+              </>
               <button
                 onClick={() => {
-                  axios.delete(`/${elem.id}`,{});
+                  axios
+                    .delete(`http://localhost:5000/posts/${elem.id}`, {
+                      headers: {
+                        authorization: `Bearer ${auth.token}`
+                      }
+                    })
+                    .then((result) => {
+                      console.log(result)
+                      dispatch(deletePost(elem.id));
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
                 }}
               >
                 deletePost
