@@ -12,7 +12,6 @@ const Posts = () => {
   const [body, setBody] = useState("");
   const [photo, setPhoto] = useState("");
   const [video, setVideo] = useState("");
-  const [comments, setComments] = useState("")
   const [update, setUpdate] = useState(false);
   const dispatch = useDispatch();
   const { posts, auth } = useSelector((state) => {
