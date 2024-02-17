@@ -59,6 +59,51 @@ const Posts = () => {
         console.log(err);
       });
   };
+
+  //!============ createPostComment ====================
+
+  const createPostComment = async (id) => {
+    try {
+      const result = await axios.post(
+        `http://localhost:5000/comments/post/${id}`
+      );
+      if (result.data.success) {
+        const comments = result.data.result;
+        dispatch(setComments({ comments: comments, post_id: id }));
+      } else throw Error;
+    } catch (error) {
+      if (!error.response.data) {
+        return setMessage(error.response.data.message);
+      }
+      setMessage("Error happened while Get Data, please try again");
+    }
+  };
+
+  //==================================================
+
+  //!============ getPostComment ====================
+
+  const getPostComment = async (id) => {
+    try {
+      const result = await axios.get(
+        `http://localhost:5000/comments/post/${id}`
+      );
+      if (result.data.success) {
+        const comments = result.data.result;
+        console.log(result.data.result);
+        dispatch(setComments({ comment: comments, id: id }));
+        console.log(comments);
+      } else throw Error;
+    } catch (error) {
+      if (!error.response.data) {
+        return setMessage(error.response.data.message);
+      }
+      setMessage("Error happened while Get Data, please try again");
+    }
+  };
+
+  //===================================================
+
   const handleDeletePost = (postId) => {
     axios
       .delete(`http://localhost:5000/posts/${postId}`, {
@@ -184,12 +229,18 @@ const Posts = () => {
             <div key={elem.id}>
               <>
                 {" "}
+
                 <h1>{elem.body}</h1>
                       
         <img width="300px" height="150px" src={elem.photo} /> 
         <video controls width="300px" height="150px">
         <source src={elem.video}type="video/mp4" />
           </video> 
+
+                <h1 onClick={() => { console.log(elem.id) }}>{elem.body}</h1>
+                {!elem.comment_posts && (<button
+                  onClick={() => { getPostComment(elem.id) }}
+                >show comment</button>)}
 
                 {update ? (
                   <>
@@ -238,6 +289,14 @@ const Posts = () => {
                 }}
               >
                 deletePost
+              </button>
+              <button
+                onClick={() => {
+                  console.log(elem.id);
+                  { elem.id && <input placeholder="Body" /> }
+                }}
+              >
+                Add Comment
               </button>
             </div>{" "}
           </>
