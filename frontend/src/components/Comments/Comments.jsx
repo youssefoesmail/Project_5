@@ -18,7 +18,8 @@ const Comments = () => {
 
     const { isLoggedIn } = useSelector((state) => {
         return {
-            isLoggedIn: state.auth.isLoggedIn
+            isLoggedIn: state.auth.isLoggedIn,
+
         };
     });
 
@@ -28,7 +29,7 @@ const Comments = () => {
 
     const createPostComment = async (id) => {
         try {
-          const result = await axios.get(
+          const result = await axios.post(
             `http://localhost:5000/comments/post/${id}`
           );
           if (result.data.success) {
