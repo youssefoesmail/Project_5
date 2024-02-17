@@ -4,7 +4,8 @@ import {
   setPosts,
   createNewPost,
   updatePostById,
-  deletePost
+  deletePost,
+  setComments
 } from "../redux/post/postSlice";
 import { token } from "../redux/auth/userSlice";
 import axios from "axios";
@@ -13,6 +14,7 @@ const Posts = () => {
   const [photo, setPhoto] = useState("");
   const [video, setVideo] = useState("");
   const [update, setUpdate] = useState(false);
+  const [com,setCom] = useState("");
   const dispatch = useDispatch();
   const { posts, auth } = useSelector((state) => {
     return {
@@ -71,10 +73,10 @@ const Posts = () => {
         `http://localhost:5000/comments/post/${id}`
       );
       if (result.data.success) {
-        const comments = result.data.result;
-        console.log(result.data.result);
+        const comments = result.data.result[0];
+        console.log(result.data.result[0]);
         dispatch(setComments({ comment: comments, id: id }));
-        console.log(comments);
+        // console.log(comments);
       } else throw Error;
     } catch (error) {
       if (!error.response.data) {
@@ -176,6 +178,9 @@ const Posts = () => {
                 {!elem.comment_posts && (<button
                   onClick={() => { getPostComment(elem.id) }}
                 >show comment</button>)}
+                {com == elem.id && (<dev>
+                  {}
+                </dev>)}
                 {update ? (
                   <>
                     {" "}
