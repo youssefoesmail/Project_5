@@ -6,6 +6,15 @@ import {
   updatePostById,
   deletePost
 } from "../redux/post/postSlice";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  listAll,
+  list,
+} from "firebase/storage";
+import { storage } from "../firebase";
+import { v4 } from "uuid";
 import { token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
@@ -15,6 +24,14 @@ const Posts = () => {
   const [video, setVideo] = useState("");
   const [update, setUpdate] = useState(false);
   const dispatch = useDispatch();
+  const [imageUpload, setImageUpload] = useState(null);
+  const [imageUrls, setImageUrls] = useState([]||null);
+  const [videoUpload, setVideoUpload] = useState(null);
+  const [videoUrls, setVideoUrls] = useState([]||null);
+
+  const imagesListRef = ref(storage, "images/");
+  const videoListRef = ref(storage, "videos/");
+
   const { posts, auth } = useSelector((state) => {
     return {
       auth: state.auth,
@@ -24,8 +41,9 @@ const Posts = () => {
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
-      photo: photo || null,
-      video: video || null
+      photo: imageUrls[imageUrls.length-1] || null,
+      video: videoUrls[videoUrls.length-1]  || null
+      
     };
 
     axios
@@ -127,13 +145,49 @@ const Posts = () => {
     setBody("");
     setPhoto("");
     setVideo("");
+    setImageUrls("");
   };
+  const uploadFile = () => {
+    if (imageUpload == null) return;
+    const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+    uploadBytes(imageRef, imageUpload).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        setImageUrls((prev) => [...prev, url]);
+      });
+    });
+    if (videoUpload == null) return;
+    const videoRef = ref(storage, `videos/${videoUpload.name + v4()}`);
+    uploadBytes(videoRef, videoUpload).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        setVideoUrls((prev) => [...prev, url]);
+      });
+    });
+  };
+
+  useEffect(() => {
+    listAll(imagesListRef).then((response) => {
+      response.items.forEach((item) => {
+        getDownloadURL(item).then((url) => {
+          setImageUrls((prev) => [...prev, url]);
+        });
+      });
+    });
+    listAll(videoListRef).then((response) => {
+      response.items.forEach((item) => {
+        getDownloadURL(item).then((url) => {
+          setVideoUrls((prev) => [...prev, url]);
+        });
+      });
+    });
+  }, []);
+
   useEffect(() => {
     axios
       .get("http://localhost:5000/posts")
       .then((result) => {
         // console.log(result.data.posts);
         dispatch(setPosts(result.data.posts));
+
       })
       .catch((err) => {
         console.log(err);
@@ -149,27 +203,30 @@ const Posts = () => {
         }}
       />
       <input
-        placeholder="photo"
-        onChange={(e) => {
-          setPhoto(e.target.value);
+        type="file"
+        onChange={(event) => {
+          setImageUpload(event.target.files[0]);
         }}
       />
-      <input
-        placeholder="video"
-        onChange={(e) => {
-          setVideo(e.target.value);
+        <input
+        type="file"
+        onChange={(event) => {
+          setVideoUpload(event.target.files[0]);
         }}
       />
+       
       <button
         onClick={() => {
           handleCreateNewPost();
           clearInput();
+         
         }}
       >
         createNewPost
-      </button>
+      </button >
+      <button onClick={uploadFile}> Upload</button>
       {posts.map((elem) => {
-        return (
+         return (
           <>
             <div key={elem.id}>
               <>
@@ -190,6 +247,21 @@ const Posts = () => {
                     show comment
                   </button>
                 )}
+
+
+                <h1>{elem.body}</h1>
+                      
+        <img width="300px" height="150px" src={elem.photo} /> 
+        <video controls width="300px" height="150px">
+        <source src={elem.video}type="video/mp4" />
+          </video> 
+
+                <h1 onClick={() => { console.log(elem.id) }}>{elem.body}</h1>
+                {!elem.comment_posts && (<button
+                  onClick={() => { getPostComment(elem.id) }}
+                >show comment</button>)}
+
+
                 {update ? (
                   <>
                     {" "}
@@ -202,7 +274,7 @@ const Posts = () => {
                     <input
                       placeholder="Body"
                       onChange={(e) => {
-                        setPhoto(e.target.value);
+                        setImageUrls(e.target.value);
                       }}
                     />
                     <input
