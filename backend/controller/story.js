@@ -8,13 +8,14 @@ const getAllStories = (req, res) => {
       res.status(200).json({
         success: true,
         message: "All the stories",
+        result: result.rows
       });
     })
     .catch((err) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err,
+        err: err
       });
     });
 };
@@ -29,14 +30,14 @@ const createNewStory = (req, res) => {
       res.status(201).json({
         success: true,
         message: "created new story successfully",
-        result: result.rows,
+        result: result.rows
       });
     })
     .catch((err) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err,
+        err: err
       });
     });
 };
@@ -51,13 +52,13 @@ const getStoryById = (req, res) => {
       if (result.rows.length === 0) {
         res.status(404).json({
           success: false,
-          message: `no story with this id: ${id}`,
+          message: `no story with this id: ${id}`
         });
       } else {
         res.status(200).json({
           success: true,
           message: `The story with id: ${id}`,
-          result: result.rows,
+          result: result.rows
         });
       }
     })
@@ -65,7 +66,7 @@ const getStoryById = (req, res) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err,
+        err: err
       });
     });
 };
@@ -81,7 +82,7 @@ const deleteStoryById = (req, res) => {
       if (result.rowCount !== 0) {
         res.status(200).json({
           success: true,
-          message: `Article with id: ${id} deleted successfully`,
+          message: `Article with id: ${id} deleted successfully`
         });
       } else {
         throw new Error("Error happened while deleting article");
@@ -91,7 +92,7 @@ const deleteStoryById = (req, res) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err,
+        err: err
       });
     });
 };
@@ -105,22 +106,22 @@ const getStoryByAuthor = (req, res) => {
     .query(query, values)
     .then((result) => {
       if (result.rows.length === 0) {
-        console.log(result,commenter);
+        console.log(result, commenter);
         res.status(404).json({
           success: false,
-          message: `The user: ${commenter} has no story`,
+          message: `The user: ${commenter} has no story`
         });
       } else {
         res.status(200).json({
           success: true,
           message: `All stories for the user: ${commenter}`,
-          result: result.rows,
+          result: result.rows
         });
       }
     })
     .catch((err) => {
       res.status(500).json({
-        err: err.message,
+        err: err.message
       });
     });
 };
@@ -130,5 +131,5 @@ module.exports = {
   createNewStory,
   getStoryById,
   deleteStoryById,
-  getStoryByAuthor,
+  getStoryByAuthor
 };
