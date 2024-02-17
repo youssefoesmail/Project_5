@@ -41,6 +41,28 @@ const Posts = () => {
         console.log(err);
       });
   };
+
+  //!============ createPostComment ====================
+
+  const createPostComment = async (id) => {
+    try {
+      const result = await axios.post(
+        `http://localhost:5000/comments/post/${id}`
+      );
+      if (result.data.success) {
+        const comments = result.data.result;
+        dispatch(setComments({ comments: comments, post_id: id }));
+      } else throw Error;
+    } catch (error) {
+      if (!error.response.data) {
+        return setMessage(error.response.data.message);
+      }
+      setMessage("Error happened while Get Data, please try again");
+    }
+  };
+
+  //===================================================
+
   const handleDeletePost = (postId) => {
     axios
       .delete(`http://localhost:5000/posts/${postId}`, {
@@ -127,7 +149,7 @@ const Posts = () => {
             <div key={elem.id}>
               <>
                 {" "}
-                <h1>{elem.body}</h1>
+                <h1 onClick={() => { console.log(elem.id) }}>{elem.body}</h1>
                 {update ? (
                   <>
                     {" "}
