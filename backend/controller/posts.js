@@ -162,7 +162,7 @@ const getPostByAuthor = (req, res) => {
     });
 };
 const getAllPostsUser = (req, res) => {
-  const user_id = req.token.userId;
+  const { user_id } = req.params;
   const query = `SELECT * FROM posts WHERE user_id = $1 AND is_deleted=0;`;
   const data = [user_id];
 
@@ -226,5 +226,5 @@ module.exports = {
   getPostByAuthor,
   getPostById,
   getAllPostsUser,
-  getAllPostsFollowers,
+  getAllPostsFollowers
 };
