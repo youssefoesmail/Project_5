@@ -8,6 +8,7 @@ import {
 } from "../redux/post/postSlice";
 import { token } from "../redux/auth/userSlice";
 import axios from "axios";
+import Story from "../Story/Story";
 const Posts = () => {
   const [body, setBody] = useState("");
   const [photo, setPhoto] = useState("");
@@ -34,7 +35,7 @@ const Posts = () => {
         }
       })
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         dispatch(createNewPost(result.data));
       })
       .catch((err) => {
@@ -72,9 +73,9 @@ const Posts = () => {
       );
       if (result.data.success) {
         const comments = result.data.result;
-        console.log(result.data.result);
+        // console.log(result.data.result);
         dispatch(setComments({ comment: comments, id: id }));
-        console.log(comments);
+        // console.log(comments);
       } else throw Error;
     } catch (error) {
       if (!error.response.data) {
@@ -94,7 +95,7 @@ const Posts = () => {
         }
       })
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         dispatch(deletePost(postId));
       })
       .catch((err) => {
@@ -131,7 +132,7 @@ const Posts = () => {
     axios
       .get("http://localhost:5000/posts")
       .then((result) => {
-        console.log(result.data.posts);
+        // console.log(result.data.posts);
         dispatch(setPosts(result.data.posts));
       })
       .catch((err) => {
@@ -140,6 +141,7 @@ const Posts = () => {
   }, []);
   return (
     <div>
+      <Story/>
       <input
         placeholder="Body"
         onChange={(e) => {
@@ -172,10 +174,22 @@ const Posts = () => {
             <div key={elem.id}>
               <>
                 {" "}
-                <h1 onClick={() => { console.log(elem.id) }}>{elem.body}</h1>
-                {!elem.comment_posts && (<button
-                  onClick={() => { getPostComment(elem.id) }}
-                >show comment</button>)}
+                <h1
+                  onClick={() => {
+                    console.log(elem.id);
+                  }}
+                >
+                  {elem.body}
+                </h1>
+                {!elem.comment_posts && (
+                  <button
+                    onClick={() => {
+                      getPostComment(elem.id);
+                    }}
+                  >
+                    show comment
+                  </button>
+                )}
                 {update ? (
                   <>
                     {" "}
@@ -226,8 +240,10 @@ const Posts = () => {
               </button>
               <button
                 onClick={() => {
-                  console.log(elem.id);
-                  { elem.id && <input placeholder="Body" /> }
+                  // console.log(elem.id);
+                  {
+                    elem.id && <input placeholder="Body" />;
+                  }
                 }}
               >
                 Add Comment

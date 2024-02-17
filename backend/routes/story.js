@@ -3,7 +3,7 @@ const {
   getAllStories,
   createNewStory,
   deleteStoryById,
-  getStoryByAuthor,
+  getStoryByAuthor
 } = require("../controller/story");
 const authentication = require("../middleware/Authentication");
 const storyRouter = express.Router();
