@@ -38,9 +38,10 @@ const Posts = () => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
-      comment: state.comment
+      comment: state.posts.comment.comment
     };
   });
+  console.log(comment);
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -243,8 +244,8 @@ const Posts = () => {
                         `http://localhost:5000/comments/post/${elem.id}`
                       );
                       if (result.data.success) {
-                        const comments = result.data.result[0];
-                        console.log(result.data.result[0]);
+                        const comments = result.data.result;
+                        console.log(result.data.result);
 
                         dispatch(
                           setComments({ comment: comments, Post_id: elem.id })
@@ -256,9 +257,9 @@ const Posts = () => {
                         return setMessage(error);
                       }
                       setMessage(
-                        "Error happened while Get Data, please try again"  
+                        "Error happened while Get Data, please try again"
                       );
-                    } 
+                    }
                   }}
                 >
                   showComment
@@ -333,7 +334,6 @@ const Posts = () => {
               >
                 Add Comment
               </button>
-              <p>{comment}</p>
             </div>{" "}
           </>
         );
