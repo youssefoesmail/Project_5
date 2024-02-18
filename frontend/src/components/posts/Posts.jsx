@@ -186,6 +186,7 @@ const Posts = () => {
   }, []);
 
   useEffect(() => {
+    console.log(comment);
     axios
       .get("http://localhost:5000/posts")
       .then((result) => {
@@ -196,6 +197,7 @@ const Posts = () => {
         console.log(err);
       });
   }, []);
+
   return (
     <div>
       <Story />
@@ -241,11 +243,11 @@ const Posts = () => {
                         `http://localhost:5000/comments/post/${elem.id}`
                       );
                       if (result.data.success) {
-                        // const comments = result.data.result;
+                        const comments = result.data.result[0];
                         console.log(result.data.result[0]);
 
                         dispatch(
-                          setComments({ comment: comment, Post_id: elem.id })
+                          setComments({ comment: comments, Post_id: elem.id })
                         );
                         // console.log(comments);
                       } else throw Error;
@@ -254,9 +256,9 @@ const Posts = () => {
                         return setMessage(error);
                       }
                       setMessage(
-                        "Error happened while Get Data, please try again"
+                        "Error happened while Get Data, please try again"  
                       );
-                    }
+                    } 
                   }}
                 >
                   showComment
