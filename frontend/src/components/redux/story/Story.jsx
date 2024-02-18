@@ -7,8 +7,11 @@ const storySlice = createSlice({
   reducers: {
     setStory: (state, action) => {
       state.story = action.payload;
+    },
+    createNewStory: (state, action) => {
+      state.story = [action.payload, ...state.story];
     }
   }
 });
-export const { setStory } = storySlice.actions;
+export const { setStory, createNewStory } = storySlice.actions;
 export default storySlice.reducer;

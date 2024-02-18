@@ -20,10 +20,10 @@ const getAllStories = (req, res) => {
     });
 };
 const createNewStory = (req, res) => {
-  const { photo_video } = req.body;
-  const commenter = req.token.userId;
-  const query = `INSERT INTO story (photo_video,commenter) VALUES ($1,$2) RETURNING *`;
-  const values = [photo_video, commenter];
+  const { photo, video } = req.body;
+  const user_id = req.token.userId;
+  const query = `INSERT INTO story (photo,video,user_id) VALUES ($1,$2,$3) RETURNING *`;
+  const values = [photo, video, user_id];
   pool
     .query(query, values)
     .then((result) => {
@@ -37,7 +37,7 @@ const createNewStory = (req, res) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err
+        err: err.message
       });
     });
 };

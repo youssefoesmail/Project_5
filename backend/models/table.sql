@@ -47,12 +47,12 @@ CREATE TABLE comment_posts(
 );
 CREATE TABLE story (
   id SERIAL PRIMARY KEY,
-  photo_video VARCHAR,
-  commenter INTEGER,
-  comment VARCHAR,
+  photo VARCHAR,
+  video VARCHAR,
+  user_id INT,
   created_at TIMESTAMP DEFAULT NOW(),
-  end_at TIMESTAMP,
-  FOREIGN KEY (commenter) REFERENCES users(id),
+  end_at TIMESTAMP DEFAULT NOW(),
+  FOREIGN KEY (user_id) REFERENCES users(id),
   is_deleted SMALLINT DEFAULT 0
 );
 CREATE TABLE comment_story(
@@ -83,6 +83,8 @@ CREATE TABLE comment_reel(
 );
 CREATE TABLE users(
   id SERIAL NOT NULL,
+  photo VARCHAR,
+  cover VARCHAR,
   firstName VARCHAR(255),
   lastName VARCHAR(255),
   email VARCHAR(255) UNIQUE,
@@ -117,53 +119,23 @@ CREATE TABLE notifications (
   is_read BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
-
-INSERT INTO
-  roles (role)
-VALUES
-  ('Admin');
-
-INSERT INTO
-  permissions (permission)
-VALUES
-  ('CREATE_POST');
-
-  INSERT INTO
-  permissions (permission)
-VALUES
-  ('CREATE_COMMENT');
-
-  INSERT INTO
-  permissions (permission)
-VALUES
-  ('CREATE_REEL');
-
-  INSERT INTO
-  permissions (permission)
-VALUES
-  ('CREATE_STORY');
-
-INSERT INTO
-  permissions (permission)
-VALUES
-  ('CREATE_COMMENT');
-
-INSERT INTO
-  role_permission (role_id, permission_id)
-VALUES
-  (1, 1);
-
-INSERT INTO
-  role_permission (role_id, permission_id)
-VALUES
-  (1, 2);
-
-  INSERT INTO
-  role_permission (role_id, permission_id)
-VALUES
-  (1, 3);
-
-  INSERT INTO
-  role_permission (role_id, permission_id)
-VALUES
-  (1, 4);
+INSERT INTO roles (role)
+VALUES ('Admin');
+INSERT INTO permissions (permission)
+VALUES ('CREATE_POST');
+INSERT INTO permissions (permission)
+VALUES ('CREATE_COMMENT');
+INSERT INTO permissions (permission)
+VALUES ('CREATE_REEL');
+INSERT INTO permissions (permission)
+VALUES ('CREATE_STORY');
+INSERT INTO permissions (permission)
+VALUES ('CREATE_COMMENT');
+INSERT INTO role_permission (role_id, permission_id)
+VALUES (1, 1);
+INSERT INTO role_permission (role_id, permission_id)
+VALUES (1, 2);
+INSERT INTO role_permission (role_id, permission_id)
+VALUES (1, 3);
+INSERT INTO role_permission (role_id, permission_id)
+VALUES (1, 4);
