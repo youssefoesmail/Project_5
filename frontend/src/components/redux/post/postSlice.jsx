@@ -3,7 +3,7 @@ const postSlice = createSlice({
   name: "posts",
   initialState: {
     posts: [],
-    comment: {}
+    comment: []
   },
   reducers: {
     setPosts: (state, action) => {
