@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const postSlice = createSlice({
   name: "posts",
   initialState: {
-    posts: []
+    posts: [],
+    comment: {}
   },
   reducers: {
     setPosts: (state, action) => {
@@ -23,15 +24,15 @@ const postSlice = createSlice({
       state.posts = state.posts.filter((elem) => elem.id !== action.payload.id);
     },
     setComments: (state, action) => {
-      state.posts = state.posts.map((id, index) => {
-        if (id.id === action.payload.id) {
-          id.comments = action.payload.comments;
-        }
-        return id;
-      });
-    },
+      state.comment = action.payload;
+    }
   }
 });
-export const { setPosts, createNewPost, updatePostById, deletePost } =
-  postSlice.actions;
+export const {
+  setPosts,
+  createNewPost,
+  updatePostById,
+  deletePost,
+  setComments
+} = postSlice.actions;
 export default postSlice.reducer;

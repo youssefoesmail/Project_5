@@ -4,14 +4,15 @@ import {
   setPosts,
   createNewPost,
   updatePostById,
-  deletePost
+  deletePost,
+  setComments
 } from "../redux/post/postSlice";
 import {
   ref,
   uploadBytes,
   getDownloadURL,
   listAll,
-  list,
+  list
 } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
@@ -25,25 +26,26 @@ const Posts = () => {
   const [update, setUpdate] = useState(false);
   const dispatch = useDispatch();
   const [imageUpload, setImageUpload] = useState(null);
-  const [imageUrls, setImageUrls] = useState([]||null);
+  const [imageUrls, setImageUrls] = useState([] || null);
   const [videoUpload, setVideoUpload] = useState(null);
-  const [videoUrls, setVideoUrls] = useState([]||null);
+  const [videoUrls, setVideoUrls] = useState([] || null);
+  const [message, setMessage] = useState("");
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
-  const { posts, auth } = useSelector((state) => {
+  const { posts, auth, comment } = useSelector((state) => {
     return {
       auth: state.auth,
-      posts: state.posts.posts
+      posts: state.posts.posts,
+      comment: state.comment
     };
   });
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
-      photo: imageUrls[imageUrls.length-1] || null,
-      video: videoUrls[videoUrls.length-1]  || null
-      
+      photo: imageUrls[imageUrls.length - 1] || null,
+      video: videoUrls[videoUrls.length - 1] || null
     };
 
     axios
@@ -63,22 +65,22 @@ const Posts = () => {
 
   //!============ createPostComment ====================
 
-  const createPostComment = async (id) => {
-    try {
-      const result = await axios.post(
-        `http://localhost:5000/comments/post/${id}`
-      );
-      if (result.data.success) {
-        const comments = result.data.result;
-        dispatch(setComments({ comments: comments, post_id: id }));
-      } else throw Error;
-    } catch (error) {
-      if (!error.response.data) {
-        return setMessage(error.response.data.message);
-      }
-      setMessage("Error happened while Get Data, please try again");
-    }
-  };
+  // const createPostComment = async (id) => {
+  //   try {
+  //     const result = await axios.post(
+  //       `http://localhost:5000/comments/post/${id}`
+  //     );
+  //     if (result.data.success) {
+  //       const comments = result.data.result;
+  //       dispatch(setComments({ comments: comments, post_id: id }));
+  //     } else throw Error;
+  //   } catch (error) {
+  //     if (!error.response.data) {
+  //       return setMessage(error.response.data.message);
+  //     }
+  //     setMessage("Error happened while Get Data, please try again");
+  //   }
+  // };
 
   //==================================================
 
@@ -89,21 +91,23 @@ const Posts = () => {
       const result = await axios.get(
         `http://localhost:5000/comments/post/${id}`
       );
+
       if (result.data.success) {
         const comments = result.data.result;
-        // console.log(result.data.result);
+
+        // Dispatch the action to set comments in the Redux store
         dispatch(setComments({ comment: comments, id: id }));
-        // console.log(comments);
-      } else throw Error;
-    } catch (error) {
-      if (!error.response.data) {
-        return setMessage(error.response.data.message);
+      } else {
+        throw new Error("API request failed");
       }
-      setMessage("Error happened while Get Data, please try again");
+    } catch (error) {
+      if (!error.response) {
+        return setMessage(error.message);
+      }
+      setMessage("Error happened while getting data, please try again");
     }
   };
-
-  //===================================================
+  // ===================================================
 
   const handleDeletePost = (postId) => {
     axios
@@ -187,7 +191,6 @@ const Posts = () => {
       .then((result) => {
         // console.log(result.data.posts);
         dispatch(setPosts(result.data.posts));
-
       })
       .catch((err) => {
         console.log(err);
@@ -195,7 +198,7 @@ const Posts = () => {
   }, []);
   return (
     <div>
-      <Story/>
+      <Story />
       <input
         placeholder="Body"
         onChange={(e) => {
@@ -208,60 +211,68 @@ const Posts = () => {
           setImageUpload(event.target.files[0]);
         }}
       />
-        <input
+      <input
         type="file"
         onChange={(event) => {
           setVideoUpload(event.target.files[0]);
         }}
       />
-       
+
       <button
         onClick={() => {
           handleCreateNewPost();
           clearInput();
-         
         }}
       >
         createNewPost
-      </button >
+      </button>
       <button onClick={uploadFile}> Upload</button>
       {posts.map((elem) => {
-         return (
+        return (
           <>
             <div key={elem.id}>
               <>
                 {" "}
-                <h1
-                  onClick={() => {
-                    console.log(elem.id);
+                <h1 onClick={elem.id}>{elem.body}</h1>
+                <button
+                  onClick={async () => {
+                    try {
+                      const result = await axios.get(
+                        `http://localhost:5000/comments/post/${elem.id}`
+                      );
+                      if (result.data.success) {
+                        // const comments = result.data.result;
+                        console.log(result.data.result[0]);
+
+                        dispatch(
+                          setComments({ comment: comment, Post_id: elem.id })
+                        );
+                        // console.log(comments);
+                      } else throw Error;
+                    } catch (error) {
+                      if (!error.response) {
+                        return setMessage(error);
+                      }
+                      setMessage(
+                        "Error happened while Get Data, please try again"
+                      );
+                    }
                   }}
                 >
-                  {elem.body}
-                </h1>
-                {!elem.comment_posts && (
-                  <button
-                    onClick={() => {
-                      getPostComment(elem.id);
-                    }}
-                  >
-                    show comment
-                  </button>
+                  showComment
+                </button>
+                <img width="300px" height="150px" src={elem.photo} />
+                <video controls width="300px" height="150px">
+                  <source src={elem.video} type="video/mp4" />
+                </video>
+                {comment && comment.id === elem.id && comment.comments && (
+                  <div>
+                    <h2>Comments:</h2>
+                    {comment.comments.map((comment) => (
+                      <p key={comment.id}>{comment.text}</p>
+                    ))}
+                  </div>
                 )}
-
-
-                <h1>{elem.body}</h1>
-                      
-        <img width="300px" height="150px" src={elem.photo} /> 
-        <video controls width="300px" height="150px">
-        <source src={elem.video}type="video/mp4" />
-          </video> 
-
-                <h1 onClick={() => { console.log(elem.id) }}>{elem.body}</h1>
-                {!elem.comment_posts && (<button
-                  onClick={() => { getPostComment(elem.id) }}
-                >show comment</button>)}
-
-
                 {update ? (
                   <>
                     {" "}
@@ -320,6 +331,7 @@ const Posts = () => {
               >
                 Add Comment
               </button>
+              <p>{comment}</p>
             </div>{" "}
           </>
         );

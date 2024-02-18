@@ -31,7 +31,7 @@ const createNewReels = (req, res) => {
 //     is_deleted SMALLINT DEFAULT 0
 //   );
 const getAllReels = (req, res) => {
-  const query = `SELECT * FROM reels`;
+  const query = `SELECT * FROM reels WHERE is_deleted=0`;
   pool
     .query(query)
     .then((result) => {
