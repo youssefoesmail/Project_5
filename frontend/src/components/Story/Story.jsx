@@ -3,10 +3,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { setStory, createNewStory } from "../redux/story/Story";
-
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  listAll,
+  list
+} from "firebase/storage";
+import { storage } from "../firebase";
+import { v4 } from "uuid";
 const Story = () => {
   const [video, setVideo] = useState(null);
   const [photo, setPhoto] = useState(null);
+  const [storyImageUpload, setStoryImageUpload] = useState(null);
+  const [storyImageUrls, setStoryImageUrls] = useState([] || null);
+  const storyImageListRef = ref(storage, "storyImages/");
+
+  const [storyVideoUpload, setStoryVideoUpload] = useState(null);
+  const [storyVideoUrls, setStoryVideoUrls] = useState([] || null);
+  const storyVideoListRef = ref(storage, "storyVideos/");
+  
+
   const { story, auth } = useSelector((state) => {
     return {
       story: state.story.story,
@@ -28,6 +45,40 @@ const Story = () => {
       })
       .catch((err) => {});
   };
+  const uploadFile = () => {
+    if (storyVideoUpload == null) return;
+    const storyVideoRef = ref(storage, `storys/${storyVideoUpload.name + v4()}`);
+    uploadBytes(storyVideoRef, storyVideoUpload).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        setStoryVideoUrls((prev) => [...prev, url]);
+      });
+    });
+    if (storyImageUpload == null) return;
+    const storyImageRef = ref(storage, `storys/${storyImageUpload.name + v4()}`);
+    uploadBytes(storyImageRef, storyImageUpload).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        setStoryImageUrls((prev) => [...prev, url]);
+      });
+    });
+  };
+
+  useEffect(() => {
+    listAll(storyVideoListRef).then((response) => {
+      response.items.forEach((item) => {
+        getDownloadURL(item).then((url) => {
+          setStoryVideoUrls((prev) => [...prev, url]);
+        });
+      });
+    });
+    listAll(storyImageListRef).then((response) => {
+      response.items.forEach((item) => {
+        getDownloadURL(item).then((url) => {
+          setStoryImageUrls((prev) => [...prev, url]);
+        });
+      });
+    });
+  }, []);
+  
   useEffect(() => {
     getAllStory();
   }, []);
@@ -37,13 +88,14 @@ const Story = () => {
         type="file"
         placeholder="photo"
         onChange={(e) => {
-          setPhoto(e.target.value);
+          setStoryImageUpload(e.target.value);
         }}
       />
       <input
         type="file"
-        onChange={(e) => {
-          setVideo(e.target.value);
+        placeholder="video"
+        onChange={(event) => {
+          setStoryVideoUpload(event.target.files[0]);
         }}
       />
       <button
@@ -52,8 +104,8 @@ const Story = () => {
             .post(
               `http://localhost:5000/story`,
               {
-                photo: photo,
-                video: video
+                photo: storyImageUrls[storyImageUrls.length - 1],
+                video: storyVideoUrls[storyVideoUrls.length - 1]
               },
               {
                 headers: {
@@ -72,10 +124,14 @@ const Story = () => {
       >
         createNewStory
       </button>
+      <button onClick={uploadFile}> Upload</button>
       {story.map((elem) => {
         return (
           <>
-            <img src={elem.photo} height="200px" width="200px" />
+                <img width="200px" height="250px" src={elem.photo} />
+                <video controls width="200px" height="250px">
+                  <source src={elem.video} type="video/mp4" />
+                </video>
           </>
         );
       })}
