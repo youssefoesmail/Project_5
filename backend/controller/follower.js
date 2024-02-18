@@ -11,7 +11,7 @@ const createFollower =(req,res)=>{
           success: true,
           message: "follower was added successfully",
           result: result.rows[0]
-        });
+        }); 
       })
       .catch((err) => {
         res.status(500).json({

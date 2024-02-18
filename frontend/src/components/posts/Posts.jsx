@@ -256,9 +256,9 @@ const Posts = () => {
                         return setMessage(error);
                       }
                       setMessage(
-                        "Error happened while Get Data, please try again"
+                        "Error happened while Get Data, please try again"  
                       );
-                    }
+                    } 
                   }}
                 >
                   showComment

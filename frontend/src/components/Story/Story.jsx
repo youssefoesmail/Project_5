@@ -34,12 +34,14 @@ const Story = () => {
   return (
     <div>
       <input
+        type="file"
         placeholder="photo"
         onChange={(e) => {
           setPhoto(e.target.value);
         }}
       />
       <input
+        type="file"
         onChange={(e) => {
           setVideo(e.target.value);
         }}
