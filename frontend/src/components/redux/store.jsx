@@ -10,6 +10,6 @@ export default configureStore({
     auth: authReducer,
     personal: personalReducer,
     story: storyReducer,
-    reel: reelReducer
+    reels: reelReducer
   }
 });

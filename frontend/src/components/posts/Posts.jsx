@@ -34,6 +34,9 @@ const Posts = () => {
   const [message, setMessage] = useState("");
   const [show, setShow] = useState("");
   const [userPostId, setUserPostId] = useState("");
+  const [addCommentId, setAddCommentId] = useState("");
+  const [addComment, setAddComment] = useState("");
+
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
@@ -113,6 +116,7 @@ const Posts = () => {
 
   const createComment = async (id) => {
     try {
+
       const result = await axios.post(
         `http://localhost:5000/comments/post/${id}`
       );
@@ -125,6 +129,22 @@ const Posts = () => {
         return setMessage(error);
       }
       setMessage("Error happened while Get Data, please try again");
+
+      const result = await axios.post(`http://localhost:5000/comments/post/${id}`,
+        {
+          comment: addComment,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${auth.token}`
+          }
+        }
+      );
+      dispatch(addComments({comment: result.data.result, id: id}))
+    }
+    catch (err) {
+      console.log(err);
+
     }
   };
   // ====================================================
@@ -174,19 +194,6 @@ const Posts = () => {
     setImageUpload("");
     setVideoUpload("");
   };
-  const deletFile = (elem) => {
-    
-// Create a reference to the file to delete
-const desertRef = ref(storage, `images/${elem}`);
-
-// Delete the file
-deleteObject(desertRef).then(() => {
-  // File deleted successfully
-}).catch((error) => {
-  // Uh-oh, an error occurred!
-});
-  }
-
 
   const uploadFile = () => {
     
@@ -367,6 +374,7 @@ deleteObject(desertRef).then(() => {
                   </>
                 )}
               </>
+
               {elem.user_id == userId && (
                 <button
                   onClick={() => {
@@ -388,6 +396,39 @@ deleteObject(desertRef).then(() => {
                   Add Comment
                 </button>
               )}
+
+              {elem.user_id == userId && <button
+                onClick={() => {
+                  handleDeletePost(elem.id);
+                }}
+              >
+                deletePost
+              </button>}
+              {userId && <button
+                onClick={() => {
+                  {
+                    setAddCommentId(elem.id);
+                  }
+                }}
+              >
+                Add Comment
+              </button>}
+              {addCommentId === elem.id && <>
+                <input
+                  placeholder="Body"
+                  onChange={(e) => {
+                    setAddComment(e.target.value);
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    console.log("===========>", elem.id);
+                    createComment(elem.id);
+                  }}
+                >ADD</button>
+              </>
+              }
+
             </div>{" "}
           </>
         );

@@ -31,14 +31,14 @@ const createNewReels = (req, res) => {
 //     is_deleted SMALLINT DEFAULT 0
 //   );
 const getAllReels = (req, res) => {
-  const query = `SELECT * FROM reels WHERE is_deleted=0`;
+  const query = `SELECT * FROM reels WHERE is_deleted= 0`;
   pool
     .query(query)
     .then((result) => {
       res.status(200).json({
         success: true,
         message: "All the reels",
-        articles: result.rows
+        reels: result.rows
       });
     })
     .catch((err) => {
