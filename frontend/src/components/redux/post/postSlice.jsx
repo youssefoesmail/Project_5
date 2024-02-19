@@ -31,6 +31,7 @@ const postSlice = createSlice({
         return id;
       });
     },
+
     addComments: (state, action) => {
       state.posts = state.posts.map((id, index) => {
         if (id.id === action.payload.id) {
@@ -40,6 +41,8 @@ const postSlice = createSlice({
       });
     },
   },
+
+  }
 });
 export const {
   setPosts,
