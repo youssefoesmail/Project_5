@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { setPosts, setUserInfo } from "../redux/personalPage/personal";
+import Posts from "../posts/Posts";
 const Personal = () => {
   const [user, setUser] = useState(null);
   const dispatch = useDispatch();
   const { auth, personal, post } = useSelector((state) => {
     return {
       auth: state.auth,
-      post: state.post,
+      post: state.personal.post,
       personal: state.personal.personal
     };
   });
@@ -28,21 +29,32 @@ const Personal = () => {
     axios
       .get(`http://localhost:5000/posts/authorPosts/${auth.userId}`)
       .then((result) => {
-        dispatch(setPosts(result.data));
-        console.log(result.data);
+        dispatch(setPosts(result.data.result));
+        console.log(result.data.result);
       })
       .catch((err) => {
-        log
+        log;
       });
   };
   useEffect(() => {
     getPostByAuthor();
     personalPage();
-    console.log(personal);
+    console.log(post);
   }, []);
   return (
     <div>
-      <h1>{personal?.firstname}</h1> <h1>{personal?.lastname}</h1>
+      <h1>{personal?.firstname}</h1>{" "}
+      <h1>
+        {personal?.lastname}
+        <p>{personal.country}</p>
+      </h1>
+      {post.map((elem) => {
+        return (
+          <>
+            <p>{elem.body}</p>
+          </>
+        );
+      })}
     </div>
   );
 };

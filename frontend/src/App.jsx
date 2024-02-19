@@ -6,12 +6,14 @@ import Register from "./components/Register/Register";
 import Comments from "./components/Comments/Comments";
 import Personal from "./components/personalPage/Personal";
 import FollowPost from "./components/FollowPost/FollowPost";
+import Reel from "./components/reels/Reel";
 
 function App() {
   return (
     <>
       <div>
         <Routes>
+          <Route path="/reels" element={<Reel />} />
           <Route path="/personal" element={<Personal />} />
           <Route path="/post" element={<Posts />} />
           <Route path="/" element={<Login />} />

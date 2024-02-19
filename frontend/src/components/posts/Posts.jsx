@@ -30,6 +30,7 @@ const Posts = () => {
   const [videoUpload, setVideoUpload] = useState(null);
   const [videoUrls, setVideoUrls] = useState([] || null);
   const [message, setMessage] = useState("");
+  const [show, setShow] = useState("");
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
@@ -38,7 +39,7 @@ const Posts = () => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
-      comment: state.comment
+      comment: state.posts.comment.comment
     };
   });
   const handleCreateNewPost = () => {
@@ -91,23 +92,31 @@ const Posts = () => {
       const result = await axios.get(
         `http://localhost:5000/comments/post/${id}`
       );
-
       if (result.data.success) {
         const comments = result.data.result;
+        console.log(result.data.result);
 
-        // Dispatch the action to set comments in the Redux store
-        dispatch(setComments({ comment: comments, id: id }));
-      } else {
-        throw new Error("API request failed");
-      }
+        dispatch(
+          setComments({ comment: comments, id: id })
+        );
+      } else throw Error;
     } catch (error) {
       if (!error.response) {
-        return setMessage(error.message);
+        return setMessage(error);
       }
-      setMessage("Error happened while getting data, please try again");
+      setMessage(
+        "Error happened while Get Data, please try again"
+      );
     }
   };
   // ===================================================
+
+  const mapcomment = () => {
+    comment.map((ele, i) => {
+      console.log(ele.comment);
+      return <p>{ele.comment}</p>
+    })
+  }
 
   const handleDeletePost = (postId) => {
     axios
@@ -229,40 +238,32 @@ const Posts = () => {
         createNewPost
       </button>
       <button onClick={uploadFile}> Upload</button>
-      {posts.map((elem) => {
+      {posts?.map((elem) => {
         return (
           <>
             <div key={elem.id}>
               <>
                 {" "}
                 <h1 onClick={elem.id}>{elem.body}</h1>
-                <button
-                  onClick={async () => {
-                    try {
-                      const result = await axios.get(
-                        `http://localhost:5000/comments/post/${elem.id}`
-                      );
-                      if (result.data.success) {
-                        const comments = result.data.result[0];
-                        console.log(result.data.result[0]);
-
-                        dispatch(
-                          setComments({ comment: comments, Post_id: elem.id })
-                        );
-                        // console.log(comments);
-                      } else throw Error;
-                    } catch (error) {
-                      if (!error.response) {
-                        return setMessage(error);
-                      }
-                      setMessage(
-                        "Error happened while Get Data, please try again"  
-                      );
-                    } 
-                  }}
+                {<button
+                  onClick={ () => {
+                    getPostComment(elem.id)
+                    setShow(elem.id);
+                  }
+                  }
                 >
                   showComment
-                </button>
+                </button>}
+                {// get if there is a value
+                elem.comment?.map((comment, i) => {
+                  return (
+                    <p className="comment" key={i}>
+                      {comment?.comment}
+                      <button>update</button>
+                      <button>delete</button>
+                    </p>
+                  );
+                })}
                 <img width="300px" height="150px" src={elem.photo} />
                 <video controls width="300px" height="150px">
                   <source src={elem.video} type="video/mp4" />
@@ -333,7 +334,6 @@ const Posts = () => {
               >
                 Add Comment
               </button>
-              <p>{comment}</p>
             </div>{" "}
           </>
         );
