@@ -35,13 +35,15 @@ const Posts = () => {
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
-  const { posts, auth, comment } = useSelector((state) => {
+  const { posts, auth, comment, userId } = useSelector((state) => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
-      comment: state.posts.comment.comment
+      comment: state.posts.comment.comment,
+      userId: state.auth.userId
     };
   });
+  console.log(userId,show);
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -246,24 +248,27 @@ const Posts = () => {
                 {" "}
                 <h1 onClick={elem.id}>{elem.body}</h1>
                 {<button
-                  onClick={ () => {
+                  onClick={() => {
                     getPostComment(elem.id)
-                    setShow(elem.id);
+                    setShow(elem.user_id);
                   }
                   }
                 >
                   showComment
                 </button>}
                 {// get if there is a value
-                elem.comment?.map((comment, i) => {
-                  return (
-                    <p className="comment" key={i}>
-                      {comment?.comment}
-                      <button>update</button>
-                      <button>delete</button>
-                    </p>
-                  );
-                })}
+                  elem.comment?.map((comment, i) => {
+                    return (
+                      <p className="comment" key={i}>
+                        {comment?.comment}
+                        {show == userId && (<div>
+                          <button>update</button>
+                          <button>delete</button>
+                        </div>)}
+                      </p>
+                    );
+                  })}
+
                 <img width="300px" height="150px" src={elem.photo} />
                 <video controls width="300px" height="150px">
                   <source src={elem.video} type="video/mp4" />
