@@ -7,8 +7,11 @@ const reelSlice = createSlice({
   reducers: {
     createNewReels: (state, action) => {
       state.reel = [action.payload, ...state.reel];
+    },
+    setReel: (state, action) => {
+      state.reel = action.payload;
     }
   }
 });
-export const { createNewReels } = reelSlice.actions;
+export const { createNewReels, setReel } = reelSlice.actions;
 export default reelSlice.reducer;
