@@ -30,6 +30,8 @@ const postSlice = createSlice({
         }
         return id;
       });
+
+    }
     },
 
     addComments: (state, action) => {
@@ -41,6 +43,7 @@ const postSlice = createSlice({
       });
     },
   },
+
 
   }
 });
