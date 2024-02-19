@@ -231,14 +231,14 @@ const Posts = () => {
         }}
       />
 
-      <button
+      {userId && <button
         onClick={() => {
           handleCreateNewPost();
           clearInput();
         }}
       >
         createNewPost
-      </button>
+      </button>}
       <button onClick={uploadFile}> Upload</button>
       {posts.map((elem) => {
         return (
@@ -329,7 +329,7 @@ const Posts = () => {
               >
                 deletePost
               </button>
-              <button
+              {userId && <button
                 onClick={() => {
                   // console.log(elem.id);
                   {
@@ -338,7 +338,7 @@ const Posts = () => {
                 }}
               >
                 Add Comment
-              </button>
+              </button>}
             </div>{" "}
           </>
         );
