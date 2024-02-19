@@ -259,7 +259,7 @@ const Posts = () => {
         createNewPost
       </button>}
       <button onClick={uploadFile}> Upload</button>
-      {posts.map((elem) => {
+      {posts?.map((elem) => {
         return (
           <>
             <div key={elem.id}>
