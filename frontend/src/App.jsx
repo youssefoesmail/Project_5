@@ -5,6 +5,7 @@ import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import Comments from "./components/Comments/Comments";
 import Personal from "./components/personalPage/Personal";
+import FollowPost from "./components/FollowPost/FollowPost";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/comments" element={<Comments />} />
+          <Route path="/followers"  element = {<FollowPost/>}/>
         </Routes>
       </div>
     </>
