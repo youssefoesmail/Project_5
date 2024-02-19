@@ -3,11 +3,13 @@ import postReducer from "./post/postSlice";
 import authReducer from "./auth/userSlice";
 import personalReducer from "../redux/personalPage/personal";
 import storyReducer from "./story/Story";
+import reelReducer from "./reels/reels";
 export default configureStore({
   reducer: {
     posts: postReducer,
     auth: authReducer,
     personal: personalReducer,
-    story: storyReducer
+    story: storyReducer,
+    reel: reelReducer
   }
 });

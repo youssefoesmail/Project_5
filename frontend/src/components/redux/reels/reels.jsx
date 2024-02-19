@@ -1,14 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
 const reelSlice = createSlice({
-  name: "reel",
+  name: "reels",
   initialState: {
-    reel: []
+    reels: [],
+    comment: []
   },
   reducers: {
     createNewReels: (state, action) => {
-      state.reel = [action.payload, ...state.reel];
+      state.reels = [action.payload, ...state.reels];
+    },
+    setReel: (state, action) => {
+      state.reels = action.payload;
+    },
+    setCommentReels: (state, action) => {
+      state.reels = state.reels.map((elem, ind) => {
+        if (elem.id === action.payload.id) {
+          elem.comment = action.payload.comment;
+        }
+        return elem;
+      });
+    },
+    createCommentReels: (state, action) => {
+      state.comment = [action.payload, ...state.comment];
     }
   }
 });
-export const { createNewReels } = reelSlice.actions;
+export const { createNewReels, setReel, setCommentReels, createCommentReels } =
+  reelSlice.actions;
 export default reelSlice.reducer;
