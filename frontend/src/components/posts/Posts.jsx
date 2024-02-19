@@ -45,7 +45,7 @@ const Posts = () => {
       userId: state.auth.userId
     };
   });
-  console.log(userId,show);
+  console.log(userId, show, userPostId);
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -249,11 +249,12 @@ const Posts = () => {
               <>
                 {" "}
                 <h1 onClick={elem.id}>{elem.body}</h1>
+                {console.log(elem)}
                 {<button
                   onClick={() => {
                     getPostComment(elem.id)
                     console.log(elem);
-                    setShow(elem.commenter);
+                    setShow(elem.user_id);
                   }
                   }
                 >
@@ -284,10 +285,9 @@ const Posts = () => {
                     ))}
                   </div>
                 )}
-                {update ? (
+                { elem.user_id == userId && update ? (
                   <>
                     {" "}
-                    {setShow(elem.commenter)}
                     <input
                       placeholder="body"
                       onChange={(e) => {
@@ -316,23 +316,23 @@ const Posts = () => {
                   </>
                 ) : (
                   <>
-                    <button
+                    {elem.user_id == userId && <button
                       onClick={() => {
                         setUpdate(!update);
                       }}
                     >
                       update
-                    </button>
+                    </button>}
                   </>
                 )}
               </>
-              <button
+              { elem.user_id == userId && <button
                 onClick={() => {
                   handleDeletePost(elem.id);
                 }}
               >
                 deletePost
-              </button>
+              </button>}
               {userId && <button
                 onClick={() => {
                   // console.log(elem.id);
