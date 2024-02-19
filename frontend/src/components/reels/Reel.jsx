@@ -1,11 +1,11 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import { setReel, createNewReels } from "../redux/reels/reels";
 const Reel = () => {
   const dispatch = useDispatch();
-  const { reel } = useSelector((state) => {
+  const { reels } = useSelector((state) => {
     return {
-      reel: state.reel
+      reels: state.reels
     };
   });
   return <div>Reel</div>;

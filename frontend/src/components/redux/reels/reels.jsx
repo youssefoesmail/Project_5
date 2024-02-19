@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 const reelSlice = createSlice({
-  name: "reel",
+  name: "reels",
   initialState: {
-    reel: []
+    reels: []
   },
   reducers: {
     createNewReels: (state, action) => {
-      state.reel = [action.payload, ...state.reel];
+      state.reels = [action.payload, ...state.reels];
     },
     setReel: (state, action) => {
-      state.reel = action.payload;
+      state.reels = action.payload;
     }
   }
 });
