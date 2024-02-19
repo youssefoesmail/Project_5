@@ -20,6 +20,7 @@ import { token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
 const Posts = () => {
+  //setUserPostId
   const [body, setBody] = useState("");
   const [photo, setPhoto] = useState("");
   const [video, setVideo] = useState("");
@@ -31,6 +32,7 @@ const Posts = () => {
   const [videoUrls, setVideoUrls] = useState([] || null);
   const [message, setMessage] = useState("");
   const [show, setShow] = useState("");
+  const [userPostId, setUserPostId] = useState("");
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
@@ -250,7 +252,8 @@ const Posts = () => {
                 {<button
                   onClick={() => {
                     getPostComment(elem.id)
-                    setShow(elem.user_id);
+                    console.log(elem);
+                    setShow(elem.commenter);
                   }
                   }
                 >
@@ -284,6 +287,7 @@ const Posts = () => {
                 {update ? (
                   <>
                     {" "}
+                    {setShow(elem.commenter)}
                     <input
                       placeholder="body"
                       onChange={(e) => {
