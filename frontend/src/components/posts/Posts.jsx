@@ -34,6 +34,9 @@ const Posts = () => {
   const [message, setMessage] = useState("");
   const [show, setShow] = useState("");
   const [userPostId, setUserPostId] = useState("");
+  const [addCommentId, setAddCommentId] = useState("");
+  const [addComment, setAddComment] = useState("");
+
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
@@ -118,22 +121,20 @@ const Posts = () => {
 
   const createComment = async (id) => {
     try {
-      const result = await axios.post(
-        `http://localhost:5000/comments/post/${id}`
+      const result = await axios.post(`http://localhost:5000/comments/post/${id}`,
+        {
+          comment: addComment,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${auth.token}`
+          }
+        }
       );
-      if (result.data.success) {
-        const comments = result.data.result;
-        dispatch(
-          addComments({ comment: comments, id: id })
-        );
-      } else throw Error;
-    } catch (error) {
-      if (!error.response) {
-        return setMessage(error);
-      }
-      setMessage(
-        "Error happened while Get Data, please try again"
-      );
+      dispatch(addComments({comment: result.data.result, id: id}))
+    }
+    catch (err) {
+      console.log(err);
     }
   };
   // ====================================================
@@ -301,7 +302,7 @@ const Posts = () => {
                     ))}
                   </div>
                 )}
-                { elem.user_id == userId && update ? (
+                {elem.user_id == userId && update ? (
                   <>
                     {" "}
                     <input
@@ -342,7 +343,7 @@ const Posts = () => {
                   </>
                 )}
               </>
-              { elem.user_id == userId && <button
+              {elem.user_id == userId && <button
                 onClick={() => {
                   handleDeletePost(elem.id);
                 }}
@@ -351,14 +352,28 @@ const Posts = () => {
               </button>}
               {userId && <button
                 onClick={() => {
-                  // console.log(elem.id);
                   {
-                    elem.id && <input placeholder="Body" />;
+                    setAddCommentId(elem.id);
                   }
                 }}
               >
                 Add Comment
               </button>}
+              {addCommentId === elem.id && <>
+                <input
+                  placeholder="Body"
+                  onChange={(e) => {
+                    setAddComment(e.target.value);
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    console.log("===========>", elem.id);
+                    createComment(elem.id);
+                  }}
+                >ADD</button>
+              </>
+              }
             </div>{" "}
           </>
         );
