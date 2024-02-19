@@ -30,7 +30,7 @@ const postSlice = createSlice({
         }
         return id;
       });
-    }
+    },
   }
 });
 export const {
