@@ -5,7 +5,8 @@ import {
   createNewPost,
   updatePostById,
   deletePost,
-  setComments
+  setComments,
+  addComments
 } from "../redux/post/postSlice";
 import {
   ref,
@@ -98,8 +99,6 @@ const Posts = () => {
       );
       if (result.data.success) {
         const comments = result.data.result;
-        console.log(result.data.result);
-
         dispatch(
           setComments({ comment: comments, id: id })
         );
@@ -115,12 +114,29 @@ const Posts = () => {
   };
   // ====================================================
 
-  const mapcomment = () => {
-    comment.map((ele, i) => {
-      console.log(ele.comment);
-      return <p>{ele.comment}</p>
-    })
-  }
+  //!============ createComment ====================
+
+  const createComment = async (id) => {
+    try {
+      const result = await axios.post(
+        `http://localhost:5000/comments/post/${id}`
+      );
+      if (result.data.success) {
+        const comments = result.data.result;
+        dispatch(
+          addComments({ comment: comments, id: id })
+        );
+      } else throw Error;
+    } catch (error) {
+      if (!error.response) {
+        return setMessage(error);
+      }
+      setMessage(
+        "Error happened while Get Data, please try again"
+      );
+    }
+  };
+  // ====================================================
 
   const handleDeletePost = (postId) => {
     axios
