@@ -259,6 +259,8 @@ const Posts = () => {
                   return (
                     <p className="comment" key={i}>
                       {comment?.comment}
+                      <button>update</button>
+                      <button>delete</button>
                     </p>
                   );
                 })}
