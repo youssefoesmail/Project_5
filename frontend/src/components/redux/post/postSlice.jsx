@@ -40,9 +40,14 @@ const postSlice = createSlice({
         return id;
       });
     },
+    setImage: (state, action) => {
+      state.photo = action.payload;
+      return state.photo
+    },
+    
   },
 
-  }
+  
 });
 export const {
   setPosts,
