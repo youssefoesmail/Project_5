@@ -10,7 +10,7 @@ const personalSlice = createSlice({
       state.personal = action.payload;
     },
     setFollowers:(state,action)=>{
-      state.personal = action.payload;
+      state.followers = action.payload;
     }
   }
 });
