@@ -20,6 +20,7 @@ import { token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
 const Posts = () => {
+  //setUserPostId
   const [body, setBody] = useState("");
   const [photo, setPhoto] = useState("");
   const [video, setVideo] = useState("");
@@ -31,17 +32,20 @@ const Posts = () => {
   const [videoUrls, setVideoUrls] = useState([] || null);
   const [message, setMessage] = useState("");
   const [show, setShow] = useState("");
+  const [userPostId, setUserPostId] = useState("");
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
-  const { posts, auth, comment } = useSelector((state) => {
+  const { posts, auth, comment, userId } = useSelector((state) => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
-      comment: state.posts.comment.comment
+      comment: state.posts.comment.comment,
+      userId: state.auth.userId
     };
   });
+  console.log(userId,show);
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -109,7 +113,7 @@ const Posts = () => {
       );
     }
   };
-  // ===================================================
+  // ====================================================
 
   const mapcomment = () => {
     comment.map((ele, i) => {
@@ -229,14 +233,14 @@ const Posts = () => {
         }}
       />
 
-      <button
+      {userId && <button
         onClick={() => {
           handleCreateNewPost();
           clearInput();
         }}
       >
         createNewPost
-      </button>
+      </button>}
       <button onClick={uploadFile}> Upload</button>
       {posts?.map((elem) => {
         return (
@@ -246,24 +250,28 @@ const Posts = () => {
                 {" "}
                 <h1 onClick={elem.id}>{elem.body}</h1>
                 {<button
-                  onClick={ () => {
+                  onClick={() => {
                     getPostComment(elem.id)
-                    setShow(elem.id);
+                    console.log(elem);
+                    setShow(elem.commenter);
                   }
                   }
                 >
                   showComment
                 </button>}
                 {// get if there is a value
-                elem.comment?.map((comment, i) => {
-                  return (
-                    <p className="comment" key={i}>
-                      {comment?.comment}
-                      <button>update</button>
-                      <button>delete</button>
-                    </p>
-                  );
-                })}
+                  elem.comment?.map((comment, i) => {
+                    return (
+                      <p className="comment" key={i}>
+                        {comment?.comment}
+                        {show == userId && (<div>
+                          <button>update</button>
+                          <button>delete</button>
+                        </div>)}
+                      </p>
+                    );
+                  })}
+
                 <img width="300px" height="150px" src={elem.photo} />
                 <video controls width="300px" height="150px">
                   <source src={elem.video} type="video/mp4" />
@@ -279,6 +287,7 @@ const Posts = () => {
                 {update ? (
                   <>
                     {" "}
+                    {setShow(elem.commenter)}
                     <input
                       placeholder="body"
                       onChange={(e) => {
@@ -324,7 +333,7 @@ const Posts = () => {
               >
                 deletePost
               </button>
-              <button
+              {userId && <button
                 onClick={() => {
                   // console.log(elem.id);
                   {
@@ -333,7 +342,7 @@ const Posts = () => {
                 }}
               >
                 Add Comment
-              </button>
+              </button>}
             </div>{" "}
           </>
         );
