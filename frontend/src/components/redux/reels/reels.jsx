@@ -25,5 +25,6 @@ const reelSlice = createSlice({
     }
   }
 });
-export const { createNewReels, setReel } = reelSlice.actions;
+export const { createNewReels, setReel, setCommentReels, createCommentReels } =
+  reelSlice.actions;
 export default reelSlice.reducer;
