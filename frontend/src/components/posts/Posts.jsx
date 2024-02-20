@@ -6,8 +6,7 @@ import {
   updatePostById,
   deletePost,
   setComments,
-  addComments,
-  updateLike
+  addComments
 } from "../redux/post/postSlice";
 import {
   ref,
@@ -18,9 +17,10 @@ import {
 } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
-import { token } from "../redux/auth/userSlice";
+import { setUserId, token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
+import { Link } from "react-router-dom";
 const Posts = () => {
   //setUserPostId
   const [body, setBody] = useState("");
@@ -39,15 +39,15 @@ const Posts = () => {
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
-  const { posts, auth, comment, userId } = useSelector((state) => {
+  const { posts, auth, comment, userId, users } = useSelector((state) => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
       comment: state.posts.comment.comment,
-      userId: state.auth.userId
+      userId: state.auth.userId,
+      users: state.posts.users
     };
   });
-  console.log(userId, show, userPostId);
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -62,8 +62,8 @@ const Posts = () => {
         }
       })
       .then((result) => {
-        // console.log(result);
-        dispatch(createNewPost(result.data));
+        console.log(result.data.result);
+        dispatch(createNewPost(result.data.result));
       })
       .catch((err) => {
         console.log(err);
@@ -100,17 +100,13 @@ const Posts = () => {
       );
       if (result.data.success) {
         const comments = result.data.result;
-        dispatch(
-          setComments({ comment: comments, id: id })
-        );
+        dispatch(setComments({ comment: comments, id: id }));
       } else throw Error;
     } catch (error) {
       if (!error.response) {
         return setMessage(error);
       }
-      setMessage(
-        "Error happened while Get Data, please try again"
-      );
+      setMessage("Error happened while Get Data, please try again");
     }
   };
   // ====================================================
@@ -124,21 +120,61 @@ const Posts = () => {
       );
       if (result.data.success) {
         const comments = result.data.result;
-        dispatch(
-          addComments({ comment: comments, id: id })
-        );
+        dispatch(addComments({ comment: comments, id: id }));
       } else throw Error;
     } catch (error) {
       if (!error.response) {
         return setMessage(error);
       }
-      setMessage(
-        "Error happened while Get Data, please try again"
+      setMessage("Error happened while Get Data, please try again");
+    }
+  };
+  // ====================================================
+  //!============ updateComment =========================
+
+  const updateComment = async (id) => {
+    try {
+      const result = await axios.put(
+        `http://localhost:5000/comments/post/${id}`,
+        {
+          comment: "addComment"
+        },
+        {
+          headers: {
+            authorization: `Bearer ${auth.token}`
+          }
+        }
       );
+      console.log(result.data.result);
+      dispatch(updateComments({ comment: result.data.result, id }));
+    } catch (err) {
+      console.log(err);
     }
   };
   // ====================================================
 
+  //!============ deleteComment =========================
+
+  // const deleteComment = async (id) => {
+  //   try {
+  //     const result = await axios.delete(`http://localhost:5000/comments/post/${id}`,
+  //       {
+  //         comment: "addComment",
+  //       },
+  //       {
+  //         headers: {
+  //           authorization: `Bearer ${auth.token}`
+  //         }
+  //       }
+  //     );
+  //     console.log(result.data.result);
+  //     dispatch(updateComments({comment:result.data.result,id}))
+  //   }
+  //   catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+  // ====================================================
   const handleDeletePost = (postId) => {
     axios
       .delete(`http://localhost:5000/posts/${postId}`, {
@@ -216,38 +252,16 @@ const Posts = () => {
   }, []);
 
   useEffect(() => {
-    console.log(comment);
     axios
       .get("http://localhost:5000/posts")
       .then((result) => {
-        // console.log(result.data.posts);
+        console.log(result.data.posts);
         dispatch(setPosts(result.data.posts));
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
-
-
-  //! Create Like to Post 
-
-  const addLike=(idPost)=>{
-    console.log(auth.token);
-    console.log("Test",auth.userId);
-    console.log("Log",idPost);
-
-    axios.post(`http://localhost:5000/likes/search/${auth.userId}?post_id=${idPost}`,{
-      headers: {
-        authorization: `Bearer ${auth.token}`,
-      }
-    }).then((result) => {
-        console.log(result);
-        dispatch(updateLike())
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
 
   return (
     <div>
@@ -271,14 +285,14 @@ const Posts = () => {
         }}
       />
 
-      {userId && <button
+      <button
         onClick={() => {
           handleCreateNewPost();
           clearInput();
         }}
       >
         createNewPost
-      </button>}
+      </button>
       <button onClick={uploadFile}> Upload</button>
       {posts?.map((elem) => {
         return (
@@ -286,35 +300,43 @@ const Posts = () => {
             <div key={elem.id}>
               <>
                 {" "}
-                <h1 onClick={elem.id}>{elem.body}</h1>
-                {console.log(elem)}
-                {<button
+                <Link
+                  to={`/users/${elem.user_id}`}
                   onClick={() => {
-                    getPostComment(elem.id)
-                    console.log(elem);
-                    setShow(elem.user_id);
-                  }
-                  }
+                    console.log(elem.user_id);
+                    dispatch(setUserId(elem.user_id));
+                  }}
                 >
-                  showComment
-                </button>}
-                {// get if there is a value
+                  <p>{elem.firstname}</p>
+                </Link>
+                <h1 onClick={elem.id}>{elem.body}</h1>
+                {
+                  <button
+                    onClick={() => {
+                      getPostComment(elem.id);
+                      console.log(elem);
+                      setShow(elem.user_id);
+                    }}
+                  >
+                    showComment
+                  </button>
+                }
+                {
+                  // get if there is a value
                   elem.comment?.map((comment, i) => {
                     return (
                       <p className="comment" key={i}>
                         {comment?.comment}
-                        {show == userId && (<div>
-                          <button>update</button>
-                          <button>delete</button>
-                        </div>)}
+                        {show == userId && (
+                          <div>
+                            <button>update</button>
+                            <button>delete</button>
+                          </div>
+                        )}
                       </p>
                     );
-                  })}
-                  
-                <button onClick={()=>{
-                  addLike(elem.id)
-                } }>Like</button>
-
+                  })
+                }
                 <img width="300px" height="150px" src={elem.photo} />
                 <video controls width="300px" height="150px">
                   <source src={elem.video} type="video/mp4" />
@@ -327,7 +349,7 @@ const Posts = () => {
                     ))}
                   </div>
                 )}
-                { elem.user_id == userId && update ? (
+                {elem.user_id == userId && update ? (
                   <>
                     {" "}
                     <input
@@ -358,33 +380,39 @@ const Posts = () => {
                   </>
                 ) : (
                   <>
-                    {elem.user_id == userId && <button
-                      onClick={() => {
-                        setUpdate(!update);
-                      }}
-                    >
-                      update
-                    </button>}
+                    {elem.user_id == userId && (
+                      <button
+                        onClick={() => {
+                          setUpdate(!update);
+                        }}
+                      >
+                        update
+                      </button>
+                    )}
                   </>
                 )}
               </>
-              { elem.user_id == userId && <button
-                onClick={() => {
-                  handleDeletePost(elem.id);
-                }}
-              >
-                deletePost
-              </button>}
-              {userId && <button
-                onClick={() => {
-                  // console.log(elem.id);
-                  {
-                    elem.id && <input placeholder="Body" />;
-                  }
-                }}
-              >
-                Add Comment
-              </button>}
+              {elem.user_id == userId && (
+                <button
+                  onClick={() => {
+                    handleDeletePost(elem.id);
+                  }}
+                >
+                  deletePost
+                </button>
+              )}
+              {userId && (
+                <button
+                  onClick={() => {
+                    // console.log(elem.id);
+                    {
+                      elem.id && <input placeholder="Body" />;
+                    }
+                  }}
+                >
+                  Add Comment
+                </button>
+              )}
             </div>{" "}
           </>
         );

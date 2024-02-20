@@ -3,8 +3,7 @@ const postSlice = createSlice({
   name: "posts",
   initialState: {
     posts: [],
-    comment: [],
-    like: 0,
+    comment: []
   },
   reducers: {
     setPosts: (state, action) => {
@@ -32,7 +31,6 @@ const postSlice = createSlice({
         return id;
       });
     },
-
     addComments: (state, action) => {
       state.posts = state.posts.map((id, index) => {
         if (id.id === action.payload.id) {
@@ -40,22 +38,9 @@ const postSlice = createSlice({
         }
         return id;
       });
-    },
-  },
-
-  updateLike: ()=>{
-    state.like++
-  },
-
-  deleteLike:()=>{
-    state.like--
-    if(state.like<0){
-      return state.like=0
     }
   }
-
 });
-
 export const {
   setPosts,
   createNewPost,
@@ -63,7 +48,6 @@ export const {
   deletePost,
   setComments,
   addComments,
-  updateLike,
-  deleteLike,
+  updateComments
 } = postSlice.actions;
 export default postSlice.reducer;
