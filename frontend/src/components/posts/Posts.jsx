@@ -6,7 +6,6 @@ import {
   updatePostById,
   deletePost,
   setComments,
-  addComments,
 } from "../redux/post/postSlice";
 import {
   ref,
@@ -140,7 +139,8 @@ const Posts = () => {
           }
         }
       );
-      dispatch(addComments({comment: result.data.result, id: id}))
+      console.log(addComment,result.data.result);
+      dispatch(addComments({comment:result.data.result,id}))
     }
     catch (err) {
       console.log(err);
@@ -289,6 +289,19 @@ const Posts = () => {
               <>
                 {" "}
                 <h1 onClick={elem.id}>{elem.body}</h1>
+
+                {<button
+                  onClick={() => {
+                    getPostComment(elem.id)
+                    setShow(elem.id);
+                  }
+                  }
+                >
+                  showComment
+                </button>}
+                {// get if there is a value 
+                show === elem.id &&
+
                 {
                   <button
                     onClick={() => {
@@ -301,16 +314,24 @@ const Posts = () => {
                 }
                 {
                   // get if there is a value
+
                   elem.comment?.map((comment, i) => {
                     return (
                       <p className="comment" key={i}>
                         {comment?.comment}
+
+                        {comment.commenter == userId && (<div>
+                          <button>update</button>
+                          <button>delete</button>
+                        </div>)}
+
                         {show == userId && (
                           <div>
                             <button>update</button>
                             <button>delete</button>
                           </div>
                         )}
+
                       </p>
                     );
                   })
