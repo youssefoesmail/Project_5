@@ -7,7 +7,6 @@ import {
   deletePost,
   setComments,
   addComments
-
 } from "../redux/post/postSlice";
 import {
   ref,
@@ -44,11 +43,11 @@ const Posts = () => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
-      comment: state.posts.comment,
-      userId: state.auth.userId
+      comment: state.posts.comment.comment,
+      userId: state.auth.userId,
+      users: state.posts.users
     };
   });
-  console.log(userId, show, userPostId);
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -63,8 +62,8 @@ const Posts = () => {
         }
       })
       .then((result) => {
-        // console.log(result);
-        dispatch(createNewPost(result.data));
+        console.log(result.data.result);
+        dispatch(createNewPost(result.data.result));
       })
       .catch((err) => {
         console.log(err);
@@ -101,9 +100,7 @@ const Posts = () => {
       );
       if (result.data.success) {
         const comments = result.data.result;
-        dispatch(
-          setComments({ comment: comments, id: id })
-        );
+        dispatch(setComments({ comment: comments, id: id }));
       } else throw Error;
     } catch (error) {
       if (!error.response) {
@@ -118,32 +115,29 @@ const Posts = () => {
 
   const createComment = async (id) => {
     try {
-      const result = await axios.post(`http://localhost:5000/comments/post/${id}`,
-        {
-          comment: addComment,
-        },
-        {
-          headers: {
-            authorization: `Bearer ${auth.token}`
-          }
-        }
+      const result = await axios.post(
+        `http://localhost:5000/comments/post/${id}`
       );
-      console.log(addComment,result.data.result);
-      dispatch(addComments({comment:result.data.result,id}))
-    }
-    catch (err) {
-      console.log(err);
+      if (result.data.success) {
+        const comments = result.data.result;
+        dispatch(addComments({ comment: comments, id: id }));
+      } else throw Error;
+    } catch (error) {
+      if (!error.response) {
+        return setMessage(error);
+      }
+      setMessage("Error happened while Get Data, please try again");
     }
   };
   // ====================================================
-
   //!============ updateComment =========================
 
   const updateComment = async (id) => {
     try {
-      const result = await axios.put(`http://localhost:5000/comments/post/${id}`,
+      const result = await axios.put(
+        `http://localhost:5000/comments/post/${id}`,
         {
-          comment: "addComment",
+          comment: "addComment"
         },
         {
           headers: {
@@ -152,9 +146,8 @@ const Posts = () => {
         }
       );
       console.log(result.data.result);
-      dispatch(updateComments({comment:result.data.result,id}))
-    }
-    catch (err) {
+      dispatch(updateComments({ comment: result.data.result, id }));
+    } catch (err) {
       console.log(err);
     }
   };
@@ -182,7 +175,6 @@ const Posts = () => {
   //   }
   // };
   // ====================================================
-
   const handleDeletePost = (postId) => {
     axios
       .delete(`http://localhost:5000/posts/${postId}`, {
@@ -191,6 +183,7 @@ const Posts = () => {
         }
       })
       .then((result) => {
+        // console.log(result);
         dispatch(deletePost(postId));
       })
       .catch((err) => {
@@ -262,7 +255,7 @@ const Posts = () => {
     axios
       .get("http://localhost:5000/posts")
       .then((result) => {
-        // console.log(result.data.posts);
+        console.log(result.data.posts);
         dispatch(setPosts(result.data.posts));
       })
       .catch((err) => {
@@ -302,7 +295,6 @@ const Posts = () => {
       </button>
       <button onClick={uploadFile}> Upload</button>
       {posts?.map((elem) => {
-        console.log(elem.comment)
         return (
           <>
             <div key={elem.id}>
@@ -311,23 +303,36 @@ const Posts = () => {
                 <Link
                   to={`/users/${elem.user_id}`}
                   onClick={() => {
-                    getPostComment(elem.id)
-                    setShow(elem.id);
-                  }
-                  }
+                    console.log(elem.user_id);
+                    dispatch(setUserId(elem.user_id));
+                  }}
                 >
-                  showComment
-                </button>}
-                {// get if there is a value 
-                show === elem.id &&
+                  <p>{elem.firstname}</p>
+                </Link>
+                <h1 onClick={elem.id}>{elem.body}</h1>
+                {
+                  <button
+                    onClick={() => {
+                      getPostComment(elem.id);
+                      console.log(elem);
+                      setShow(elem.user_id);
+                    }}
+                  >
+                    showComment
+                  </button>
+                }
+                {
+                  // get if there is a value
                   elem.comment?.map((comment, i) => {
                     return (
                       <p className="comment" key={i}>
                         {comment?.comment}
-                        {comment.commenter == userId && (<div>
-                          <button>update</button>
-                          <button>delete</button>
-                        </div>)}
+                        {show == userId && (
+                          <div>
+                            <button>update</button>
+                            <button>delete</button>
+                          </div>
+                        )}
                       </p>
                     );
                   })
@@ -399,8 +404,10 @@ const Posts = () => {
               {userId && (
                 <button
                   onClick={() => {
-                    console.log("===========>", elem.id);
-                    createComment(elem.id);
+                    // console.log(elem.id);
+                    {
+                      elem.id && <input placeholder="Body" />;
+                    }
                   }}
                 >
                   Add Comment
