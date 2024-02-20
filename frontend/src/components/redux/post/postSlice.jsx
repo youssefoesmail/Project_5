@@ -3,7 +3,7 @@ const postSlice = createSlice({
   name: "posts",
   initialState: {
     posts: [],
-    comment: null
+    comment: []
   },
   reducers: {
     setPosts: (state, action) => {
@@ -24,23 +24,20 @@ const postSlice = createSlice({
       state.posts = state.posts.filter((elem) => elem.id !== action.payload.id);
     },
     setComments: (state, action) => {
-      state.comment = action.payload
+      state.posts = state.posts.map((id, index) => {
+        if (id.id === action.payload.id) {
+          id.comment = action.payload.comment;
+        }
+        return id;
+      });
     },
     addComments: (state, action) => {
-      state.comment = state.comment.map((id, index) => {
+      state.posts = state.posts.map((id, index) => {
         if (id.id === action.payload.id) {
           id.comment.push(action.payload.comment);
         }
-      return id.comment;
-      })
-    },
-    updateComments: (state, action) => {
-      state.comment = state.comment.map((id, index) => {
-        if (id.id === action.payload.id) {
-          return { ...id, ...action.payload.comment }
-        }
-        return id
-      })
+        return id;
+      });
     }
   }
 });

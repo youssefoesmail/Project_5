@@ -6,8 +6,8 @@ import {
   updatePostById,
   deletePost,
   setComments,
-  addComments,
-  updateComments
+  addComments
+
 } from "../redux/post/postSlice";
 import {
   ref,
@@ -18,9 +18,10 @@ import {
 } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
-import { token } from "../redux/auth/userSlice";
+import { setUserId, token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
+import { Link } from "react-router-dom";
 const Posts = () => {
   //setUserPostId
   const [body, setBody] = useState("");
@@ -35,14 +36,11 @@ const Posts = () => {
   const [message, setMessage] = useState("");
   const [show, setShow] = useState("");
   const [userPostId, setUserPostId] = useState("");
-  const [addCommentId, setAddCommentId] = useState("");
-  const [addComment, setAddComment] = useState("");
-
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
-  const { posts, auth, comment, userId } = useSelector((state) => {
+  const { posts, auth, comment, userId, users } = useSelector((state) => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
@@ -50,7 +48,7 @@ const Posts = () => {
       userId: state.auth.userId
     };
   });
-  console.log(comment);
+  console.log(userId, show, userPostId);
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -65,6 +63,7 @@ const Posts = () => {
         }
       })
       .then((result) => {
+        // console.log(result);
         dispatch(createNewPost(result.data));
       })
       .catch((err) => {
@@ -103,16 +102,14 @@ const Posts = () => {
       if (result.data.success) {
         const comments = result.data.result;
         dispatch(
-          setComments(comments)
+          setComments({ comment: comments, id: id })
         );
       } else throw Error;
     } catch (error) {
       if (!error.response) {
         return setMessage(error);
       }
-      setMessage(
-        "Error happened while Get Data, please try again"
-      );
+      setMessage("Error happened while Get Data, please try again");
     }
   };
   // ====================================================
@@ -131,6 +128,7 @@ const Posts = () => {
           }
         }
       );
+      console.log(addComment,result.data.result);
       dispatch(addComments({comment:result.data.result,id}))
     }
     catch (err) {
@@ -264,6 +262,7 @@ const Posts = () => {
     axios
       .get("http://localhost:5000/posts")
       .then((result) => {
+        // console.log(result.data.posts);
         dispatch(setPosts(result.data.posts));
       })
       .catch((err) => {
@@ -293,14 +292,14 @@ const Posts = () => {
         }}
       />
 
-      {userId && <button
+      <button
         onClick={() => {
           handleCreateNewPost();
           clearInput();
         }}
       >
         createNewPost
-      </button>}
+      </button>
       <button onClick={uploadFile}> Upload</button>
       {posts?.map((elem) => {
         console.log(elem.comment)
@@ -309,8 +308,8 @@ const Posts = () => {
             <div key={elem.id}>
               <>
                 {" "}
-                <h1 onClick={elem.id}>{elem.body}</h1>
-                {<button
+                <Link
+                  to={`/users/${elem.user_id}`}
                   onClick={() => {
                     getPostComment(elem.id)
                     setShow(elem.id);
@@ -319,21 +318,20 @@ const Posts = () => {
                 >
                   showComment
                 </button>}
-                {show === elem.id &&
-                comment?.map((comment, i) => {
+                {// get if there is a value 
+                show === elem.id &&
+                  elem.comment?.map((comment, i) => {
                     return (
                       <p className="comment" key={i}>
                         {comment?.comment}
                         {comment.commenter == userId && (<div>
-                          <button
-                          onClick={()=>{updateComment(comment.id)}}
-                          >update</button>
+                          <button>update</button>
                           <button>delete</button>
                         </div>)}
                       </p>
                     );
-                  })}
-
+                  })
+                }
                 <img width="300px" height="150px" src={elem.photo} />
                 <video controls width="300px" height="150px">
                   <source src={elem.video} type="video/mp4" />
@@ -377,46 +375,37 @@ const Posts = () => {
                   </>
                 ) : (
                   <>
-                    {elem.user_id == userId && <button
-                      onClick={() => {
-                        setUpdate(!update);
-                      }}
-                    >
-                      update
-                    </button>}
+                    {elem.user_id == userId && (
+                      <button
+                        onClick={() => {
+                          setUpdate(!update);
+                        }}
+                      >
+                        update
+                      </button>
+                    )}
                   </>
                 )}
               </>
-              {elem.user_id == userId && <button
-                onClick={() => {
-                  handleDeletePost(elem.id);
-                }}
-              >
-                deletePost
-              </button>}
-              {userId && <button
-                onClick={() => {
-                  {
-                    setAddCommentId(elem.id);
-                  }
-                }}
-              >
-                Add Comment
-              </button>}
-              {addCommentId === elem.id && <>
-                <input
-                  placeholder="Body"
-                  onChange={(e) => {
-                    setAddComment(e.target.value);
-                  }}
-                />
+              {elem.user_id == userId && (
                 <button
                   onClick={() => {
+                    handleDeletePost(elem.id);
+                  }}
+                >
+                  deletePost
+                </button>
+              )}
+              {userId && (
+                <button
+                  onClick={() => {
+                    console.log("===========>", elem.id);
                     createComment(elem.id);
                   }}
-                >ADD</button>
-              </>
-              }
+                >
+                  Add Comment
+                </button>
+              )}
             </div>{" "}
           </>
         );
