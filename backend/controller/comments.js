@@ -158,7 +158,7 @@ const updateCommentPostById = (req, res) => {
   const commenter = req.token.userId;
 
   const query = `UPDATE comment_posts SET comment = COALESCE($1,comment) WHERE commenter=$2 AND id=$3 AND is_deleted = 0  RETURNING *;`;
-  const values = [comment || null,commenter, id];
+  const values = [comment ,commenter, id];
   pool
     .query(query, values)
     .then((result) => {
