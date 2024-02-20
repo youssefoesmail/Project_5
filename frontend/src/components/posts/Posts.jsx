@@ -44,8 +44,7 @@ const Posts = () => {
       auth: state.auth,
       posts: state.posts.posts,
       comment: state.posts.comment.comment,
-      userId: state.auth.userId,
-      users: state.posts.users
+      userId: state.auth.userId
     };
   });
   const handleCreateNewPost = () => {

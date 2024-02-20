@@ -7,19 +7,21 @@ import Comments from "./components/Comments/Comments";
 import Personal from "./components/personalPage/Personal";
 import FollowPost from "./components/FollowPost/FollowPost";
 import Reel from "./components/reels/Reel";
+import UsersPage from "./components/usersPage/UsersPage";
 
 function App() {
   return (
     <>
       <div>
         <Routes>
+          <Route path="/users/:id" element={<UsersPage />} />
           <Route path="/reels" element={<Reel />} />
           <Route path="/personal" element={<Personal />} />
           <Route path="/post" element={<Posts />} />
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/comments" element={<Comments />} />
-          <Route path="/followers"  element = {<FollowPost/>}/>
+          <Route path="/followers" element={<FollowPost />} />
         </Routes>
       </div>
     </>
