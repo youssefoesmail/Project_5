@@ -42,9 +42,7 @@ const postSlice = createSlice({
       return id;
     });
   },
-  setUsersId: (state, action) => {
-    state.users = action.payload;
-  }
+ 
 });
 export const {
   setPosts,
