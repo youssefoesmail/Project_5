@@ -3,7 +3,8 @@ const postSlice = createSlice({
   name: "posts",
   initialState: {
     posts: [],
-    comment: []
+    comment: [],
+    users: {}
   },
   reducers: {
     setPosts: (state, action) => {
@@ -40,6 +41,9 @@ const postSlice = createSlice({
       }
       return id;
     });
+  },
+  setUsersId: (state, action) => {
+    state.users = action.payload;
   }
 });
 export const {

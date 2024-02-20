@@ -6,7 +6,8 @@ import {
   updatePostById,
   deletePost,
   setComments,
-  addComments
+  addComments,
+  setUsersId
 } from "../redux/post/postSlice";
 import {
   ref,
@@ -38,12 +39,13 @@ const Posts = () => {
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
-  const { posts, auth, comment, userId } = useSelector((state) => {
+  const { posts, auth, comment, userId, users } = useSelector((state) => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
       comment: state.posts.comment.comment,
-      userId: state.auth.userId
+      userId: state.auth.userId,
+      users: state.posts.users
     };
   });
   console.log(userId, show, userPostId);
@@ -99,17 +101,13 @@ const Posts = () => {
       );
       if (result.data.success) {
         const comments = result.data.result;
-        dispatch(
-          setComments({ comment: comments, id: id })
-        );
+        dispatch(setComments({ comment: comments, id: id }));
       } else throw Error;
     } catch (error) {
       if (!error.response) {
         return setMessage(error);
       }
-      setMessage(
-        "Error happened while Get Data, please try again"
-      );
+      setMessage("Error happened while Get Data, please try again");
     }
   };
   // ====================================================
@@ -123,17 +121,13 @@ const Posts = () => {
       );
       if (result.data.success) {
         const comments = result.data.result;
-        dispatch(
-          addComments({ comment: comments, id: id })
-        );
+        dispatch(addComments({ comment: comments, id: id }));
       } else throw Error;
     } catch (error) {
       if (!error.response) {
         return setMessage(error);
       }
-      setMessage(
-        "Error happened while Get Data, please try again"
-      );
+      setMessage("Error happened while Get Data, please try again");
     }
   };
   // ====================================================
@@ -249,14 +243,16 @@ const Posts = () => {
         }}
       />
 
-      {userId && <button
-        onClick={() => {
-          handleCreateNewPost();
-          clearInput();
-        }}
-      >
-        createNewPost
-      </button>}
+      {userId && (
+        <button
+          onClick={() => {
+            handleCreateNewPost();
+            clearInput();
+          }}
+        >
+          createNewPost
+        </button>
+      )}
       <button onClick={uploadFile}> Upload</button>
       {posts?.map((elem) => {
         return (
@@ -266,29 +262,33 @@ const Posts = () => {
                 {" "}
                 <h1 onClick={elem.id}>{elem.body}</h1>
                 {console.log(elem)}
-                {<button
-                  onClick={() => {
-                    getPostComment(elem.id)
-                    console.log(elem);
-                    setShow(elem.user_id);
-                  }
-                  }
-                >
-                  showComment
-                </button>}
-                {// get if there is a value
+                {
+                  <button
+                    onClick={() => {
+                      getPostComment(elem.id);
+                      console.log(elem);
+                      setShow(elem.user_id);
+                    }}
+                  >
+                    showComment
+                  </button>
+                }
+                {
+                  // get if there is a value
                   elem.comment?.map((comment, i) => {
                     return (
                       <p className="comment" key={i}>
                         {comment?.comment}
-                        {show == userId && (<div>
-                          <button>update</button>
-                          <button>delete</button>
-                        </div>)}
+                        {show == userId && (
+                          <div>
+                            <button>update</button>
+                            <button>delete</button>
+                          </div>
+                        )}
                       </p>
                     );
-                  })}
-
+                  })
+                }
                 <img width="300px" height="150px" src={elem.photo} />
                 <video controls width="300px" height="150px">
                   <source src={elem.video} type="video/mp4" />
@@ -301,7 +301,7 @@ const Posts = () => {
                     ))}
                   </div>
                 )}
-                { elem.user_id == userId && update ? (
+                {elem.user_id == userId && update ? (
                   <>
                     {" "}
                     <input
@@ -332,33 +332,39 @@ const Posts = () => {
                   </>
                 ) : (
                   <>
-                    {elem.user_id == userId && <button
-                      onClick={() => {
-                        setUpdate(!update);
-                      }}
-                    >
-                      update
-                    </button>}
+                    {elem.user_id == userId && (
+                      <button
+                        onClick={() => {
+                          setUpdate(!update);
+                        }}
+                      >
+                        update
+                      </button>
+                    )}
                   </>
                 )}
               </>
-              { elem.user_id == userId && <button
-                onClick={() => {
-                  handleDeletePost(elem.id);
-                }}
-              >
-                deletePost
-              </button>}
-              {userId && <button
-                onClick={() => {
-                  // console.log(elem.id);
-                  {
-                    elem.id && <input placeholder="Body" />;
-                  }
-                }}
-              >
-                Add Comment
-              </button>}
+              {elem.user_id == userId && (
+                <button
+                  onClick={() => {
+                    handleDeletePost(elem.id);
+                  }}
+                >
+                  deletePost
+                </button>
+              )}
+              {userId && (
+                <button
+                  onClick={() => {
+                    // console.log(elem.id);
+                    {
+                      elem.id && <input placeholder="Body" />;
+                    }
+                  }}
+                >
+                  Add Comment
+                </button>
+              )}
             </div>{" "}
           </>
         );
