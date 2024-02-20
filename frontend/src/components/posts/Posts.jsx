@@ -268,23 +268,22 @@ const Posts = () => {
               <>
                 {" "}
                 <h1 onClick={elem.id}>{elem.body}</h1>
-                {console.log(elem)}
                 {<button
                   onClick={() => {
                     getPostComment(elem.id)
-                    console.log(elem);
-                    setShow(elem.user_id);
+                    setShow(elem.id);
                   }
                   }
                 >
                   showComment
                 </button>}
-                {// get if there is a value
+                {// get if there is a value 
+                show === elem.id &&
                   elem.comment?.map((comment, i) => {
                     return (
                       <p className="comment" key={i}>
                         {comment?.comment}
-                        {show == userId && (<div>
+                        {comment.commenter == userId && (<div>
                           <button>update</button>
                           <button>delete</button>
                         </div>)}
