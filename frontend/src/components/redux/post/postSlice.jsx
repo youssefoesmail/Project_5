@@ -30,6 +30,26 @@ const postSlice = createSlice({
         }
         return id;
       });
+
+    },
+
+    addComments: (state, action) => {
+      state.posts = state.posts.map((id, index) => {
+        if (id.id === action.payload.id) {
+          id.comment.push(action.payload.comment);
+        }
+        return id;
+      });
+    },
+    setImage: (state, action) => {
+      state.photo = action.payload;
+      return state.photo
+    },
+    
+  },
+
+  
+
     }
   },
 
@@ -41,6 +61,7 @@ const postSlice = createSlice({
       return id;
     });
   }
+
 });
 export const {
   setPosts,
