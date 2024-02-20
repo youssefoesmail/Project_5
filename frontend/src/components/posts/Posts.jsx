@@ -6,7 +6,8 @@ import {
   updatePostById,
   deletePost,
   setComments,
-  addComments
+  addComments,
+  updateLike
 } from "../redux/post/postSlice";
 import {
   ref,
@@ -227,6 +228,27 @@ const Posts = () => {
       });
   }, []);
 
+
+  //! Create Like to Post 
+
+  const addLike=(idPost)=>{
+    console.log(auth.token);
+    console.log("Test",auth.userId);
+    console.log("Log",idPost);
+
+    axios.post(`http://localhost:5000/likes/search/${auth.userId}?post_id=${idPost}`,{
+      headers: {
+        authorization: `Bearer ${auth.token}`,
+      }
+    }).then((result) => {
+        console.log(result);
+        dispatch(updateLike())
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   return (
     <div>
       <Story />
@@ -288,6 +310,10 @@ const Posts = () => {
                       </p>
                     );
                   })}
+                  
+                <button onClick={()=>{
+                  addLike(elem.id)
+                } }>Like</button>
 
                 <img width="300px" height="150px" src={elem.photo} />
                 <video controls width="300px" height="150px">
