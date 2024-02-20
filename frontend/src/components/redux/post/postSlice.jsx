@@ -30,16 +30,15 @@ const postSlice = createSlice({
         }
         return id;
       });
+    },
+    addComments: (state, action) => {
+      state.posts = state.posts.map((id, index) => {
+        if (id.id === action.payload.id) {
+          id.comment.push(action.payload.comment);
+        }
+        return id;
+      });
     }
-  },
-
-  addComments: (state, action) => {
-    state.posts = state.posts.map((id, index) => {
-      if (id.id === action.payload.id) {
-        id.comment.push(action.payload.comment);
-      }
-      return id;
-    });
   }
 });
 export const {
