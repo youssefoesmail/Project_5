@@ -6,6 +6,8 @@ import {
   updatePostById,
   deletePost,
   setComments,
+  addComments,
+  setUsersId
 } from "../redux/post/postSlice";
 import {
   ref,
@@ -40,12 +42,16 @@ const Posts = () => {
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
-  const { posts, auth, comment, userId } = useSelector((state) => {
+  const { posts, auth, comment, userId, users } = useSelector((state) => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
       comment: state.posts.comment.comment,
       userId: state.auth.userId,
+
+      users: state.posts.users
+
+
     };
   });
   const handleCreateNewPost = () => {
@@ -128,6 +134,7 @@ const Posts = () => {
         return setMessage(error);
       }
       setMessage("Error happened while Get Data, please try again");
+
 
       const result = await axios.post(`http://localhost:5000/comments/post/${id}`,
         {
@@ -278,10 +285,14 @@ const Posts = () => {
           createNewPost
         </button>
       )}
+
+      <button onClick={uploadFile}> Upload</button>
+
       <button onClick={() => {
         uploadFile();
         clearInput();
         }}> Upload</button>
+
       {posts?.map((elem) => {
         return (
           <>
@@ -289,6 +300,9 @@ const Posts = () => {
               <>
                 {" "}
                 <h1 onClick={elem.id}>{elem.body}</h1>
+
+                {console.log(elem)}
+
 
                 {<button
                   onClick={() => {
@@ -302,10 +316,14 @@ const Posts = () => {
                 {// get if there is a value 
                 show === elem.id &&
 
+
                 {
                   <button
                     onClick={() => {
                       getPostComment(elem.id);
+                      console.log(elem);
+
+
                       setShow(elem.user_id);
                     }}
                   >
@@ -320,10 +338,12 @@ const Posts = () => {
                       <p className="comment" key={i}>
                         {comment?.comment}
 
+
                         {comment.commenter == userId && (<div>
                           <button>update</button>
                           <button>delete</button>
                         </div>)}
+
 
                         {show == userId && (
                           <div>
@@ -332,11 +352,12 @@ const Posts = () => {
                           </div>
                         )}
 
+
                       </p>
                     );
                   })
                 }
-                
+
                 <img width="300px" height="150px" src={elem.photo} />
                 <video controls width="300px" height="150px">
                   <source src={elem.video} type="video/mp4" />
@@ -418,6 +439,7 @@ const Posts = () => {
                 </button>
               )}
 
+
               {elem.user_id == userId && <button
                 onClick={() => {
                   handleDeletePost(elem.id);
@@ -449,6 +471,7 @@ const Posts = () => {
                 >ADD</button>
               </>
               }
+
 
             </div>{" "}
           </>

@@ -3,7 +3,8 @@ const postSlice = createSlice({
   name: "posts",
   initialState: {
     posts: [],
-    comment: []
+    comment: [],
+    users: {}
   },
   reducers: {
     setPosts: (state, action) => {
@@ -48,6 +49,18 @@ const postSlice = createSlice({
     },
     
   },
+
+
+  addComments: (state, action) => {
+    state.posts = state.posts.map((id, index) => {
+      if (id.id === action.payload.id) {
+        id.comment.push(action.payload.comment);
+      }
+      return id;
+    });
+  },
+  setUsersId: (state, action) => {
+    state.users = action.payload;
 
     }
   }
