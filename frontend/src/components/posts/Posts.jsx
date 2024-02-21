@@ -7,6 +7,8 @@ import {
   deletePost,
   setComments,
   addComments,
+  updateComments
+
 } from "../redux/post/postSlice";
 import {
   ref,
@@ -21,6 +23,7 @@ import { setUserId, token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
+
 const Posts = () => {
   //setUserPostId
   const [body, setBody] = useState("");
@@ -34,7 +37,9 @@ const Posts = () => {
   const [videoUrls, setVideoUrls] = useState([] || null);
   const [message, setMessage] = useState("");
   const [show, setShow] = useState("");
+  const [postId, setPostId] = useState("");
   const [userPostId, setUserPostId] = useState("");
+  const [addCommentValue, setAddCommentValue] = useState("");
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
@@ -43,11 +48,12 @@ const Posts = () => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
-      comment: state.posts.comment.comment,
+      comment: state.posts.comment,
       userId: state.auth.userId,
       users: state.posts.users,
     };
   });
+  console.log(posts);
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -99,8 +105,9 @@ const Posts = () => {
         `http://localhost:5000/comments/post/${id}`
       );
       if (result.data.success) {
+        console.log(result.data.result)
         const comments = result.data.result;
-        dispatch(setComments({ comment: comments, id: id }));
+        dispatch(setComments({ comment: comments, id }));
       } else throw Error;
     } catch (error) {
       if (!error.response) {
@@ -116,11 +123,19 @@ const Posts = () => {
   const createComment = async (id) => {
     try {
       const result = await axios.post(
-        `http://localhost:5000/comments/post/${id}`
+        `http://localhost:5000/comments/post/${id}`,
+        {
+          comment: addCommentValue
+        },
+        {
+          headers: {
+            authorization: `Bearer ${auth.token}`
+          }
+        }
       );
       if (result.data.success) {
         const comments = result.data.result;
-        dispatch(addComments({ comment: comments, id: id }));
+        dispatch(addComments({ comment: comments, id }));
       } else throw Error;
     } catch (error) {
       if (!error.response) {
@@ -132,12 +147,14 @@ const Posts = () => {
   // ====================================================
   //!============ updateComment =========================
 
-  const updateComment = async (id) => {
+  const updateComment = async (id, pID) => {
     try {
       const result = await axios.put(
         `http://localhost:5000/comments/post/${id}`,
         {
+          comment: "addComment_4"
           comment: "addComment",
+
         },
         {
           headers: {
@@ -146,7 +163,7 @@ const Posts = () => {
         }
       );
       console.log(result.data.result);
-      dispatch(updateComments({ comment: result.data.result, id }));
+      dispatch(updateComments({ comment: result.data.result, id, pID }));
     } catch (err) {
       console.log(err);
     }
@@ -327,26 +344,33 @@ const Posts = () => {
                   <button
                     onClick={() => {
                       getPostComment(elem.id);
-                      console.log(elem);
+                      console.log(elem.id);
                       setShow(elem.user_id);
+                      setPostId(elem.id)
                     }}
                   >
                     showComment
                   </button>
                 }
-                {
+                {elem.id == postId &&
                   // get if there is a value
                   elem.comment?.map((comment, i) => {
                     return (
-                      <p className="comment" key={i}>
-                        {comment?.comment}
-                        {show == userId && (
+                      <div className="comment" key={i}>
+                        <p>{comment?.comment}</p>
+                        {comment.commenter == userId && (
                           <div>
-                            <button>update</button>
+
+                            <button
+                              onClick={() => {
+                                console.log(comment);
+                                updateComment(comment.id, elem.id)
+                              }}
+                            >update</button>
                             <button>delete</button>
                           </div>
                         )}
-                      </p>
+                      </div>
                     );
                   })
                 }
@@ -415,18 +439,33 @@ const Posts = () => {
                   deletePost
                 </button>
               )}
-              {userId && (
-                <button
+              {elem.id != show && <button
+                onClick={() => {
+                  {
+                    setShow(elem.id)
+                  }
+                }}
+              >
+                Add Comment
+              </button>
+              }
+              {
+                elem.id == show && <input placeholder="Body" onChange={(e) => {
+                  setAddCommentValue(e.target.value);
+                }} />
+              }
+              {
+                elem.id == show && <button
                   onClick={() => {
-                    // console.log(elem.id);
                     {
-                      elem.id && <input placeholder="Body" />;
+                      createComment(elem.id)
+                      setShow("")
                     }
                   }}
                 >
-                  Add Comment
+                  Add
                 </button>
-              )}
+              }
             </div>{" "}
           </>
         );
