@@ -6,14 +6,14 @@ import {
   updatePostById,
   deletePost,
   setComments,
-  addComments
+  addComments,
 } from "../redux/post/postSlice";
 import {
   ref,
   uploadBytes,
   getDownloadURL,
   listAll,
-  list
+  list,
 } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
@@ -45,21 +45,21 @@ const Posts = () => {
       posts: state.posts.posts,
       comment: state.posts.comment.comment,
       userId: state.auth.userId,
-      users: state.posts.users
+      users: state.posts.users,
     };
   });
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
       photo: imageUrls[imageUrls.length - 1] || null,
-      video: videoUrls[videoUrls.length - 1] || null
+      video: videoUrls[videoUrls.length - 1] || null,
     };
 
     axios
       .post("http://localhost:5000/posts", NewPost, {
         headers: {
-          authorization: `Bearer ${auth.token}`
-        }
+          authorization: `Bearer ${auth.token}`,
+        },
       })
       .then((result) => {
         console.log(result.data.result);
@@ -137,12 +137,12 @@ const Posts = () => {
       const result = await axios.put(
         `http://localhost:5000/comments/post/${id}`,
         {
-          comment: "addComment"
+          comment: "addComment",
         },
         {
           headers: {
-            authorization: `Bearer ${auth.token}`
-          }
+            authorization: `Bearer ${auth.token}`,
+          },
         }
       );
       console.log(result.data.result);
@@ -179,8 +179,8 @@ const Posts = () => {
     axios
       .delete(`http://localhost:5000/posts/${postId}`, {
         headers: {
-          authorization: `Bearer ${auth.token}`
-        }
+          authorization: `Bearer ${auth.token}`,
+        },
       })
       .then((result) => {
         // console.log(result);
@@ -191,17 +191,17 @@ const Posts = () => {
       });
   };
 
-  const handleUpdatePost = (postId) => {
+  const handleUpdatePost = (postId,img_url,vid_url) => {
     const updatePost = {
       body,
-      photo,
-      video
+      photo: img_url,
+      video: vid_url,
     };
     axios
       .put(`http://localhost:5000/posts/${postId}`, updatePost, {
         headers: {
-          authorization: `Bearer ${auth.token}`
-        }
+          authorization: `Bearer ${auth.token}`,
+        },
       })
       .then((result) => {
         setUpdate(!update);
@@ -210,19 +210,27 @@ const Posts = () => {
       .catch((err) => {
         console.log(err);
       });
+  console.log(updatePost);
+
   };
   const clearInput = () => {
     setBody("");
     setPhoto("");
     setVideo("");
     setImageUrls("");
+    setVideoUrls("");
+    setImageUpload("");
+    setVideoUpload("");
   };
-  const uploadFile = () => {
+  const uploadFile = (id,str1,str2) => {
+    let urlim=""
     if (imageUpload == null) return;
     const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
     uploadBytes(imageRef, imageUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         setImageUrls((prev) => [...prev, url]);
+                urlim=url
+        
       });
     });
     if (videoUpload == null) return;
@@ -230,8 +238,13 @@ const Posts = () => {
     uploadBytes(videoRef, videoUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         setVideoUrls((prev) => [...prev, url]);
+        if(str2 == "update_vid"){
+          handleUpdatePost(id,urlim,url)
+        }
       });
     });
+   
+
   };
 
   useEffect(() => {
@@ -359,20 +372,21 @@ const Posts = () => {
                       }}
                     />
                     <input
-                      placeholder="Body"
-                      onChange={(e) => {
-                        setImageUrls(e.target.value);
+                      type="file"
+                      onChange={(event) => {
+                        setImageUpload(event.target.files[0]);
                       }}
                     />
                     <input
-                      placeholder="Body"
-                      onChange={(e) => {
-                        setVideo(e.target.value);
+                      type="file"
+                      onChange={(event) => {
+                        setVideoUpload(event.target.files[0]);
                       }}
                     />
                     <button
                       onClick={() => {
-                        handleUpdatePost(elem.id);
+                        // handleUpdatePost(elem.id);
+                        uploadFile(elem.id,"update_img","update_vid")
                       }}
                     >
                       UpdateInformtion
