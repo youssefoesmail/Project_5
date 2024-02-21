@@ -42,7 +42,7 @@ const postSlice = createSlice({
     },
   },
 
-  }
+  
 });
 export const {
   setPosts,
