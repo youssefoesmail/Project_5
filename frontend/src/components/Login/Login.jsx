@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUserId, setLogin } from "../redux/auth/userSlice";
+import Navbar from "../Navbars/NavbarLogin";
 import { GoogleLogin } from '@react-oauth/google';
 
 
@@ -68,6 +69,7 @@ const Login = () => {
 
     return (
         <div>
+            <Navbar/>
             <div>
                 <p>Login: </p>
 

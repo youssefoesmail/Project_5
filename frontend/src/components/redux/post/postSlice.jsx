@@ -14,6 +14,7 @@ const postSlice = createSlice({
     updatePostById: (state, action) => {
       state.posts = state.posts.map((elem, ind) => {
         if (elem.id === action.payload.id) {
+          console.log(action.payload);
           return { ...elem, ...action.payload };
         }
         return elem;
@@ -37,6 +38,7 @@ const postSlice = createSlice({
         }
         return id;
       });
+
     },
     updateComments: (state, action) => {
 
@@ -53,8 +55,16 @@ const postSlice = createSlice({
         return post
       })
       console.log(state.posts)
+
+    },
+  },
+
+  
+
+
     }
   }
+
 });
 export const {
   setPosts,
