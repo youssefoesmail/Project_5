@@ -56,12 +56,6 @@ const postSlice = createSlice({
       })
       console.log(state.posts)
 
-    },
-  },
-
-  
-
-
     }
   }
 
