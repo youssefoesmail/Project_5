@@ -52,6 +52,7 @@ const Posts = () => {
       users: state.posts.users
     };
   });
+  console.log(posts);
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -150,7 +151,7 @@ const Posts = () => {
       const result = await axios.put(
         `http://localhost:5000/comments/post/${id}`,
         {
-          comment: "addComment_3"
+          comment: "addComment_4"
         },
         {
           headers: {
@@ -159,7 +160,7 @@ const Posts = () => {
         }
       );
       console.log(result.data.result);
-      dispatch(updateComments({ comment: result.data.result, id, pID  }));
+      dispatch(updateComments({ comment: result.data.result, id, pID }));
     } catch (err) {
       console.log(err);
     }
@@ -339,21 +340,21 @@ const Posts = () => {
                   // get if there is a value
                   elem.comment?.map((comment, i) => {
                     return (
-                      <p className="comment" key={i}>
-                        {comment?.comment}
-                        {console.log(comment.commenter,userId)}
+                      <div className="comment" key={i}>
+                        <p>{comment?.comment}</p>
                         {comment.commenter == userId && (
                           <div>
+
                             <button
                               onClick={() => {
                                 console.log(comment);
                                 updateComment(comment.id, elem.id)
-                               }}
+                              }}
                             >update</button>
                             <button>delete</button>
                           </div>
                         )}
-                      </p>
+                      </div>
                     );
                   })
                 }
@@ -438,15 +439,15 @@ const Posts = () => {
               }
               {
                 elem.id == show && <button
-                onClick={() => {
-                  {
-                    createComment(elem.id)
-                    setShow("")
-                  }
-                }}
-              >
-                Add
-              </button>
+                  onClick={() => {
+                    {
+                      createComment(elem.id)
+                      setShow("")
+                    }
+                  }}
+                >
+                  Add
+                </button>
               }
             </div>{" "}
           </>
