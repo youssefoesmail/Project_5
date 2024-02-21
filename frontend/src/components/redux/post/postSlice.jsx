@@ -37,6 +37,23 @@ const postSlice = createSlice({
         }
         return id;
       });
+    },
+    updateComments: (state, action) => {
+      console.log(action.payload);
+      state.posts = state.posts.map((post, index) => {
+        if(post.id === action.payload.pID)
+        {
+          console.log("Done");
+          state.posts.comment = state.posts.comment.map((com, index)=>{
+            console.log("Done 2");
+            if(com.id === action.payload.id)
+            {
+              com.comment = action.payload.comment
+            }
+            return com
+          })
+        }
+      })
     }
   }
 });

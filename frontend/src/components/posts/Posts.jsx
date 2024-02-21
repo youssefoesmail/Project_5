@@ -6,7 +6,8 @@ import {
   updatePostById,
   deletePost,
   setComments,
-  addComments
+  addComments,
+  updateComments
 } from "../redux/post/postSlice";
 import {
   ref,
@@ -21,6 +22,7 @@ import { setUserId, token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
+
 const Posts = () => {
   //setUserPostId
   const [body, setBody] = useState("");
@@ -101,6 +103,7 @@ const Posts = () => {
         `http://localhost:5000/comments/post/${id}`
       );
       if (result.data.success) {
+        console.log(result.data.result)
         const comments = result.data.result;
         dispatch(setComments({ comment: comments, id }));
       } else throw Error;
@@ -142,12 +145,12 @@ const Posts = () => {
   // ====================================================
   //!============ updateComment =========================
 
-  const updateComment = async (id) => {
+  const updateComment = async (id, pID) => {
     try {
       const result = await axios.put(
         `http://localhost:5000/comments/post/${id}`,
         {
-          comment: "addComment"
+          comment: "addComment_3"
         },
         {
           headers: {
@@ -156,7 +159,7 @@ const Posts = () => {
         }
       );
       console.log(result.data.result);
-      //dispatch(updateComments({ comment: result.data.result, id }));
+      dispatch(updateComments({ comment: result.data.result, id, pID  }));
     } catch (err) {
       console.log(err);
     }
@@ -342,8 +345,9 @@ const Posts = () => {
                         {comment.commenter == userId && (
                           <div>
                             <button
-                              onClick={() => { 
-                                //updateComment(comment.id)
+                              onClick={() => {
+                                console.log(comment);
+                                updateComment(comment.id, elem.id)
                                }}
                             >update</button>
                             <button>delete</button>
