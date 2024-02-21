@@ -27,6 +27,8 @@ const postSlice = createSlice({
       state.posts = state.posts.map((id, index) => {
         if (id.id === action.payload.id) {
           id.comment = action.payload.comment;
+          console.log(id.comment);
+          state.comment = action.payload.comment;
         }
         return id;
       });

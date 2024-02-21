@@ -43,11 +43,12 @@ const Posts = () => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
-      comment: state.posts.comment.comment,
+      comment: state.posts.comment,
       userId: state.auth.userId,
       users: state.posts.users
     };
   });
+  console.log(comment);
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -100,7 +101,7 @@ const Posts = () => {
       );
       if (result.data.success) {
         const comments = result.data.result;
-        dispatch(setComments({ comment: comments, id: id }));
+        dispatch(setComments({ comment: comments, id }));
       } else throw Error;
     } catch (error) {
       if (!error.response) {
@@ -146,7 +147,7 @@ const Posts = () => {
         }
       );
       console.log(result.data.result);
-      dispatch(updateComments({ comment: result.data.result, id }));
+      //dispatch(updateComments({ comment: result.data.result, id }));
     } catch (err) {
       console.log(err);
     }
@@ -314,22 +315,24 @@ const Posts = () => {
                   <button
                     onClick={() => {
                       getPostComment(elem.id);
-                      console.log(elem);
+                      console.log(elem.id);
                       setShow(elem.user_id);
                     }}
                   >
                     showComment
                   </button>
                 }
-                {
-                  // get if there is a value
-                  elem.comment?.map((comment, i) => {
+                {elem.id == comment[0]?.post_id &&
+                // get if there is a value
+                  comment?.map((comment, i) => {
                     return (
                       <p className="comment" key={i}>
                         {comment?.comment}
                         {show == userId && (
                           <div>
-                            <button>update</button>
+                            <button
+                            onClick={()=>{updateComment(comment.id)}}
+                            >update</button>
                             <button>delete</button>
                           </div>
                         )}
