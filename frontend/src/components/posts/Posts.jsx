@@ -34,7 +34,9 @@ const Posts = () => {
   const [videoUrls, setVideoUrls] = useState([] || null);
   const [message, setMessage] = useState("");
   const [show, setShow] = useState("");
+  const [postId, setPostId] = useState("");
   const [userPostId, setUserPostId] = useState("");
+  const [addCommentValue, setAddCommentValue] = useState("");
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
@@ -48,7 +50,6 @@ const Posts = () => {
       users: state.posts.users
     };
   });
-  console.log(comment);
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -117,11 +118,19 @@ const Posts = () => {
   const createComment = async (id) => {
     try {
       const result = await axios.post(
-        `http://localhost:5000/comments/post/${id}`
+        `http://localhost:5000/comments/post/${id}`,
+        {
+          comment: addCommentValue
+        },
+        {
+          headers: {
+            authorization: `Bearer ${auth.token}`
+          }
+        }
       );
       if (result.data.success) {
         const comments = result.data.result;
-        dispatch(addComments({ comment: comments, id: id }));
+        dispatch(addComments({ comment: comments, id }));
       } else throw Error;
     } catch (error) {
       if (!error.response) {
@@ -317,21 +326,25 @@ const Posts = () => {
                       getPostComment(elem.id);
                       console.log(elem.id);
                       setShow(elem.user_id);
+                      setPostId(elem.id)
                     }}
                   >
                     showComment
                   </button>
                 }
-                {elem.id == comment[0]?.post_id &&
-                // get if there is a value
-                  comment?.map((comment, i) => {
+                {elem.id == postId &&
+                  // get if there is a value
+                  elem.comment?.map((comment, i) => {
                     return (
                       <p className="comment" key={i}>
                         {comment?.comment}
-                        {show == userId && (
+                        {console.log(comment.commenter,userId)}
+                        {comment.commenter == userId && (
                           <div>
                             <button
-                            onClick={()=>{updateComment(comment.id)}}
+                              onClick={() => { 
+                                //updateComment(comment.id)
+                               }}
                             >update</button>
                             <button>delete</button>
                           </div>
@@ -404,18 +417,33 @@ const Posts = () => {
                   deletePost
                 </button>
               )}
-              {userId && (
-                <button
-                  onClick={() => {
-                    // console.log(elem.id);
-                    {
-                      elem.id && <input placeholder="Body" />;
-                    }
-                  }}
-                >
-                  Add Comment
-                </button>
-              )}
+              {elem.id != show && <button
+                onClick={() => {
+                  {
+                    setShow(elem.id)
+                  }
+                }}
+              >
+                Add Comment
+              </button>
+              }
+              {
+                elem.id == show && <input placeholder="Body" onChange={(e) => {
+                  setAddCommentValue(e.target.value);
+                }} />
+              }
+              {
+                elem.id == show && <button
+                onClick={() => {
+                  {
+                    createComment(elem.id)
+                    setShow("")
+                  }
+                }}
+              >
+                Add
+              </button>
+              }
             </div>{" "}
           </>
         );
