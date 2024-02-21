@@ -152,9 +152,7 @@ const Posts = () => {
       const result = await axios.put(
         `http://localhost:5000/comments/post/${id}`,
         {
-          comment: "addComment_4"
-          comment: "addComment",
-
+          comment: "addComment_5"
         },
         {
           headers: {
