@@ -6,12 +6,13 @@ const reelSlice = createSlice({
     comment: []
   },
   reducers: {
-    createNewReels: (state, action) => {
-      state.reels = [action.payload, ...state.reels];
-    },
     setReel: (state, action) => {
       state.reels = action.payload;
     },
+    createNewReels: (state, action) => {
+      state.reels = [action.payload, ...state.reels];
+    },
+
     setCommentReels: (state, action) => {
       state.reels = state.reels.map((elem, ind) => {
         if (elem.id === action.payload.id) {

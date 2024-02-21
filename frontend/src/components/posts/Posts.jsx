@@ -6,20 +6,21 @@ import {
   updatePostById,
   deletePost,
   setComments,
-  addComments
+  addComments,
 } from "../redux/post/postSlice";
 import {
   ref,
   uploadBytes,
   getDownloadURL,
   listAll,
-  list
+  list,
 } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
-import { token } from "../redux/auth/userSlice";
+import { setUserId, token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
+import { Link } from "react-router-dom";
 const Posts = () => {
   //setUserPostId
   const [body, setBody] = useState("");
@@ -38,31 +39,31 @@ const Posts = () => {
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
-  const { posts, auth, comment, userId } = useSelector((state) => {
+  const { posts, auth, comment, userId, users } = useSelector((state) => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
       comment: state.posts.comment.comment,
-      userId: state.auth.userId
+      userId: state.auth.userId,
+      users: state.posts.users,
     };
   });
-  console.log(userId, show, userPostId);
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
       photo: imageUrls[imageUrls.length - 1] || null,
-      video: videoUrls[videoUrls.length - 1] || null
+      video: videoUrls[videoUrls.length - 1] || null,
     };
 
     axios
       .post("http://localhost:5000/posts", NewPost, {
         headers: {
-          authorization: `Bearer ${auth.token}`
-        }
+          authorization: `Bearer ${auth.token}`,
+        },
       })
       .then((result) => {
-        // console.log(result);
-        dispatch(createNewPost(result.data));
+        console.log(result.data.result);
+        dispatch(createNewPost(result.data.result));
       })
       .catch((err) => {
         console.log(err);
@@ -99,17 +100,13 @@ const Posts = () => {
       );
       if (result.data.success) {
         const comments = result.data.result;
-        dispatch(
-          setComments({ comment: comments, id: id })
-        );
+        dispatch(setComments({ comment: comments, id: id }));
       } else throw Error;
     } catch (error) {
       if (!error.response) {
         return setMessage(error);
       }
-      setMessage(
-        "Error happened while Get Data, please try again"
-      );
+      setMessage("Error happened while Get Data, please try again");
     }
   };
   // ====================================================
@@ -123,27 +120,67 @@ const Posts = () => {
       );
       if (result.data.success) {
         const comments = result.data.result;
-        dispatch(
-          addComments({ comment: comments, id: id })
-        );
+        dispatch(addComments({ comment: comments, id: id }));
       } else throw Error;
     } catch (error) {
       if (!error.response) {
         return setMessage(error);
       }
-      setMessage(
-        "Error happened while Get Data, please try again"
+      setMessage("Error happened while Get Data, please try again");
+    }
+  };
+  // ====================================================
+  //!============ updateComment =========================
+
+  const updateComment = async (id) => {
+    try {
+      const result = await axios.put(
+        `http://localhost:5000/comments/post/${id}`,
+        {
+          comment: "addComment",
+        },
+        {
+          headers: {
+            authorization: `Bearer ${auth.token}`,
+          },
+        }
       );
+      console.log(result.data.result);
+      dispatch(updateComments({ comment: result.data.result, id }));
+    } catch (err) {
+      console.log(err);
     }
   };
   // ====================================================
 
+  //!============ deleteComment =========================
+
+  // const deleteComment = async (id) => {
+  //   try {
+  //     const result = await axios.delete(`http://localhost:5000/comments/post/${id}`,
+  //       {
+  //         comment: "addComment",
+  //       },
+  //       {
+  //         headers: {
+  //           authorization: `Bearer ${auth.token}`
+  //         }
+  //       }
+  //     );
+  //     console.log(result.data.result);
+  //     dispatch(updateComments({comment:result.data.result,id}))
+  //   }
+  //   catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+  // ====================================================
   const handleDeletePost = (postId) => {
     axios
       .delete(`http://localhost:5000/posts/${postId}`, {
         headers: {
-          authorization: `Bearer ${auth.token}`
-        }
+          authorization: `Bearer ${auth.token}`,
+        },
       })
       .then((result) => {
         // console.log(result);
@@ -154,17 +191,17 @@ const Posts = () => {
       });
   };
 
-  const handleUpdatePost = (postId) => {
+  const handleUpdatePost = (postId,img_url,vid_url) => {
     const updatePost = {
       body,
-      photo,
-      video
+      photo: img_url,
+      video: vid_url,
     };
     axios
       .put(`http://localhost:5000/posts/${postId}`, updatePost, {
         headers: {
-          authorization: `Bearer ${auth.token}`
-        }
+          authorization: `Bearer ${auth.token}`,
+        },
       })
       .then((result) => {
         setUpdate(!update);
@@ -173,19 +210,27 @@ const Posts = () => {
       .catch((err) => {
         console.log(err);
       });
+  console.log(updatePost);
+
   };
   const clearInput = () => {
     setBody("");
     setPhoto("");
     setVideo("");
     setImageUrls("");
+    setVideoUrls("");
+    setImageUpload("");
+    setVideoUpload("");
   };
-  const uploadFile = () => {
+  const uploadFile = (id,str1,str2) => {
+    let urlim=""
     if (imageUpload == null) return;
     const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
     uploadBytes(imageRef, imageUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         setImageUrls((prev) => [...prev, url]);
+                urlim=url
+        
       });
     });
     if (videoUpload == null) return;
@@ -193,8 +238,13 @@ const Posts = () => {
     uploadBytes(videoRef, videoUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         setVideoUrls((prev) => [...prev, url]);
+        if(str2 == "update_vid"){
+          handleUpdatePost(id,urlim,url)
+        }
       });
     });
+   
+
   };
 
   useEffect(() => {
@@ -215,11 +265,10 @@ const Posts = () => {
   }, []);
 
   useEffect(() => {
-    console.log(comment);
     axios
       .get("http://localhost:5000/posts")
       .then((result) => {
-        // console.log(result.data.posts);
+        console.log(result.data.posts);
         dispatch(setPosts(result.data.posts));
       })
       .catch((err) => {
@@ -249,14 +298,14 @@ const Posts = () => {
         }}
       />
 
-      {userId && <button
+      <button
         onClick={() => {
           handleCreateNewPost();
           clearInput();
         }}
       >
         createNewPost
-      </button>}
+      </button>
       <button onClick={uploadFile}> Upload</button>
       {posts?.map((elem) => {
         return (
@@ -264,31 +313,43 @@ const Posts = () => {
             <div key={elem.id}>
               <>
                 {" "}
-                <h1 onClick={elem.id}>{elem.body}</h1>
-                {console.log(elem)}
-                {<button
+                <Link
+                  to={`/users/${elem.user_id}`}
                   onClick={() => {
-                    getPostComment(elem.id)
-                    console.log(elem);
-                    setShow(elem.user_id);
-                  }
-                  }
+                    console.log(elem.user_id);
+                    dispatch(setUserId(elem.user_id));
+                  }}
                 >
-                  showComment
-                </button>}
-                {// get if there is a value
+                  <p>{elem.firstname}</p>
+                </Link>
+                <h1 onClick={elem.id}>{elem.body}</h1>
+                {
+                  <button
+                    onClick={() => {
+                      getPostComment(elem.id);
+                      console.log(elem);
+                      setShow(elem.user_id);
+                    }}
+                  >
+                    showComment
+                  </button>
+                }
+                {
+                  // get if there is a value
                   elem.comment?.map((comment, i) => {
                     return (
                       <p className="comment" key={i}>
                         {comment?.comment}
-                        {show == userId && (<div>
-                          <button>update</button>
-                          <button>delete</button>
-                        </div>)}
+                        {show == userId && (
+                          <div>
+                            <button>update</button>
+                            <button>delete</button>
+                          </div>
+                        )}
                       </p>
                     );
-                  })}
-
+                  })
+                }
                 <img width="300px" height="150px" src={elem.photo} />
                 <video controls width="300px" height="150px">
                   <source src={elem.video} type="video/mp4" />
@@ -301,7 +362,7 @@ const Posts = () => {
                     ))}
                   </div>
                 )}
-                { elem.user_id == userId && update ? (
+                {elem.user_id == userId && update ? (
                   <>
                     {" "}
                     <input
@@ -311,20 +372,21 @@ const Posts = () => {
                       }}
                     />
                     <input
-                      placeholder="Body"
-                      onChange={(e) => {
-                        setImageUrls(e.target.value);
+                      type="file"
+                      onChange={(event) => {
+                        setImageUpload(event.target.files[0]);
                       }}
                     />
                     <input
-                      placeholder="Body"
-                      onChange={(e) => {
-                        setVideo(e.target.value);
+                      type="file"
+                      onChange={(event) => {
+                        setVideoUpload(event.target.files[0]);
                       }}
                     />
                     <button
                       onClick={() => {
-                        handleUpdatePost(elem.id);
+                        // handleUpdatePost(elem.id);
+                        uploadFile(elem.id,"update_img","update_vid")
                       }}
                     >
                       UpdateInformtion
@@ -332,33 +394,39 @@ const Posts = () => {
                   </>
                 ) : (
                   <>
-                    {elem.user_id == userId && <button
-                      onClick={() => {
-                        setUpdate(!update);
-                      }}
-                    >
-                      update
-                    </button>}
+                    {elem.user_id == userId && (
+                      <button
+                        onClick={() => {
+                          setUpdate(!update);
+                        }}
+                      >
+                        update
+                      </button>
+                    )}
                   </>
                 )}
               </>
-              { elem.user_id == userId && <button
-                onClick={() => {
-                  handleDeletePost(elem.id);
-                }}
-              >
-                deletePost
-              </button>}
-              {userId && <button
-                onClick={() => {
-                  // console.log(elem.id);
-                  {
-                    elem.id && <input placeholder="Body" />;
-                  }
-                }}
-              >
-                Add Comment
-              </button>}
+              {elem.user_id == userId && (
+                <button
+                  onClick={() => {
+                    handleDeletePost(elem.id);
+                  }}
+                >
+                  deletePost
+                </button>
+              )}
+              {userId && (
+                <button
+                  onClick={() => {
+                    // console.log(elem.id);
+                    {
+                      elem.id && <input placeholder="Body" />;
+                    }
+                  }}
+                >
+                  Add Comment
+                </button>
+              )}
             </div>{" "}
           </>
         );
