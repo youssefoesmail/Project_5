@@ -12,6 +12,7 @@ function App() {
   return (
     <>
       <div>
+        <h1 className="text-blue-500"></h1>
         <Routes>
           <Route path="/reels" element={<Reel />} />
           <Route path="/personal" element={<Personal />} />
