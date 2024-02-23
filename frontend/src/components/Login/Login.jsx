@@ -3,9 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUserId, setLogin } from "../redux/auth/userSlice";
+import { Button } from 'flowbite-react';
+import Navbar from "../Navbars/NavbarLogin";
+import { GoogleLogin } from '@react-oauth/google';
+
 
 const Login = () => {
-
     //================= useNavigate =========================
 
     const history = useNavigate();
@@ -25,8 +28,9 @@ const Login = () => {
 
     const dispatch = useDispatch();
 
-    const { isLoggedIn } = useSelector((state) => {
+    const { isLoggedIn,token } = useSelector((state) => {
         return {
+            token:state.auth.token,
             isLoggedIn: state.auth.isLoggedIn
         };
     });
@@ -66,6 +70,7 @@ const Login = () => {
 
     return (
         <div>
+            <Navbar/>
             <div>
                 <p>Login: </p>
 
@@ -81,6 +86,7 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <br />
+                
                 <button
                     onClick={(e) => {
                         login(e);
@@ -88,8 +94,21 @@ const Login = () => {
                 >
                     Login
                 </button>
-
-                <button
+                
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              console.log(credentialResponse);
+                dispatch(setLogin(credentialResponse.credential))
+              /* setToken(credentialResponse.credential); */
+              localStorage.setItem("token", credentialResponse.credential);
+              navigate("/");
+            }}
+            onError={() => {
+              setError("Google login failed");
+            }}
+          />
+        
+               <button
                     onClick={(e) => {
                         history("/register");
                     }}
