@@ -262,42 +262,50 @@ const deleteCommentPost = (req, res) => {
     });
 };
 const deleteCommentStory = (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   const query = `UPDATE comment_story SET is_deleted=1 WHERE id=$1`;
   const value = [id];
-  pool.query(query, value).then((result) => {
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "comment delete successfully",
-      })
-      .catch((err) => {
-        res.status(500).json({
-          success: false,
-          message: "server error",
+  pool
+    .query(query, value)
+    .then((result) => {
+      if (result.rowCount !== 0) {
+        res.status(201).json({
+          success: true,
+          message: "comment delete successfully",
         });
+      } else {
+        throw new Error("Error happened while deleting comment");
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "server error",
       });
-  });
+    });
 };
 const deleteCommentReels = (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   const query = `UPDATE comment_reel SET is_deleted=1 WHERE id=$1`;
   const value = [id];
-  pool.query(query, value).then((result) => {
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "comment delete successfully",
-      })
-      .catch((err) => {
-        res.status(500).json({
-          success: false,
-          message: "server error",
+  pool
+    .query(query, value)
+    .then((result) => {
+      if (result.rowCount !== 0) {
+        res.status(201).json({
+          success: true,
+          message: "comment delete successfully",
         });
+      } else {
+        throw new Error("Error happened while deleting comment");
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "server error",
       });
-  });
+    });
 };
 module.exports = {
   createNewCommentPost,
