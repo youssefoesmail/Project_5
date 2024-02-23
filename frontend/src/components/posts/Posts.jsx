@@ -7,8 +7,8 @@ import {
   deletePost,
   setComments,
   addComments,
-  updateComments
-
+  updateComments,
+  deleteComments
 } from "../redux/post/postSlice";
 import {
   ref,
@@ -183,7 +183,7 @@ const Posts = () => {
         }
       );
       console.log("===================>",result.data.message,pID);
-      //dispatch(updateComments({comment:result.data.result,id}))
+      dispatch(deleteComments({id,pID}));
     }
     catch (err) {
       console.log(err);

@@ -41,8 +41,6 @@ const postSlice = createSlice({
 
     },
     updateComments: (state, action) => {
-
-      console.log(action.payload);
       state.posts = state.posts.map((post, index) => {
         if (post.id === action.payload.pID) {
           post.comment.map((com, index) => {
@@ -54,8 +52,14 @@ const postSlice = createSlice({
         }
         return post
       })
-      console.log(state.posts)
-
+    },
+    deleteComments: (state, action) => {
+      state.posts = state.posts.map((post, index) => {
+        if(post.id === action.payload.pID){
+          post.comment.filter((comment) => comment.id !== action.payload.id);
+        }
+        return post
+      })
     }
   }
 
@@ -67,6 +71,7 @@ export const {
   deletePost,
   setComments,
   addComments,
-  updateComments
+  updateComments,
+  deleteComments
 } = postSlice.actions;
 export default postSlice.reducer;
