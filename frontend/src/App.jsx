@@ -8,11 +8,13 @@ import Personal from "./components/personalPage/Personal";
 import FollowPost from "./components/FollowPost/FollowPost";
 import Reel from "./components/reels/Reel";
 import UsersPage from "./components/usersPage/UsersPage";
+import Nav from "./components/navbat/Nav";
 
 function App() {
   return (
     <>
       <div>
+     
         <h1 className="text-blue-500"></h1>
         <Routes>
           <Route path="/users/:id" element={<UsersPage />} />
