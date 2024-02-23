@@ -173,25 +173,22 @@ const Posts = () => {
 
   //!============ deleteComment =========================
 
-  // const deleteComment = async (id) => {
-  //   try {
-  //     const result = await axios.delete(`http://localhost:5000/comments/post/${id}`,
-  //       {
-  //         comment: "addComment",
-  //       },
-  //       {
-  //         headers: {
-  //           authorization: `Bearer ${auth.token}`
-  //         }
-  //       }
-  //     );
-  //     console.log(result.data.result);
-  //     dispatch(updateComments({comment:result.data.result,id}))
-  //   }
-  //   catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const deleteComment = async (id, pID) => {
+    try {
+      const result = await axios.delete(`http://localhost:5000/comments/post/${id}`,
+        {
+          headers: {
+            authorization: `Bearer ${auth.token}`
+          }
+        }
+      );
+      console.log("===================>",result.data.message,pID);
+      //dispatch(updateComments({comment:result.data.result,id}))
+    }
+    catch (err) {
+      console.log(err);
+    }
+  };
   // ====================================================
   const handleDeletePost = (postId) => {
     axios
@@ -368,7 +365,12 @@ const Posts = () => {
                                 setCommId(comment.id);
                               }}
                             >update</button>
-                            <button>delete</button>
+                            <button
+                            onClick={()=>{
+                              console.log(comment.id);
+                              deleteComment(comment.id, elem.id)
+                            }}
+                            >delete</button>
                           </div>
                         )}
                         {
