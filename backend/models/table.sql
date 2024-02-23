@@ -37,7 +37,7 @@ CREATE TABLE posts (
   is_deleted SMALLINT DEFAULT 0
 );
 CREATE TABLE comment_posts(
-  id SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY,gi
   comment VARCHAR,
   commenter INTEGER,
   post_id INTEGER,
