@@ -346,6 +346,35 @@ const Posts = () => {
                             <button
                               onClick={() => {
                                 updateComment(comment.id, elem.id);
+
+                                updateComment(comment.id, elem.id)
+
+                                //updateComment(comment.id, elem.id)
+                                setCommId(comment.id);
+
+                              }}
+                            >update</button>
+                            <button
+                            onClick={()=>{
+                              console.log(comment.id);
+                              deleteComment(comment.id, elem.id)
+                            }}
+                            >delete</button>
+                          </div>
+                        )}
+                        {
+                          comment.id == commId &&
+                          <>
+                            <input
+                              placeholder="update comment"
+                              onChange={(e) => {
+                                setUpCommValue(e.target.value)
+                              }}
+                            />
+                            <button
+                              onClick={() => {
+                                updateComment(commId, elem.id);
+                                setCommId("");
                               }}
                             >
                               update

@@ -1,0 +1,31 @@
+.card-slider {
+  width: 400px; 
+  display: contents;
+  height: 100%;
+
+}
+.card-img-top{
+  height: 100%;
+
+}
+.slider {
+  overflow: hidden;
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.5s ease;
+  width: 400px;
+}
+
+.slide {
+  flex: 0 0 100%;
+  margin-right: 20px; 
+
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
