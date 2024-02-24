@@ -11,7 +11,6 @@ import UsersPage from "./components/usersPage/UsersPage";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import Message from "./components/message/Message";
-// import SocketInit from "./socketServer";
 function App() {
   const { auth } = useSelector((state) => {
     return {
