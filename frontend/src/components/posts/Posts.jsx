@@ -328,7 +328,7 @@ const Posts = () => {
             onClick={uploadFile}> Upload</button>
           {posts?.map((elem) => {
             return (
-              <div class="mt-8  lg:px-6 lg:mt-0 ">
+              <div class="mt-8  lg:px-6 lg:mt-0 border-2 border-solid border-dark-600 rounded-lg">
                 <div className=" w-auto" key={elem.id}>
                   <>
                     {" "}
@@ -359,9 +359,11 @@ const Posts = () => {
                       // get if there is a value
                       elem.comment?.map((comment, i) => {
                         return (
-                          <section class="max-w-md p-4 mx-auto bg-white border border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 rounded-2xl">
+                          <section class="max-w-md p-4 mx-auto bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
                             <div className="comment" key={i}>
-                              <h2 class="font-semibold text-gray-800 dark:text-white">{comment?.commenter}</h2>
+                              <h2 class="font-semibold text-gray-800 dark:text-white">
+                                {comment.firstname}
+                              </h2>
                               <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">{comment?.comment}</p>
                               {comment.commenter == userId && (
                                 <div>
