@@ -55,7 +55,6 @@ const Posts = () => {
       users: state.posts.users,
     };
   });
-  console.log(posts);
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -70,7 +69,6 @@ const Posts = () => {
         },
       })
       .then((result) => {
-        console.log(result.data.result);
         dispatch(createNewPost(result.data.result));
       })
       .catch((err) => {
@@ -107,7 +105,6 @@ const Posts = () => {
         `http://localhost:5000/comments/post/${id}`
       );
       if (result.data.success) {
-        console.log(result.data.result)
         const comments = result.data.result;
         dispatch(setComments({ comment: comments, id }));
       } else throw Error;
@@ -162,7 +159,6 @@ const Posts = () => {
           },
         }
       );
-      console.log(result.data.result);
       dispatch(updateComments({ comment: result.data.result, id, pID }));
       setUpCommValue("")
     } catch (err) {
@@ -225,7 +221,9 @@ const Posts = () => {
       .catch((err) => {
         console.log(err);
       });
+
     console.log(updatePost);
+
 
   };
   const clearInput = () => {
@@ -283,7 +281,6 @@ const Posts = () => {
     axios
       .get("http://localhost:5000/posts")
       .then((result) => {
-        console.log(result.data.posts);
         dispatch(setPosts(result.data.posts));
       })
       .catch((err) => {
@@ -331,7 +328,6 @@ const Posts = () => {
                 <Link
                   to={`/users/${elem.user_id}`}
                   onClick={() => {
-                    console.log(elem.user_id);
                     dispatch(setUserId(elem.user_id));
                   }}
                 >
@@ -342,7 +338,6 @@ const Posts = () => {
                   <button
                     onClick={() => {
                       getPostComment(elem.id);
-                      console.log(elem.id);
                       setShow(elem.user_id);
                       setPostId(elem.id)
                     }}
@@ -360,9 +355,13 @@ const Posts = () => {
                           <div>
                             <button
                               onClick={() => {
+
+                                updateComment(comment.id, elem.id)
+
                                 console.log(comment);
                                 //updateComment(comment.id, elem.id)
                                 setCommId(comment.id);
+
                               }}
                             >update</button>
                             <button

@@ -9,6 +9,8 @@ import FollowPost from "./components/FollowPost/FollowPost";
 import Reel from "./components/reels/Reel";
 import UsersPage from "./components/usersPage/UsersPage";
 
+import Nav from "./components/Navbars/NavbarLogin";
+
 
 function App() {
   return (
