@@ -178,8 +178,8 @@ const Posts = () => {
           }
         }
       );
-      console.log("===================>",result.data.message,pID);
-      dispatch(deleteComments({id,pID}));
+      console.log("===================>", result.data.message,  );
+      dispatch(deleteComments({ id, pID }));
     }
     catch (err) {
       console.log(err);
@@ -287,211 +287,215 @@ const Posts = () => {
         console.log(err);
       });
   }, []);
-
+// console.log(posts);
   return (
-    <div>
-      <Story />
-      <input
-        placeholder="Body"
-        onChange={(e) => {
-          setBody(e.target.value);
-        }}
-      />
-      <input
-        type="file"
-        onChange={(event) => {
-          setImageUpload(event.target.files[0]);
-        }}
-      />
-      <input
-        type="file"
-        onChange={(event) => {
-          setVideoUpload(event.target.files[0]);
-        }}
-      />
+    <section class="bg-white dark:bg-gray-900">
+      <div class="container px-6 py-10 mx-auto">
+        <div class="lg:-mx-6 lg:flex lg:items-center">
+          <Story />
+          <input
+            placeholder="Body"
+            onChange={(e) => {
+              setBody(e.target.value);
+            }}
+          />
+          <input
+            type="file"
+            onChange={(event) => {
+              setImageUpload(event.target.files[0]);
+            }}
+          />
+          <input
+            type="file"
+            onChange={(event) => {
+              setVideoUpload(event.target.files[0]);
+            }}
+          />
 
-      <button
-        onClick={() => {
-          handleCreateNewPost();
-          clearInput();
-        }}
-      >
-        createNewPost
-      </button>
-      <button onClick={uploadFile}> Upload</button>
-      {posts?.map((elem) => {
-        return (
-          <>
-            <div key={elem.id}>
-              <>
-                {" "}
-                <Link
-                  to={`/users/${elem.user_id}`}
-                  onClick={() => {
-                    dispatch(setUserId(elem.user_id));
-                  }}
-                >
-                  <p>{elem.firstname}</p>
-                </Link>
-                <h1 onClick={elem.id}>{elem.body}</h1>
-                {
-                  <button
-                    onClick={() => {
-                      getPostComment(elem.id);
-                      setShow(elem.user_id);
-                      setPostId(elem.id)
-                    }}
-                  >
-                    showComment
-                  </button>
-                }
-                {elem.id == postId &&
-                  // get if there is a value
-                  elem.comment?.map((comment, i) => {
-                    return (
-                      <div className="comment" key={i}>
-                        <p>{comment?.comment}</p>
-                        {comment.commenter == userId && (
-                          <div>
-                            <button
-                              onClick={() => {
-
-                                updateComment(comment.id, elem.id)
-
-                                console.log(comment);
-                                //updateComment(comment.id, elem.id)
-                                setCommId(comment.id);
-
-                              }}
-                            >update</button>
-                            <button
-                            onClick={()=>{
-                              console.log(comment.id);
-                              deleteComment(comment.id, elem.id)
-                            }}
-                            >delete</button>
-                          </div>
-                        )}
-                        {
-                          comment.id == commId &&
-                          <>
-                            <input
-                              placeholder="update comment"
-                              onChange={(e) => {
-                                setUpCommValue(e.target.value)
-                              }}
-                            />
-                            <button
-                              onClick={() => {
-                                updateComment(commId, elem.id);
-                                setCommId("");
-                              }}
-                            >
-                              update
-                            </button>
-                          </>
-                        }
-                      </div>
-                    );
-                  })
-                }
-                <img width="300px" height="150px" src={elem.photo} />
-                <video controls width="300px" height="150px">
-                  <source src={elem.video} type="video/mp4" />
-                </video>
-                {comment && comment.id === elem.id && comment.comments && (
-                  <div>
-                    <h2>Comments:</h2>
-                    {comment.comments.map((comment) => (
-                      <p key={comment.id}>{comment.text}</p>
-                    ))}
-                  </div>
-                )}
-                {elem.user_id == userId && update ? (
+          <button
+            onClick={() => {
+              handleCreateNewPost();
+              clearInput();
+            }}
+          >
+            createNewPost
+          </button>
+          <button onClick={uploadFile}> Upload</button>
+          {posts?.map((elem) => {
+            return (
+              <div class="mt-8 lg:w-1/2 lg:px-6 lg:mt-0">
+                <div key={elem.id}>
                   <>
                     {" "}
-                    <input
-                      placeholder="body"
-                      onChange={(e) => {
-                        setBody(e.target.value);
-                      }}
-                    />
-                    <input
-                      type="file"
-                      onChange={(event) => {
-                        setImageUpload(event.target.files[0]);
-                      }}
-                    />
-                    <input
-                      type="file"
-                      onChange={(event) => {
-                        setVideoUpload(event.target.files[0]);
-                      }}
-                    />
-                    <button
+                    <Link
+                      to={`/users/${elem.user_id}`}
                       onClick={() => {
-                        // handleUpdatePost(elem.id);
-                        uploadFile(elem.id, "update_img", "update_vid")
+                        dispatch(setUserId(elem.user_id));
                       }}
                     >
-                      UpdateInformtion
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    {elem.user_id == userId && (
+                      <p>{elem.firstname}</p>
+                    </Link>
+                    <h1 onClick={elem.id}>{elem.body}</h1>
+                    {
                       <button
                         onClick={() => {
-                          setUpdate(!update);
+                          getPostComment(elem.id);
+                          setShow(elem.user_id);
+                          setPostId(elem.id)
                         }}
                       >
-                        update
+                        showComment
                       </button>
+                    }
+                    <img class="object-cover object-center lg:w-1/2 lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]"  alt="" width="300px" height="150px" src={elem.photo} />
+                    <video controls width="300px" height="150px">
+                      <source src={elem.video} type="video/mp4" />
+                    </video>
+                    {elem.id == postId &&
+                      // get if there is a value
+                      elem.comment?.map((comment, i) => {
+                        return (
+                          <div className="comment" key={i}>
+                            <p>{comment?.comment}</p>
+                            {comment.commenter == userId && (
+                              <div>
+                                <button
+                                  onClick={() => {
+
+                                    updateComment(comment.id, elem.id)
+
+                                    console.log(comment);
+                                    //updateComment(comment.id, elem.id)
+                                    setCommId(comment.id);
+
+                                  }}
+                                >update</button>
+                                <button
+                                  onClick={() => {
+                                    console.log(comment.id);
+                                    deleteComment(comment.id, elem.id)
+                                  }}
+                                >delete</button>
+                              </div>
+                            )}
+                            {
+                              comment.id == commId &&
+                              <>
+                                <input
+                                  placeholder="update comment"
+                                  onChange={(e) => {
+                                    setUpCommValue(e.target.value)
+                                  }}
+                                />
+                                <button
+                                  onClick={() => {
+                                    updateComment(commId, elem.id);
+                                    setCommId("");
+                                  }}
+                                >
+                                  update
+                                </button>
+                              </>
+                            }
+                          </div>
+                        );
+                      })
+                    }
+                    {comment && comment.id === elem.id && comment.comments && (
+                      <div>
+                        <h2>Comments:</h2>
+                        {comment.comments.map((comment) => (
+                          <p key={comment.id}>{comment.text}</p>
+                        ))}
+                      </div>
+                    )}
+                    {elem.user_id == userId && update ? (
+                      <>
+                        {" "}
+                        <input
+                          placeholder="body"
+                          onChange={(e) => {
+                            setBody(e.target.value);
+                          }}
+                        />
+                        <input
+                          type="file"
+                          onChange={(event) => {
+                            setImageUpload(event.target.files[0]);
+                          }}
+                        />
+                        <input
+                          type="file"
+                          onChange={(event) => {
+                            setVideoUpload(event.target.files[0]);
+                          }}
+                        />
+                        <button
+                          onClick={() => {
+                            // handleUpdatePost(elem.id);
+                            uploadFile(elem.id, "update_img", "update_vid")
+                          }}
+                        >
+                          UpdateInformtion
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        {elem.user_id == userId && (
+                          <button
+                            onClick={() => {
+                              setUpdate(!update);
+                            }}
+                          >
+                            update
+                          </button>
+                        )}
+                      </>
                     )}
                   </>
-                )}
-              </>
-              {elem.user_id == userId && (
-                <button
-                  onClick={() => {
-                    handleDeletePost(elem.id);
-                  }}
-                >
-                  deletePost
-                </button>
-              )}
-              {elem.id != show && <button
-                onClick={() => {
-                  {
-                    setShow(elem.id)
+                  {elem.user_id == userId && (
+                    <button
+                      onClick={() => {
+                        handleDeletePost(elem.id);
+                      }}
+                    >
+                      deletePost
+                    </button>
+                  )}
+                  {elem.id != show && <button
+                    onClick={() => {
+                      {
+                        setShow(elem.id)
+                      }
+                    }}
+                  >
+                    Add Comment
+                  </button>
                   }
-                }}
-              >
-                Add Comment
-              </button>
-              }
-              {
-                elem.id == show && <input placeholder="Body" onChange={(e) => {
-                  setAddCommentValue(e.target.value);
-                }} />
-              }
-              {
-                elem.id == show && <button
-                  onClick={() => {
-                    {
-                      createComment(elem.id)
-                      setShow("")
-                    }
-                  }}
-                >
-                  Add
-                </button>
-              }
-            </div>{" "}
-          </>
-        );
-      })}
-    </div>
+                  {
+                    elem.id == show && <input placeholder="Body" onChange={(e) => {
+                      setAddCommentValue(e.target.value);
+                    }} />
+                  }
+                  {
+                    elem.id == show && <button
+                      onClick={() => {
+                        {
+                          createComment(elem.id)
+                          setShow("")
+                        }
+                      }}
+                    >
+                      Add
+                    </button>
+                  }
+                </div>{" "}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 };
 
