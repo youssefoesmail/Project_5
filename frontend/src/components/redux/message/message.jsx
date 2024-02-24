@@ -9,7 +9,7 @@ const messageSlice = createSlice({
       state.message = action.payload;
     },
     createNewMessage: (state, action) => {
-      state.message=action.payload;
+      state.message = action.payload;
     }
   }
 });
