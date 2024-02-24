@@ -7,15 +7,14 @@ import {
   deletePost,
   setComments,
   addComments,
-  updateComments,
-  deleteComments
+  updateComments
 } from "../redux/post/postSlice";
 import {
   ref,
   uploadBytes,
   getDownloadURL,
   listAll,
-  list,
+  list
 } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
@@ -40,8 +39,6 @@ const Posts = () => {
   const [postId, setPostId] = useState("");
   const [userPostId, setUserPostId] = useState("");
   const [addCommentValue, setAddCommentValue] = useState("");
-  const [commId, setCommId] = useState("");
-  const [upCommValue, setUpCommValue] = useState("");
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
@@ -52,21 +49,21 @@ const Posts = () => {
       posts: state.posts.posts,
       comment: state.posts.comment,
       userId: state.auth.userId,
-      users: state.posts.users,
+      users: state.posts.users
     };
   });
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
       photo: imageUrls[imageUrls.length - 1] || null,
-      video: videoUrls[videoUrls.length - 1] || null,
+      video: videoUrls[videoUrls.length - 1] || null
     };
 
     axios
       .post("http://localhost:5000/posts", NewPost, {
         headers: {
-          authorization: `Bearer ${auth.token}`,
-        },
+          authorization: `Bearer ${auth.token}`
+        }
       })
       .then((result) => {
         dispatch(createNewPost(result.data.result));
@@ -151,16 +148,15 @@ const Posts = () => {
       const result = await axios.put(
         `http://localhost:5000/comments/post/${id}`,
         {
-          comment: upCommValue
+          comment: "addComment_5"
         },
         {
           headers: {
-            authorization: `Bearer ${auth.token}`,
-          },
+            authorization: `Bearer ${auth.token}`
+          }
         }
       );
       dispatch(updateComments({ comment: result.data.result, id, pID }));
-      setUpCommValue("")
     } catch (err) {
       console.log(err);
     }
@@ -169,32 +165,33 @@ const Posts = () => {
 
   //!============ deleteComment =========================
 
-  const deleteComment = async (id, pID) => {
-    try {
-      const result = await axios.delete(`http://localhost:5000/comments/post/${id}`,
-        {
-          headers: {
-            authorization: `Bearer ${auth.token}`
-          }
-        }
-      );
-      console.log("===================>",result.data.message,pID);
-      dispatch(deleteComments({id,pID}));
-    }
-    catch (err) {
-      console.log(err);
-    }
-  };
+  // const deleteComment = async (id) => {
+  //   try {
+  //     const result = await axios.delete(`http://localhost:5000/comments/post/${id}`,
+  //       {
+  //         comment: "addComment",
+  //       },
+  //       {
+  //         headers: {
+  //           authorization: `Bearer ${auth.token}`
+  //         }
+  //       }
+  //     );
+  //     dispatch(updateComments({comment:result.data.result,id}))
+  //   }
+  //   catch (err) {
+  //     console.log(err);
+  //   }
+  // };
   // ====================================================
   const handleDeletePost = (postId) => {
     axios
       .delete(`http://localhost:5000/posts/${postId}`, {
         headers: {
-          authorization: `Bearer ${auth.token}`,
-        },
+          authorization: `Bearer ${auth.token}`
+        }
       })
       .then((result) => {
-        // console.log(result);
         dispatch(deletePost(postId));
       })
       .catch((err) => {
@@ -206,13 +203,13 @@ const Posts = () => {
     const updatePost = {
       body,
       photo: img_url,
-      video: vid_url,
+      video: vid_url
     };
     axios
       .put(`http://localhost:5000/posts/${postId}`, updatePost, {
         headers: {
-          authorization: `Bearer ${auth.token}`,
-        },
+          authorization: `Bearer ${auth.token}`
+        }
       })
       .then((result) => {
         setUpdate(!update);
@@ -221,10 +218,6 @@ const Posts = () => {
       .catch((err) => {
         console.log(err);
       });
-
-    console.log(updatePost);
-
-
   };
   const clearInput = () => {
     setBody("");
@@ -236,14 +229,13 @@ const Posts = () => {
     setVideoUpload("");
   };
   const uploadFile = (id, str1, str2) => {
-    let urlim = ""
+    let urlim = "";
     if (imageUpload == null) return;
     const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
     uploadBytes(imageRef, imageUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         setImageUrls((prev) => [...prev, url]);
-        urlim = url
-
+        urlim = url;
       });
     });
     if (videoUpload == null) return;
@@ -252,12 +244,10 @@ const Posts = () => {
       getDownloadURL(snapshot.ref).then((url) => {
         setVideoUrls((prev) => [...prev, url]);
         if (str2 == "update_vid") {
-          handleUpdatePost(id, urlim, url)
+          handleUpdatePost(id, urlim, url);
         }
       });
     });
-
-
   };
 
   useEffect(() => {
@@ -339,7 +329,7 @@ const Posts = () => {
                     onClick={() => {
                       getPostComment(elem.id);
                       setShow(elem.user_id);
-                      setPostId(elem.id)
+                      setPostId(elem.id);
                     }}
                   >
                     showComment
@@ -355,10 +345,10 @@ const Posts = () => {
                           <div>
                             <button
                               onClick={() => {
+                                updateComment(comment.id, elem.id);
 
                                 updateComment(comment.id, elem.id)
 
-                                console.log(comment);
                                 //updateComment(comment.id, elem.id)
                                 setCommId(comment.id);
 
@@ -389,12 +379,12 @@ const Posts = () => {
                             >
                               update
                             </button>
-                          </>
-                        }
+                            <button>delete</button>
+                          </div>
+                        )}
                       </div>
                     );
-                  })
-                }
+                  })}
                 <img width="300px" height="150px" src={elem.photo} />
                 <video controls width="300px" height="150px">
                   <source src={elem.video} type="video/mp4" />
@@ -431,7 +421,7 @@ const Posts = () => {
                     <button
                       onClick={() => {
                         // handleUpdatePost(elem.id);
-                        uploadFile(elem.id, "update_img", "update_vid")
+                        uploadFile(elem.id, "update_img", "update_vid");
                       }}
                     >
                       UpdateInformtion
@@ -460,33 +450,37 @@ const Posts = () => {
                   deletePost
                 </button>
               )}
-              {elem.id != show && <button
-                onClick={() => {
-                  {
-                    setShow(elem.id)
-                  }
-                }}
-              >
-                Add Comment
-              </button>
-              }
-              {
-                elem.id == show && <input placeholder="Body" onChange={(e) => {
-                  setAddCommentValue(e.target.value);
-                }} />
-              }
-              {
-                elem.id == show && <button
+              {elem.id != show && (
+                <button
                   onClick={() => {
                     {
-                      createComment(elem.id)
-                      setShow("")
+                      setShow(elem.id);
+                    }
+                  }}
+                >
+                  Add Comment
+                </button>
+              )}
+              {elem.id == show && (
+                <input
+                  placeholder="Body"
+                  onChange={(e) => {
+                    setAddCommentValue(e.target.value);
+                  }}
+                />
+              )}
+              {elem.id == show && (
+                <button
+                  onClick={() => {
+                    {
+                      createComment(elem.id);
+                      setShow("");
                     }
                   }}
                 >
                   Add
                 </button>
-              }
+              )}
             </div>{" "}
           </>
         );
