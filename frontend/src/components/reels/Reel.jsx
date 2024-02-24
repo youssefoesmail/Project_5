@@ -86,28 +86,7 @@ const Reel = () => {
   useEffect(() => {
     getAllReels();
   }, []);
-  const handleReelClick = (videoUrl) => {
-    const videoElement = document.createElement("video");
-    videoElement.src = videoUrl;
-    videoElement.controls = true;
-  
-    // Listen for the 'loadedmetadata' event to ensure the video is ready
-    videoElement.addEventListener("loadedmetadata", () => {
-      // Append the video element to the document body
-      document.body.appendChild(videoElement);
-  
-      // Check if the browser supports Fullscreen API
-      if (document.fullscreenEnabled) {
-        // Request full-screen mode
-        if (videoElement.requestFullscreen) {
-          videoElement.requestFullscreen();
-        }
-      } else {
-        // For browsers that do not support Fullscreen API, open the video in a new tab
-        window.open(videoUrl, "_blank");
-      }
-    });
-  };
+ 
 
   return (
     <div>
@@ -130,7 +109,6 @@ const Reel = () => {
           key={index}
           className="reel"
           style={{ display: "block", height:"100%" }}
-          onClick={() => handleReelClick(videoUrl)}
         >
           <Card.Body>
             <video src={videoUrl} controls width="100%" height="100%" />
