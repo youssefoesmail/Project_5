@@ -340,8 +340,6 @@ const Posts = () => {
                     >
                       <p>{elem.firstname}</p>
                     </Link>
-                    <h1 onClick={elem.id}>{elem.body}</h1>
-
                     {elem.photo ? <img class="object-cover object-center lg:w-1/2 lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]" alt="" width="300px" height="150px" src={elem.photo} /> :
                       <video controls width="300px" height="150px" class="object-cover object-center lg:w-1/2 lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]">
                         <source src={elem.video} type="video/mp4" />
@@ -362,54 +360,54 @@ const Posts = () => {
                       elem.comment?.map((comment, i) => {
                         return (
                           <section class="max-w-md p-4 mx-auto bg-white border border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 rounded-2xl">
-                          <div className="comment" key={i}>
-                          <h2 class="font-semibold text-gray-800 dark:text-white">{comment?.commenter}</h2>
-                          <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">{comment?.comment}</p>
-                            {comment.commenter == userId && (
-                              <div>
-                                <button
-                                class=" text-xs bg-green-900 font-medium rounded-lg hover:bg-green-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
-                                  onClick={() => {
+                            <div className="comment" key={i}>
+                              <h2 class="font-semibold text-gray-800 dark:text-white">{comment?.commenter}</h2>
+                              <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">{comment?.comment}</p>
+                              {comment.commenter == userId && (
+                                <div>
+                                  <button
+                                    class=" text-xs bg-green-900 font-medium rounded-lg hover:bg-green-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
+                                    onClick={() => {
 
-                                    updateComment(comment.id, elem.id)
+                                      updateComment(comment.id, elem.id)
 
-                                    console.log(comment);
-                                    //updateComment(comment.id, elem.id)
-                                    setCommId(comment.id);
+                                      console.log(comment);
+                                      //updateComment(comment.id, elem.id)
+                                      setCommId(comment.id);
 
-                                  }}
-                                >update</button>
-                                <button
-                                class=" text-xs bg-red-900 font-medium rounded-lg hover:bg-red-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
-                                  onClick={() => {
-                                    console.log(comment.id);
-                                    deleteComment(comment.id, elem.id)
-                                  }}
-                                >delete</button>
-                              </div>
-                            )}
-                            {
-                              comment.id == commId &&
-                              <>
-                                <input
-                                  type="text" placeholder="update comment" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                                    }}
+                                  >update</button>
+                                  <button
+                                    class=" text-xs bg-red-900 font-medium rounded-lg hover:bg-red-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
+                                    onClick={() => {
+                                      console.log(comment.id);
+                                      deleteComment(comment.id, elem.id)
+                                    }}
+                                  >delete</button>
+                                </div>
+                              )}
+                              {
+                                comment.id == commId &&
+                                <>
+                                  <input
+                                    type="text" placeholder="update comment" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
 
-                                  onChange={(e) => {
-                                    setUpCommValue(e.target.value)
-                                  }}
-                                />
-                                <button
-                                class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
-                                  onClick={() => {
-                                    updateComment(commId, elem.id);
-                                    setCommId("");
-                                  }}
-                                >
-                                  update
-                                </button>
-                              </>
-                            }
-                          </div>
+                                    onChange={(e) => {
+                                      setUpCommValue(e.target.value)
+                                    }}
+                                  />
+                                  <button
+                                    class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
+                                    onClick={() => {
+                                      updateComment(commId, elem.id);
+                                      setCommId("");
+                                    }}
+                                  >
+                                    update
+                                  </button>
+                                </>
+                              }
+                            </div>
                           </section>
                         );
                       })
@@ -445,7 +443,7 @@ const Posts = () => {
                           }}
                         />
                         <button
-                        class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
+                          class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
                           onClick={() => {
                             // handleUpdatePost(elem.id);
                             uploadFile(elem.id, "update_img", "update_vid")
