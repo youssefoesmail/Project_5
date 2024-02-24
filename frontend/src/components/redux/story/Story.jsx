@@ -10,10 +10,11 @@ export const storySlice = createSlice({
   initialState,
   reducers: {
     setStory: (state, action) => {
+
       state.story = action.payload;
     },
     createNewStory: (state, action) => {
-      state.story = [action.payload, ...state.story];    }
+      state.story = [...action.payload,...state.story]    }
   }
 });
 

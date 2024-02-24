@@ -23,6 +23,7 @@ import { setUserId, token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
+import Reel from "../reels/Reel";
 
 const Posts = () => {
   //setUserPostId
@@ -292,6 +293,13 @@ const Posts = () => {
       <div class="container px-6 py-10 mx-auto">
         <div class="lg:flex-col  lg:items-center">
           <Story />
+          <Link
+                      to={`/reels`}
+                    
+                    >
+                      <p>reels</p>
+                    </Link>
+
           <input
             type="text" placeholder="Body" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
 
@@ -445,7 +453,7 @@ const Posts = () => {
                         <button
                           class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
                           onClick={() => {
-                            // handleUpdatePost(elem.id);
+                             handleUpdatePost(elem.id);
                             uploadFile(elem.id, "update_img", "update_vid")
                           }}
                         >

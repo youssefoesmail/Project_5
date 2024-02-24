@@ -32,7 +32,7 @@ const Story = () => {
     };
   });
   const dispatch = useDispatch();
-  //   console.log(story);
+    
   const getAllStory = () => {
     axios
       .get(`http://localhost:5000/story`, {
@@ -114,6 +114,7 @@ const Story = () => {
   const goToPrevSlide = () => {
     setCurrentSlide((prevSlide) => (prevSlide - 1 + story.length) % story.length);
   };
+  console.log(story);
   return (
     <div>
       <input
