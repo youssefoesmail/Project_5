@@ -10,7 +10,8 @@ lerna-debug.log*
 node_modules
 package.json
 package-lock.json
-dist
+package-lock
+
 dist-ssr
 *.local
 
