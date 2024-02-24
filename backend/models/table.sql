@@ -38,11 +38,12 @@ CREATE TABLE posts (
 );
 CREATE TABLE comment_posts(
   id SERIAL PRIMARY KEY,
-  gi comment VARCHAR,
+  comment VARCHAR,
   commenter INTEGER,
   post_id INTEGER,
   created_at TIMESTAMP DEFAULT NOW(),
   is_deleted SMALLINT DEFAULT 0,
+  FOREIGN KEY (commenter) REFERENCES users(id),
   FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 CREATE TABLE story (
@@ -62,6 +63,7 @@ CREATE TABLE comment_story(
   story_id INTEGER,
   created_at TIMESTAMP DEFAULT NOW(),
   is_deleted SMALLINT DEFAULT 0,
+  FOREIGN KEY (commenter) REFERENCES users(id),
   FOREIGN KEY (story_id) REFERENCES story(id)
 );
 CREATE TABLE reels (
@@ -79,6 +81,7 @@ CREATE TABLE comment_reel(
   reel_id INTEGER,
   created_at TIMESTAMP DEFAULT NOW(),
   is_deleted SMALLINT DEFAULT 0,
+  FOREIGN KEY (commenter) REFERENCES users(id),
   FOREIGN KEY (reel_id) REFERENCES reels(id)
 );
 CREATE TABLE users(
@@ -119,12 +122,14 @@ CREATE TABLE notifications (
   is_read BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
-CREATE TABLE message(
+CREATE TABLE messages(
   message_id SERIAL PRIMARY KEY,
-  user_id INTEGER,
-  message VARCHAR(255),
+  sender_id INTEGER NOT NULL,
+  receiver_id INTEGER NOT NULL,
+  messages VARCHAR(255),
   created_at TIMESTAMP DEFAULT NOW(),
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  FOREIGN KEY (sender_id) REFERENCES users(id),
+  FOREIGN KEY (receiver_id) REFERENCES users(id)
 )
 INSERT INTO roles (role)
 VALUES ('Admin');
