@@ -54,12 +54,17 @@ const postSlice = createSlice({
       })
     },
     deleteComments: (state, action) => {
+      console.log(action.payload);
       state.posts = state.posts.map((post, index) => {
-        if(post.id === action.payload.pID){
-          post.comment.filter((comment) => comment.id !== action.payload.id);
+        if (post.id === action.payload.pID) {
+          post.comment = post.comment.filter((comment) => {
+            return comment.id !== action.payload.id
+          });
         }
+
         return post
       })
+      console.log(state.posts)
     }
   }
 
