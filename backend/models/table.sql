@@ -37,8 +37,8 @@ CREATE TABLE posts (
   is_deleted SMALLINT DEFAULT 0
 );
 CREATE TABLE comment_posts(
-  id SERIAL PRIMARY KEY,gi
-  comment VARCHAR,
+  id SERIAL PRIMARY KEY,
+  gi comment VARCHAR,
   commenter INTEGER,
   post_id INTEGER,
   created_at TIMESTAMP DEFAULT NOW(),
@@ -119,6 +119,13 @@ CREATE TABLE notifications (
   is_read BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+CREATE TABLE message(
+  message_id SERIAL PRIMARY KEY,
+  user_id INTEGER,
+  message VARCHAR(255),
+  created_at TIMESTAMP DEFAULT NOW(),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)
 INSERT INTO roles (role)
 VALUES ('Admin');
 INSERT INTO permissions (permission)
