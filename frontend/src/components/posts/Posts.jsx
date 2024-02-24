@@ -288,6 +288,128 @@ const Posts = () => {
       });
   }, []);
   return (
+    <div>
+      <Story />
+      <input
+        placeholder="Body"
+        onChange={(e) => {
+          setBody(e.target.value);
+        }}
+      />
+      <input
+        type="file"
+        onChange={(event) => {
+          setImageUpload(event.target.files[0]);
+        }}
+      />
+      <input
+        type="file"
+        onChange={(event) => {
+          setVideoUpload(event.target.files[0]);
+        }}
+      />
+
+      <button
+        onClick={() => {
+          handleCreateNewPost();
+          clearInput();
+        }}
+      >
+        createNewPost
+      </button>
+      <button onClick={uploadFile}> Upload</button>
+      {posts?.map((elem) => {
+        return (
+          <>
+            <div key={elem.id}>
+              <>
+                {" "}
+                <Link
+                  to={`/users/${elem.user_id}`}
+                  onClick={() => {
+                    dispatch(setUserId(elem.user_id));
+                  }}
+                >
+                  <p>{elem.firstname}</p>
+                </Link>
+                <h1 onClick={elem.id}>{elem.body}</h1>
+                {
+                  <button
+                    onClick={() => {
+                      getPostComment(elem.id);
+                      setShow(elem.user_id);
+                      setPostId(elem.id);
+                    }}
+                  >
+                    showComment
+                  </button>
+                }
+                {elem.id == postId &&
+                  // get if there is a value
+                  elem.comment?.map((comment, i) => {
+                    return (
+                      <div className="comment" key={i}>
+                        <p>{comment?.comment}</p>
+                        {comment.commenter == userId && (
+                          <div>
+                            <button
+                              onClick={() => {
+                                updateComment(comment.id, elem.id);
+
+                                updateComment(comment.id, elem.id);
+
+                                //updateComment(comment.id, elem.id)
+                                setCommId(comment.id);
+                              }}
+                            >
+                              update
+                            </button>
+                            <button
+                              onClick={() => {
+                                console.log(comment.id);
+                                deleteComment(comment.id, elem.id);
+                              }}
+                            >
+                              delete
+                            </button>
+                          </div>
+                        )}
+                        {comment.id == commId && (
+                          <>
+                            <input
+                              placeholder="update comment"
+                              onChange={(e) => {
+                                setUpCommValue(e.target.value);
+                              }}
+                            />
+                            <button
+                              onClick={() => {
+                                updateComment(commId, elem.id);
+                                setCommId("");
+                              }}
+                            >
+                              update
+                            </button>
+                            <button>delete</button>
+                          </>
+                        )}
+                      </div>
+                    );
+                  })}
+                <img width="300px" height="150px" src={elem.photo} />
+                <video controls width="300px" height="150px">
+                  <source src={elem.video} type="video/mp4" />
+                </video>
+                {comment && comment.id === elem.id && comment.comments && (
+                  <div>
+                    <h2>Comments:</h2>
+                    {comment.comments.map((comment) => (
+                      <p key={comment.id}>{comment.text}</p>
+                    ))}
+                  </div>
+                )}
+                {elem.user_id == userId && update ? (
+
     <section class="bg-white dark:bg-gray-900">
       <div class="container px-6 py-10 mx-auto">
         <div class="lg:flex-col  lg:items-center">
@@ -330,6 +452,7 @@ const Posts = () => {
             return (
               <div class="mt-8  lg:px-6 lg:mt-0 ">
                 <div className=" w-auto" key={elem.id}>
+
                   <>
                     {" "}
                     <Link

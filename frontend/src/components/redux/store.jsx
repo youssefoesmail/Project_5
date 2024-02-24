@@ -6,6 +6,7 @@ import storyReducer from "./story/Story";
 import reelReducer from "./reels/reels";
 import usersReducer from "./users/usersSlice";
 import messageReducer from "./message/message";
+import followersReducer from "./followers/followers";
 export default configureStore({
   reducer: {
     posts: postReducer,
@@ -14,6 +15,7 @@ export default configureStore({
     story: storyReducer,
     reels: reelReducer,
     users: usersReducer,
-    message: messageReducer
+    message: messageReducer,
+    followers: followersReducer
   }
 });

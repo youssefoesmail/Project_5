@@ -9,9 +9,7 @@ const personalSlice = createSlice({
     setUserInfo: (state, action) => {
       state.personal = action.payload;
     },
-    setFollowers:(state,action)=>{
-      state.followers = action.payload;
-    }
+
   }
 });
 export const { setPosts, setUserInfo,setFollowers } = personalSlice.actions;
