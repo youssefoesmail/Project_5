@@ -347,28 +347,30 @@ const Posts = () => {
                               onClick={() => {
                                 updateComment(comment.id, elem.id);
 
-                                updateComment(comment.id, elem.id)
+                                updateComment(comment.id, elem.id);
 
                                 //updateComment(comment.id, elem.id)
                                 setCommId(comment.id);
-
                               }}
-                            >update</button>
+                            >
+                              update
+                            </button>
                             <button
-                            onClick={()=>{
-                              console.log(comment.id);
-                              deleteComment(comment.id, elem.id)
-                            }}
-                            >delete</button>
+                              onClick={() => {
+                                console.log(comment.id);
+                                deleteComment(comment.id, elem.id);
+                              }}
+                            >
+                              delete
+                            </button>
                           </div>
                         )}
-                        {
-                          comment.id == commId &&
+                        {comment.id == commId && (
                           <>
                             <input
                               placeholder="update comment"
                               onChange={(e) => {
-                                setUpCommValue(e.target.value)
+                                setUpCommValue(e.target.value);
                               }}
                             />
                             <button
@@ -380,7 +382,7 @@ const Posts = () => {
                               update
                             </button>
                             <button>delete</button>
-                          </div>
+                          </>
                         )}
                       </div>
                     );
