@@ -185,7 +185,7 @@ const Posts = () => {
       console.log(err);
     }
   };
-  // ====================================================
+  // ========================================================
   const handleDeletePost = (postId) => {
     axios
       .delete(`http://localhost:5000/posts/${postId}`, {
