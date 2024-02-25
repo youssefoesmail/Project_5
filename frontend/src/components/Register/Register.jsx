@@ -54,11 +54,9 @@ const Register = () => {
           }
         );
         if (result.data.success) {
+          console.log(result);
           setStatus(true);
           setMessage(result.data.message);
-          dispatch(setUserId(result.data.userId));
-          dispatch(setLogin(result.data.token));
-          history("/Home");
         } else throw Error;
       } catch (error) {
         setStatus(false);
@@ -72,1022 +70,128 @@ const Register = () => {
     }
   };
 
-  return (<><Navbar/>
-    <section
-      class="py-20 px-4 lg:px-16 overflow-hidden relative z-10"
-      data-aos="fade-up"
-      id="contact"
-    >
-      <div class="container">
-        <div class="mb-5 flex items-center max-w-md">
-          <h2 class="text-slate-900 dark:text-gray-200 text-3xl font-bold">
-            {" "}
-            Register Form{" "}
-          </h2>
-        </div>
-        <div class="flex flex-col lg:flex-row lg:items-center text-slate-900 dark:text-gray-200 lg:justify-between -mx-4">
-          <div
-            class="w-full lg:w-1/2 xl:w-6/12 px-4"
-            data-aos="fade-up"
-            data-aos-delay="200"
-          >
-            <div class="max-w-[570px] mb-12 lg:mb-0">
-              <p class="text-base text-4xl font-extrabold text-body-color leading-relaxed stand__out__text mb-9 mx-5">
-                Lorem ipsum dolor. Nulla porttitor accumsan tincidunt.
-              </p>
-              <p class="text-base text-2xl font-medium text-body-color leading-relaxed mb-9 mx-5">
-                Based in <span class="font-bold font-bold italic">America</span>
-                , available worldwide.
-              </p>
-            </div>
+  return (
+    <>
+      <div class="w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
+        <div class="px-6 py-4">
+          <div class="flex justify-center mx-auto">
+            <img
+              class="w-auto h-7 sm:h-8"
+              src="https://merakiui.com/images/logo.svg"
+              alt=""
+            />
           </div>
-          <div
-            class="w-full lg:w-1/2 xl:w-5/12 px-4"
-            data-aos="fade-up"
-            data-aos-delay="500"
-            data-aos-duration="2000"
-          >
-            <div class="bg-gray-100 dark:bg-slate-800 relative rounded-lg p-8 sm:p-12 shadow-lg">
-              <form>
-                <div class="mb-6">
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    class="mb-6
-                                    w-19
-                                    rounded
-                                    p-3
-                                    text-gray-800
-                                    dark:text-gray-50
-                                    dark:bg-slate-700
-                                    border-gray-500
-                                    dark:border-slate-600
-                                    outline-none
-                                    focus-visible:shadow-none
-                                    focus:border-primary
-                                    "
-                    name="full_name"
-                    id="full_name"
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
-                  />
-                  <input
-                    type="text"
-                    id="lastName"
-                    placeholder="Last Name"
-                    class="
-                                    w-19
-                                    rounded
-                                    p-3
-                                    text-gray-800
-                                    dark:text-gray-50
-                                    dark:bg-slate-700
-                                    border-gray-500
-                                    dark:border-slate-600
-                                    outline-none
-                                    focus-visible:shadow-none
-                                    focus:border-primary
-                                    "
-                    name="full_name"
-                    onChange={(e) => setLastName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div class="mb-6">
-                  <input
-                    type="date"
-                    placeholder="Age"
-                    class="
-                                    w-full
-                                    rounded
-                                    p-3
-                                    text-gray-800
-                                    dark:text-gray-50
-                                    dark:bg-slate-700
-                                    border-gray-500
-                                    dark:border-slate-600
-                                    outline-none
-                                    focus-visible:shadow-none
-                                    focus:border-primary
-                                    "
-                    name="email"
-                    id="email"
-                    onChange={(e) => setAge(e.target.value)}
-                    required
-                  />
-                </div>
-                <div class="mb-6">
-                  <input
-                    inputMode="numeric"
-                    placeholder="Country"
-                    class="
-                                    w-full
-                                    rounded
-                                    p-3
-                                    text-gray-800
-                                    dark:text-gray-50
-                                    dark:bg-slate-700
-                                    border-gray-500
-                                    dark:border-slate-600
-                                    outline-none
-                                    focus-visible:shadow-none
-                                    focus:border-primary
-                                    "
-                    name="Country"
-                    id="Country"
-                    onChange={(e) => setCountry(e.target.value)}
-                    required
-                  />
-                </div>
 
-                <div class="mb-6">
-                  <input
-                    inputMode="numeric"
-                    placeholder="Email"
-                    class="
-                                    w-full
-                                    rounded
-                                    p-3
-                                    text-gray-800
-                                    dark:text-gray-50
-                                    dark:bg-slate-700
-                                    border-gray-500
-                                    dark:border-slate-600
-                                    outline-none
-                                    focus-visible:shadow-none
-                                    focus:border-primary
-                                    "
-                    name="Password"
-                    id="Password"
-                    type="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div class="mb-6">
-                  <input
-                    inputMode="numeric"
-                    placeholder="Password"
-                    class="
-                                    w-full
-                                    rounded
-                                    p-3
-                                    text-gray-800
-                                    dark:text-gray-50
-                                    dark:bg-slate-700
-                                    border-gray-500
-                                    dark:border-slate-600
-                                    outline-none
-                                    focus-visible:shadow-none
-                                    focus:border-primary
-                                    "
-                    name="Password"
-                    id="Password"
-                    type="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                <div>
-                  <button
-                    type="submit"
-                    class="
-                                    w-full
-                                    text-gray-100
-                                    hover:text-gray-700
-                                    bg-yellow-400
-                                    rounded
-                                    border border-primary
-                                    dark:border-slate-600
-                                    p-3
-                                    transition
-                                    ease-in-out
-                                    duration-500
-                                    hover:bg-yellow-300
-                                    "
-                    onClick={(e) => {
-                      addNewUser();
-                    }}
-                  >
-                    Register
-                  </button>
-                </div>
-              </form>
-              <div>
-                <span class="absolute -top-10 -right-9 z-[-1]">
-                  <svg
-                    width="100"
-                    height="100"
-                    viewBox="0 0 100 100"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M0 100C0 44.7715 0 0 0 0C55.2285 0 100 44.7715 100 100C100 100 100 100 0 100Z"
-                      fill="#FACC15"
-                    />
-                  </svg>
-                </span>
-               
-              </div>
+          <h3 class="mt-3 text-xl font-medium text-center text-gray-600 dark:text-gray-200">
+            Welcome Back
+          </h3>
+
+          <p class="mt-1 text-center text-gray-500 dark:text-gray-400">
+            Login or create account
+          </p>
+
+          <form>
+            <div class="w-full mt-4">
+              <input
+                class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                type="text"
+                placeholder="First Name"
+                aria-label="First Name"
+                onChange={(e) => {
+                  setFirstName(e.target.value);
+                }}
+                required
+              />
             </div>
-          </div>
+            <div class="w-full mt-4">
+              <input
+                class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                type="text"
+                placeholder="Last Name"
+                aria-label="Last Name"
+                onChange={(e) => {
+                  setLastName(e.target.value);
+                }}
+                required
+              />
+            </div>
+            <div class="w-full mt-4">
+              <input
+                class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                type="text"
+                placeholder="Country"
+                aria-label="Country"
+                onChange={(e) => {
+                  setCountry(e.target.value);
+                }}
+                required
+              />
+            </div>
+            <div class="w-full mt-4">
+              <input
+                class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                type="text"
+                placeholder="Age"
+                aria-label="Age"
+                onChange={(e) => {
+                  setAge(e.target.value);
+                }}
+                required
+              />
+            </div>
+            <div class="w-full mt-4">
+              <input
+                class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                type="email"
+                placeholder="Email Address"
+                aria-label="Email Address"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                required
+              />
+            </div>
+
+            <div class="w-full mt-4">
+              <input
+                class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                type="password"
+                placeholder="Password"
+                aria-label="Password"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+                required
+              />
+            </div>
+
+            <div class="flex items-center justify-between mt-4">
+              <button
+                class="px-6 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                onClick={() => {
+                  addNewUser();
+                  history("/");
+                }}
+              >
+                Register
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="flex items-center justify-center py-4 text-center bg-gray-50 dark:bg-gray-700">
+          <span class="text-sm text-gray-600 dark:text-gray-200">
+            Don't have an account?{" "}
+          </span>
+
+          <a
+            href="#"
+            class="mx-2 text-sm font-bold text-blue-500 dark:text-blue-400 hover:underline"
+          ></a>
         </div>
       </div>
-    </section></>
+    </>
   );
 };
 
 export default Register;
-<span class="absolute -right-10 top-[90px] z-[-1]">
-<svg
-  width="34"
-  height="134"
-  viewBox="0 0 34 134"
-  fill="none"
-  xmlns="http://www.w3.org/2000/svg"
->
-  {/* <circle
-    cx="31.9993"
-    cy="132"
-    r="1.66667"
-    transform="rotate(180 31.9993 132)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="117.333"
-    r="1.66667"
-    transform="rotate(180 31.9993 117.333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="102.667"
-    r="1.66667"
-    transform="rotate(180 31.9993 102.667)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="88"
-    r="1.66667"
-    transform="rotate(180 31.9993 88)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="73.3333"
-    r="1.66667"
-    transform="rotate(180 31.9993 73.3333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="45"
-    r="1.66667"
-    transform="rotate(180 31.9993 45)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="16"
-    r="1.66667"
-    transform="rotate(180 31.9993 16)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="59"
-    r="1.66667"
-    transform="rotate(180 31.9993 59)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="30.6666"
-    r="1.66667"
-    transform="rotate(180 31.9993 30.6666)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="1.66665"
-    r="1.66667"
-    transform="rotate(180 31.9993 1.66665)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="132"
-    r="1.66667"
-    transform="rotate(180 17.3333 132)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="117.333"
-    r="1.66667"
-    transform="rotate(180 17.3333 117.333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="102.667"
-    r="1.66667"
-    transform="rotate(180 17.3333 102.667)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="88"
-    r="1.66667"
-    transform="rotate(180 17.3333 88)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="73.3333"
-    r="1.66667"
-    transform="rotate(180 17.3333 73.3333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="45"
-    r="1.66667"
-    transform="rotate(180 17.3333 45)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="16"
-    r="1.66667"
-    transform="rotate(180 17.3333 16)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="59"
-    r="1.66667"
-    transform="rotate(180 17.3333 59)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="30.6666"
-    r="1.66667"
-    transform="rotate(180 17.3333 30.6666)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="1.66665"
-    r="1.66667"
-    transform="rotate(180 17.3333 1.66665)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="132"
-    r="1.66667"
-    transform="rotate(180 2.66536 132)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="117.333"
-    r="1.66667"
-    transform="rotate(180 2.66536 117.333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="102.667"
-    r="1.66667"
-    transform="rotate(180 2.66536 102.667)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="88"
-    r="1.66667"
-    transform="rotate(180 2.66536 88)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="73.3333"
-    r="1.66667"
-    transform="rotate(180 2.66536 73.3333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="45"
-    r="1.66667"
-    transform="rotate(180 2.66536 45)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="16"
-    r="1.66667"
-    transform="rotate(180 2.66536 16)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="59"
-    r="1.66667"
-    transform="rotate(180 2.66536 59)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="30.6666"
-    r="1.66667"
-    transform="rotate(180 2.66536 30.6666)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="1.66665"
-    r="1.66667"
-    transform="rotate(180 2.66536 1.66665)"
-    fill="#13C296"
-  />
-</svg>
-</span>
-<span class="absolute -left-7 -bottom-7 z-[-1]">
-<svg
-  width="107"
-  height="134"
-  viewBox="0 0 107 134"
-  fill="none"
-  xmlns="http://www.w3.org/2000/svg"
->
-  <circle
-    cx="104.999"
-    cy="132"
-    r="1.66667"
-    transform="rotate(180 104.999 132)"
-    fill="#13C296"
-  />
-  <circle
-    cx="104.999"
-    cy="117.333"
-    r="1.66667"
-    transform="rotate(180 104.999 117.333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="104.999"
-    cy="102.667"
-    r="1.66667"
-    transform="rotate(180 104.999 102.667)"
-    fill="#13C296"
-  />
-  <circle
-    cx="104.999"
-    cy="88"
-    r="1.66667"
-    transform="rotate(180 104.999 88)"
-    fill="#13C296"
-  />
-  <circle
-    cx="104.999"
-    cy="73.3333"
-    r="1.66667"
-    transform="rotate(180 104.999 73.3333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="104.999"
-    cy="45"
-    r="1.66667"
-    transform="rotate(180 104.999 45)"
-    fill="#13C296"
-  />
-  <circle
-    cx="104.999"
-    cy="16"
-    r="1.66667"
-    transform="rotate(180 104.999 16)"
-    fill="#13C296"
-  />
-  <circle
-    cx="104.999"
-    cy="59"
-    r="1.66667"
-    transform="rotate(180 104.999 59)"
-    fill="#13C296"
-  />
-  <circle
-    cx="104.999"
-    cy="30.6666"
-    r="1.66667"
-    transform="rotate(180 104.999 30.6666)"
-    fill="#13C296"
-  />
-  <circle
-    cx="104.999"
-    cy="1.66665"
-    r="1.66667"
-    transform="rotate(180 104.999 1.66665)"
-    fill="#13C296"
-  />
-  <circle
-    cx="90.3333"
-    cy="132"
-    r="1.66667"
-    transform="rotate(180 90.3333 132)"
-    fill="#13C296"
-  />
-  <circle
-    cx="90.3333"
-    cy="117.333"
-    r="1.66667"
-    transform="rotate(180 90.3333 117.333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="90.3333"
-    cy="102.667"
-    r="1.66667"
-    transform="rotate(180 90.3333 102.667)"
-    fill="#13C296"
-  />
-  <circle
-    cx="90.3333"
-    cy="88"
-    r="1.66667"
-    transform="rotate(180 90.3333 88)"
-    fill="#13C296"
-  />
-  <circle
-    cx="90.3333"
-    cy="73.3333"
-    r="1.66667"
-    transform="rotate(180 90.3333 73.3333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="90.3333"
-    cy="45"
-    r="1.66667"
-    transform="rotate(180 90.3333 45)"
-    fill="#13C296"
-  />
-  <circle
-    cx="90.3333"
-    cy="16"
-    r="1.66667"
-    transform="rotate(180 90.3333 16)"
-    fill="#13C296"
-  />
-  <circle
-    cx="90.3333"
-    cy="59"
-    r="1.66667"
-    transform="rotate(180 90.3333 59)"
-    fill="#13C296"
-  />
-  <circle
-    cx="90.3333"
-    cy="30.6666"
-    r="1.66667"
-    transform="rotate(180 90.3333 30.6666)"
-    fill="#13C296"
-  />
-  <circle
-    cx="90.3333"
-    cy="1.66665"
-    r="1.66667"
-    transform="rotate(180 90.3333 1.66665)"
-    fill="#13C296"
-  />
-  <circle
-    cx="75.6654"
-    cy="132"
-    r="1.66667"
-    transform="rotate(180 75.6654 132)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="132"
-    r="1.66667"
-    transform="rotate(180 31.9993 132)"
-    fill="#13C296"
-  />
-  <circle
-    cx="75.6654"
-    cy="117.333"
-    r="1.66667"
-    transform="rotate(180 75.6654 117.333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="117.333"
-    r="1.66667"
-    transform="rotate(180 31.9993 117.333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="75.6654"
-    cy="102.667"
-    r="1.66667"
-    transform="rotate(180 75.6654 102.667)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="102.667"
-    r="1.66667"
-    transform="rotate(180 31.9993 102.667)"
-    fill="#13C296"
-  />
-  <circle
-    cx="75.6654"
-    cy="88"
-    r="1.66667"
-    transform="rotate(180 75.6654 88)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="88"
-    r="1.66667"
-    transform="rotate(180 31.9993 88)"
-    fill="#13C296"
-  />
-  <circle
-    cx="75.6654"
-    cy="73.3333"
-    r="1.66667"
-    transform="rotate(180 75.6654 73.3333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="73.3333"
-    r="1.66667"
-    transform="rotate(180 31.9993 73.3333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="75.6654"
-    cy="45"
-    r="1.66667"
-    transform="rotate(180 75.6654 45)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="45"
-    r="1.66667"
-    transform="rotate(180 31.9993 45)"
-    fill="#13C296"
-  />
-  <circle
-    cx="75.6654"
-    cy="16"
-    r="1.66667"
-    transform="rotate(180 75.6654 16)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="16"
-    r="1.66667"
-    transform="rotate(180 31.9993 16)"
-    fill="#13C296"
-  />
-  <circle
-    cx="75.6654"
-    cy="59"
-    r="1.66667"
-    transform="rotate(180 75.6654 59)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="59"
-    r="1.66667"
-    transform="rotate(180 31.9993 59)"
-    fill="#13C296"
-  />
-  <circle
-    cx="75.6654"
-    cy="30.6666"
-    r="1.66667"
-    transform="rotate(180 75.6654 30.6666)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="30.6666"
-    r="1.66667"
-    transform="rotate(180 31.9993 30.6666)"
-    fill="#13C296"
-  />
-  <circle
-    cx="75.6654"
-    cy="1.66665"
-    r="1.66667"
-    transform="rotate(180 75.6654 1.66665)"
-    fill="#13C296"
-  />
-  <circle
-    cx="31.9993"
-    cy="1.66665"
-    r="1.66667"
-    transform="rotate(180 31.9993 1.66665)"
-    fill="#13C296"
-  />
-  <circle
-    cx="60.9993"
-    cy="132"
-    r="1.66667"
-    transform="rotate(180 60.9993 132)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="132"
-    r="1.66667"
-    transform="rotate(180 17.3333 132)"
-    fill="#13C296"
-  />
-  <circle
-    cx="60.9993"
-    cy="117.333"
-    r="1.66667"
-    transform="rotate(180 60.9993 117.333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="117.333"
-    r="1.66667"
-    transform="rotate(180 17.3333 117.333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="60.9993"
-    cy="102.667"
-    r="1.66667"
-    transform="rotate(180 60.9993 102.667)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="102.667"
-    r="1.66667"
-    transform="rotate(180 17.3333 102.667)"
-    fill="#13C296"
-  />
-  <circle
-    cx="60.9993"
-    cy="88"
-    r="1.66667"
-    transform="rotate(180 60.9993 88)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="88"
-    r="1.66667"
-    transform="rotate(180 17.3333 88)"
-    fill="#13C296"
-  />
-  <circle
-    cx="60.9993"
-    cy="73.3333"
-    r="1.66667"
-    transform="rotate(180 60.9993 73.3333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="73.3333"
-    r="1.66667"
-    transform="rotate(180 17.3333 73.3333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="60.9993"
-    cy="45"
-    r="1.66667"
-    transform="rotate(180 60.9993 45)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="45"
-    r="1.66667"
-    transform="rotate(180 17.3333 45)"
-    fill="#13C296"
-  />
-  <circle
-    cx="60.9993"
-    cy="16"
-    r="1.66667"
-    transform="rotate(180 60.9993 16)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="16"
-    r="1.66667"
-    transform="rotate(180 17.3333 16)"
-    fill="#13C296"
-  />
-  <circle
-    cx="60.9993"
-    cy="59"
-    r="1.66667"
-    transform="rotate(180 60.9993 59)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="59"
-    r="1.66667"
-    transform="rotate(180 17.3333 59)"
-    fill="#13C296"
-  />
-  <circle
-    cx="60.9993"
-    cy="30.6666"
-    r="1.66667"
-    transform="rotate(180 60.9993 30.6666)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="30.6666"
-    r="1.66667"
-    transform="rotate(180 17.3333 30.6666)"
-    fill="#13C296"
-  />
-  <circle
-    cx="60.9993"
-    cy="1.66665"
-    r="1.66667"
-    transform="rotate(180 60.9993 1.66665)"
-    fill="#13C296"
-  />
-  <circle
-    cx="17.3333"
-    cy="1.66665"
-    r="1.66667"
-    transform="rotate(180 17.3333 1.66665)"
-    fill="#13C296"
-  />
-  <circle
-    cx="46.3333"
-    cy="132"
-    r="1.66667"
-    transform="rotate(180 46.3333 132)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="132"
-    r="1.66667"
-    transform="rotate(180 2.66536 132)"
-    fill="#13C296"
-  />
-  <circle
-    cx="46.3333"
-    cy="117.333"
-    r="1.66667"
-    transform="rotate(180 46.3333 117.333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="117.333"
-    r="1.66667"
-    transform="rotate(180 2.66536 117.333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="46.3333"
-    cy="102.667"
-    r="1.66667"
-    transform="rotate(180 46.3333 102.667)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="102.667"
-    r="1.66667"
-    transform="rotate(180 2.66536 102.667)"
-    fill="#13C296"
-  />
-  <circle
-    cx="46.3333"
-    cy="88"
-    r="1.66667"
-    transform="rotate(180 46.3333 88)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="88"
-    r="1.66667"
-    transform="rotate(180 2.66536 88)"
-    fill="#13C296"
-  />
-  <circle
-    cx="46.3333"
-    cy="73.3333"
-    r="1.66667"
-    transform="rotate(180 46.3333 73.3333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="73.3333"
-    r="1.66667"
-    transform="rotate(180 2.66536 73.3333)"
-    fill="#13C296"
-  />
-  <circle
-    cx="46.3333"
-    cy="45"
-    r="1.66667"
-    transform="rotate(180 46.3333 45)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="45"
-    r="1.66667"
-    transform="rotate(180 2.66536 45)"
-    fill="#13C296"
-  />
-  <circle
-    cx="46.3333"
-    cy="16"
-    r="1.66667"
-    transform="rotate(180 46.3333 16)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="16"
-    r="1.66667"
-    transform="rotate(180 2.66536 16)"
-    fill="#13C296"
-  />
-  <circle
-    cx="46.3333"
-    cy="59"
-    r="1.66667"
-    transform="rotate(180 46.3333 59)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="59"
-    r="1.66667"
-    transform="rotate(180 2.66536 59)"
-    fill="#13C296"
-  />
-  <circle
-    cx="46.3333"
-    cy="30.6666"
-    r="1.66667"
-    transform="rotate(180 46.3333 30.6666)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="30.6666"
-    r="1.66667"
-    transform="rotate(180 2.66536 30.6666)"
-    fill="#13C296"
-  />
-  <circle
-    cx="46.3333"
-    cy="1.66665"
-    r="1.66667"
-    transform="rotate(180 46.3333 1.66665)"
-    fill="#13C296"
-  />
-  <circle
-    cx="2.66536"
-    cy="1.66665"
-    r="1.66667"
-    transform="rotate(180 2.66536 1.66665)"
-    fill="#13C296"
-  /> */}
-</svg>
-</span>

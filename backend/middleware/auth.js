@@ -1,10 +1,10 @@
 const auth = (socket, next) => {
   console.log(socket.handshake.headers);
-  const headers = socket.handshake.headers;
+  const userId = socket.handshake.headers.user_id;
   console.log("from auth");
-  if (headers.user_id) {
-    socket.join("room-" + headers.user_id);
-    socket.user = { user_id: headers.user_id };
+  if (userId) {
+    socket.join("room-" + userId);
+    socket.user = { user_id: userId };
     next();
   } else {
     next(new Error("invalid"));
