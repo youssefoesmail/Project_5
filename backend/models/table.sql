@@ -124,10 +124,10 @@ CREATE TABLE notifications (
 );
 CREATE TABLE messages(
   message_id SERIAL PRIMARY KEY,
-  sender_id INTEGER NOT NULL,
   receiver_id INTEGER NOT NULL,
+  sender_id INTEGER NOT NULL,
   messages VARCHAR(255),
-  created_at TIMESTAMP DEFAULT NOW(),
+  sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (sender_id) REFERENCES users(id),
   FOREIGN KEY (receiver_id) REFERENCES users(id)
 )
