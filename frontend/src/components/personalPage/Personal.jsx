@@ -115,11 +115,23 @@ const Personal = () => {
     <>
     <div>
       <Navbar/>
+
+
+
       
-      <main className="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
+
+
+
+
+
+
+      
+      <main className="flex flex-col items-center justify-center w-full ">
       <div className="container px-6 py-16 mx-auto text-center">
-  <div className="flex justify-center mt-10">
-            <img className="w-full h-64 bg-gray-300 bg-center bg-cover rounded-lg shadow-md" src={personal.cover} />
+  <div className="container ">
+  <div class="flex justify-center mt-10">
+            <img class="object-cover w-full h-96 rounded-xl lg:w-4/5" src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80" />
+        </div>
 
             
     
