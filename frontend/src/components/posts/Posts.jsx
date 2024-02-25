@@ -23,7 +23,6 @@ import { setUserId, token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
-import Reel from "../reels/Reel";
 
 const Posts = () => {
   //setUserPostId
@@ -289,139 +288,10 @@ const Posts = () => {
       });
   }, []);
   return (
-    <div>
-      <Story />
-      <input
-        placeholder="Body"
-        onChange={(e) => {
-          setBody(e.target.value);
-        }}
-      />
-      <input
-        type="file"
-        onChange={(event) => {
-          setImageUpload(event.target.files[0]);
-        }}
-      />
-      <input
-        type="file"
-        onChange={(event) => {
-          setVideoUpload(event.target.files[0]);
-        }}
-      />
-
-      <button
-        onClick={() => {
-          handleCreateNewPost();
-          clearInput();
-        }}
-      >
-        createNewPost
-      </button>
-      <button onClick={uploadFile}> Upload</button>
-      {posts?.map((elem) => {
-        return (
-          <>
-            <div key={elem.id}>
-              <>
-                {" "}
-                <Link
-                  to={`/users/${elem.user_id}`}
-                  onClick={() => {
-                    dispatch(setUserId(elem.user_id));
-                  }}
-                >
-                  <p>{elem.firstname}</p>
-                </Link>
-                <h1 onClick={elem.id}>{elem.body}</h1>
-                {
-                  <button
-                    onClick={() => {
-                      getPostComment(elem.id);
-                      setShow(elem.user_id);
-                      setPostId(elem.id);
-                    }}
-                  >
-                    showComment
-                  </button>
-                }
-                {elem.id == postId &&
-                  // get if there is a value
-                  elem.comment?.map((comment, i) => {
-                    return (
-                      <div className="comment" key={i}>
-                        <p>{comment?.comment}</p>
-                        {comment.commenter == userId && (
-                          <div>
-                            <button
-                              onClick={() => {
-                                updateComment(comment.id, elem.id);
-
-                                updateComment(comment.id, elem.id);
-
-                                //updateComment(comment.id, elem.id)
-                                setCommId(comment.id);
-                              }}
-                            >
-                              update
-                            </button>
-                            <button
-                              onClick={() => {
-                                console.log(comment.id);
-                                deleteComment(comment.id, elem.id);
-                              }}
-                            >
-                              delete
-                            </button>
-                          </div>
-                        )}
-                        {comment.id == commId && (
-                          <>
-                            <input
-                              placeholder="update comment"
-                              onChange={(e) => {
-                                setUpCommValue(e.target.value);
-                              }}
-                            />
-                            <button
-                              onClick={() => {
-                                updateComment(commId, elem.id);
-                                setCommId("");
-                              }}
-                            >
-                              update
-                            </button>
-                            <button>delete</button>
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
-                <img width="300px" height="150px" src={elem.photo} />
-                <video controls width="300px" height="150px">
-                  <source src={elem.video} type="video/mp4" />
-                </video>
-                {comment && comment.id === elem.id && comment.comments && (
-                  <div>
-                    <h2>Comments:</h2>
-                    {comment.comments.map((comment) => (
-                      <p key={comment.id}>{comment.text}</p>
-                    ))}
-                  </div>
-                )}
-                {elem.user_id == userId && update ? (
-
     <section class="bg-white dark:bg-gray-900">
       <div class="container px-6 py-10 mx-auto">
         <div class="lg:flex-col  lg:items-center">
           <Story />
-          <Link
-                      to={`/reels`}
-                    
-                    >
-                      <p>reels</p>
-                    </Link>
-
           <input
             type="text" placeholder="Body" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
 
@@ -458,9 +328,8 @@ const Posts = () => {
             onClick={uploadFile}> Upload</button>
           {posts?.map((elem) => {
             return (
-              <div class="mt-8  lg:px-6 lg:mt-0 ">
+              <div class="mt-8  lg:px-6 lg:mt-0 border-2 border-solid border-dark-600 rounded-lg">
                 <div className=" w-auto" key={elem.id}>
-
                   <>
                     {" "}
                     <Link
@@ -490,9 +359,11 @@ const Posts = () => {
                       // get if there is a value
                       elem.comment?.map((comment, i) => {
                         return (
-                          <section class="max-w-md p-4 mx-auto bg-white border border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 rounded-2xl">
+                          <section class="max-w-md p-4 mx-auto bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
                             <div className="comment" key={i}>
-                              <h2 class="font-semibold text-gray-800 dark:text-white">{comment?.commenter}</h2>
+                              <h2 class="font-semibold text-gray-800 dark:text-white">
+                                {comment.firstname}
+                              </h2>
                               <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">{comment?.comment}</p>
                               {comment.commenter == userId && (
                                 <div>
@@ -576,7 +447,7 @@ const Posts = () => {
                         <button
                           class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
                           onClick={() => {
-                             handleUpdatePost(elem.id);
+                            // handleUpdatePost(elem.id);
                             uploadFile(elem.id, "update_img", "update_vid")
                           }}
                         >
