@@ -56,6 +56,8 @@ CREATE TABLE story (
   FOREIGN KEY (user_id) REFERENCES users(id),
   is_deleted SMALLINT DEFAULT 0
 );
+
+
 CREATE TABLE comment_story(
   id SERIAL PRIMARY KEY,
   comment VARCHAR,
