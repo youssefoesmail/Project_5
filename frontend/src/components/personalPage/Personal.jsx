@@ -77,7 +77,7 @@ const Personal = () => {
         }
       })
       .then((result) => {
-        console.log(result.data.result);
+        console.log("followers",result.data.result);
         dispatch(setFollowers(result.data.result));
       })
       .catch((err) => {
@@ -146,6 +146,7 @@ const Personal = () => {
     <>
     <div>
       <Navbar/>
+      
 
       
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
@@ -192,12 +193,6 @@ const Personal = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
-
-
-
-
-
       
       <main className="flex flex-col items-center justify-center w-full ">
       <div className="container px-6 py-16 mx-auto text-center">
@@ -214,6 +209,23 @@ const Personal = () => {
         </div>
 
         
+      <Modal show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Header>Terms of Service</Modal.Header>
+        <Modal.Body>
+          <div className="space-y-6">
+            {followers.map((elem,i)=>{
+              return <>
+              </>
+            })}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setOpenModal(false)}>I accept</Button>
+          <Button color="gray" onClick={() => setOpenModal(false)}>
+            Decline
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
 
 
@@ -223,7 +235,7 @@ const Personal = () => {
       
         <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase dark:text-white">{personal.firstname} {personal.lastname}</h3>
 
-        <a href="#"
+        <a href="#" onClick={() => setOpenModal(true)}
                             class="mx-2 text-gray-600 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
                             aria-label="Reddit">
                               
