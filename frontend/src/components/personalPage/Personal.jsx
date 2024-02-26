@@ -35,6 +35,8 @@ const Personal = () => {
 
 
   const [openModal, setOpenModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
 
   const [user, setUser] = useState(null);
   const [coverImageUpload, setcoverImageUpload] = useState(null);
@@ -209,20 +211,28 @@ const Personal = () => {
         </div>
 
         
-      <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Terms of Service</Modal.Header>
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Header>Followers</Modal.Header>
         <Modal.Body>
           <div className="space-y-6">
             {followers.map((elem,i)=>{
               return <>
+              <div class="flex items-center gap-x-2">
+        <img class="object-cover w-16 h-16 rounded-full" src={elem.photo} alt=""/>
+        
+        <div>
+            <h1 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">{elem.firstname} {elem.lastname} </h1>
+
+            <p class="text-base text-gray-500 dark:text-gray-400">{elem.email}</p>
+        </div>
+    </div>
               </>
             })}
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => setOpenModal(false)}>I accept</Button>
-          <Button color="gray" onClick={() => setOpenModal(false)}>
-            Decline
+          <Button color="gray" onClick={() => setShowModal(false)}>
+            Back
           </Button>
         </Modal.Footer>
       </Modal>
@@ -235,7 +245,7 @@ const Personal = () => {
       
         <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase dark:text-white">{personal.firstname} {personal.lastname}</h3>
 
-        <a href="#" onClick={() => setOpenModal(true)}
+        <a href="#" onClick={() => setShowModal(true)}
                             class="mx-2 text-gray-600 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
                             aria-label="Reddit">
                               
