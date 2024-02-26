@@ -1,7 +1,10 @@
 const { pool } = require("../models/db");
 
 const getAllStories = (req, res) => {
-  const query = `SELECT * FROM story a WHERE is_deleted=0;`;
+  const query = `SELECT * 
+  FROM story
+  INNER JOIN users ON users.id = story.user_id
+  WHERE story.is_deleted = 0;`;
   const updateQuery = `UPDATE story
   SET is_deleted = 1
   WHERE created_at <= NOW() - INTERVAL '24 HOURS' AND is_deleted = 0;`;
