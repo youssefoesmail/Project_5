@@ -6,6 +6,7 @@ const followersSlice = createSlice({
   },
   reducers: {
     setFollowers: (state, action) => {
+      console.log("Action",action.payload);
       state.followers = action.payload;
     }
   }

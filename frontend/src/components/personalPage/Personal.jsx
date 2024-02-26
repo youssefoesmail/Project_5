@@ -16,8 +16,20 @@ import {
 } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
+import { setFollowers } from "../redux/followers/followers";
 
 const Personal = () => {
+  const dispatch = useDispatch();
+  const { auth, personal, post ,followers} = useSelector((state) => {
+    return {
+      followers:state.followers.followers,
+      auth: state.auth,
+      post: state.personal.post,
+      personal: state.personal.personal
+    };
+  });
+
+
   const [show, setShow] = useState(false)
   const [user, setUser] = useState(null);
   const [coverImageUpload, setcoverImageUpload] = useState(null);
@@ -28,14 +40,7 @@ const Personal = () => {
   const [photoImageUrls, setphotoImageUrls] = useState([] || null);
   const photoImageListRef = ref(storage, "photoImages/");
 
-  const dispatch = useDispatch();
-  const { auth, personal, post } = useSelector((state) => {
-    return {
-      auth: state.auth,
-      post: state.personal.post,
-      personal: state.personal.personal
-    };
-  });
+  
   const personalPage = () => {
     axios
       .get(`http://localhost:5000/users/${auth.userId}`)
@@ -58,10 +63,32 @@ const Personal = () => {
         log;
       });
   };
+
+  const getFollowers = () => {
+    axios
+      .get(`http://localhost:5000/followers`, {
+        headers: {
+          authorization: `Bearer ${auth.token}`
+        }
+      })
+      .then((result) => {
+        console.log(result.data.result);
+        dispatch(setFollowers(result.data.result));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+
+
+
+
   useEffect(() => {
+    getFollowers();
     getPostByAuthor();
     personalPage();
-    //console.log(post);
+    console.log("followers", followers);
   }, []);
   console.log(personal);
 
@@ -204,6 +231,13 @@ const Personal = () => {
       <Avatar img={personal.photo} size="xl" />
       
         <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase dark:text-white">{personal.firstname} {personal.lastname}</h3>
+
+        <a href="#"
+                            class="mx-2 text-gray-600 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
+                            aria-label="Reddit">
+                            
+                            <p class="text-center text-gray-500 dark:text-gray-400">followers {followers.length} </p>
+                        </a>
       </div>
       </div>
       </main>
