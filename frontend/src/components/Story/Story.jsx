@@ -92,34 +92,29 @@ const Story = () => {
     getAllStory();
   }, []);
 
-   useEffect(() => {
-    console.log("Slideshow component mounted");
-    const interval = setInterval(() => {
-      console.log("Changing slide...");
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % story.length);
-    },5000); // Change slides every 5 seconds
 
-    return () => {
-      console.log("Slideshow component unmounted");
-      clearInterval(interval);
-    };
-  }, [story]); 
   console.log(story);
   return (
     <div>
+         <div class="flex bg-white shadow-lg rounded-lg mx-4 md:mx-auto my-56 max-w-md md:max-w-2xl marginElement"  >
+            <div class="flex items-start px-4 py-6">
+              <div class="flex items-center justify-between"></div>
        <input
-        type="file"
+        type="file"  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
         onChange={(event) => {
           setStoryImageUpload(event.target.files[0]);
           
         }}
       />
       <input
-        type="file"
+        type="file" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
         onChange={(event) => {
           setStoryVideoUpload(event.target.files[0]);
         }}
       />
+                  </div>
+                  </div>
+
       <button
         onClick={() => {
           axios

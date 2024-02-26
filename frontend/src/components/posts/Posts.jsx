@@ -322,7 +322,7 @@ const Posts = () => {
       <div class="container px-6 py-10 mx-auto">
         
         <div class="lg:flex-col  lg:items-center">
-        <Link to={`/reels/`}>
+        <Link to={`/reels`}>
           <button
                   class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
                 >
