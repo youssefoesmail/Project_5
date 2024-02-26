@@ -117,7 +117,7 @@ const Story = () => {
   console.log(story);
   return (
     <div>
-      <input
+       <input
         type="file"
         onChange={(event) => {
           setStoryImageUpload(event.target.files[0]);
@@ -157,27 +157,33 @@ const Story = () => {
         createNewStory
       </button>
       <button onClick={uploadFile}> Upload</button>
-      <Card className="card-slider">
-      <Card.Body>
-        <div className="slider">
-          <div className="slides" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
-            {story.map((slide, index) => (
-              <Card key={index} className="slide">
-                <Card.Img variant="top" src={slide.photo} />
-              </Card>
-            ))}
-          </div>
-        </div>
-        <div className="controls">
-          <Button variant="outline-primary" onClick={goToPrevSlide}>Previous</Button>
-          <Button variant="outline-primary" onClick={goToNextSlide}>Next</Button>
-        </div>
-      </Card.Body>
-    </Card>
-  
       
+      <Card className="card-slider">
+        <Card.Body>
+          <div className="slider">
+            <div className="slides" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+              {story.map((slide, index) => (
+                <Card key={index} className="slide">
+                  <Card.Img variant="top" src={slide.photo} />
+                </Card>
+              ))}
+            </div>
+          </div>
+          <div className="controls">
+            <Button variant="outline-primary" onClick={goToPrevSlide}>
+              &lt; 
+            </Button>
+            <Button variant="outline-primary" onClick={goToNextSlide}>
+              &gt; 
+            </Button>
+          </div>
+        </Card.Body>
+      </Card>
     </div>
   );
 };
+   
+  
+
 
 export default Story;
