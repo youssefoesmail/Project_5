@@ -75,10 +75,10 @@ const Register = () => {
     const templateId = "template_05hqb17";
     const userId = "znH3jKlhlPReHMYZa";
     const templateParams = {
-      to_email: `${e}`,
-      from_name: `rashedmohammadalfoqha@gmail.com`,
+      to_email: `rashedmohammadalfoqha@gmail.com`,
+      from_name: `${e}`,
       message: ` "register successfully.",
-      Name:${f},${l},
+      Name:${f} ${l},
       country:${c}`
     };
 
