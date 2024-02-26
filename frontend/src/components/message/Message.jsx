@@ -13,7 +13,9 @@ import { setUserInfo } from "../redux/personalPage/personal";
 
 const Message = () => {
   const [to, setTo] = useState("");
-  const [messageText, setMessageText] = useState(""); // Use a separate state for the message text
+  const [form, setForm] = useState("");
+
+  const [messageText, setMessageText] = useState("");
   const dispatch = useDispatch();
   const { auth, messages, followers, personal } = useSelector((state) => {
     return {
