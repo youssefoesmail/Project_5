@@ -23,14 +23,8 @@ import { setUserId, token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
-import {
-  FacebookShareButton,
-  TwitterShareButton,
-  WhatsappShareButton,
-  FacebookIcon,
-  TwitterIcon,
-  WhatsappIcon
-} from "react-share";
+import "./index.css";
+
 const Posts = () => {
   //setUserPostId
   const [body, setBody] = useState("");
@@ -78,12 +72,12 @@ const Posts = () => {
         </WhatsappShareButton>
       </div>
     );
-    // <div className="mt-8 lg:px-6 lg:mt-0 border-2 border-solid border-dark-600 rounded-lg">
-    //         <div className="w-auto" key={elem.id}>
-    //           <ShareButtons shareUrl={`your-post-url/${elem.id}`} title={elem.body} />
-    //         </div>
-    //       </div>
   };
+  // <div className="mt-8 lg:px-6 lg:mt-0 border-2 border-solid border-dark-600 rounded-lg">
+  //         <div className="w-auto" key={elem.id}>
+  //           <ShareButtons shareUrl={`your-post-url/${elem.id}`} title={elem.body} />
+  //         </div>
+  //       </div>
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -311,234 +305,399 @@ const Posts = () => {
         console.log(err);
       });
   }, []);
-<section class="bg-white dark:bg-gray-900">
+  return (
+    <div class="bg-white dark:bg-gray-900">
       <div class="container px-6 py-10 mx-auto">
         <div class="lg:flex-col  lg:items-center">
           <Story />
-          <input
-            type="text" placeholder="Body" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-
-            onChange={(e) => {
-              setBody(e.target.value);
-            }}
-          />
-          <input
-            type="file" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-            onChange={(event) => {
-              setImageUpload(event.target.files[0]);
-            }}
-          />
-          <input
-            type="file" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-
-            onChange={(event) => {
-              setVideoUpload(event.target.files[0]);
-            }}
-          />
-
-          <button
-            class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
-            onClick={() => {
-              handleCreateNewPost();
-              clearInput();
-            }}
-          >
-            createNewPost
-          </button>
-          <button
-            class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
-
-            onClick={uploadFile}> Upload</button>
+          <div class="flex bg-white shadow-lg rounded-lg mx-4 md:mx-auto my-56 max-w-md md:max-w-2xl marginElement">
+            <div class="flex items-start px-4 py-6">
+              <div class="flex items-center justify-between">
+                <input
+                  type="text"
+                  placeholder="Body"
+                  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                  onChange={(e) => {
+                    setBody(e.target.value);
+                  }}
+                />
+                <input
+                  type="file"
+                  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                  onChange={(event) => {
+                    setImageUpload(event.target.files[0]);
+                  }}
+                />
+                <input
+                  type="file"
+                  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                  onChange={(event) => {
+                    setVideoUpload(event.target.files[0]);
+                  }}
+                />
+              </div>
+              <div class="flex items-center justify-between">
+                <button
+                  class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+                  onClick={() => {
+                    handleCreateNewPost();
+                    clearInput();
+                  }}
+                >
+                  createNewPost
+                </button>
+              </div>
+              <div class="flex items-center justify-between">
+                <button
+                  class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
+                  onClick={uploadFile}
+                >
+                  {" "}
+                  Upload
+                </button>
+              </div>
+            </div>
+          </div>
           {posts?.map((elem) => {
             return (
-              <div class="mt-8  lg:px-6 lg:mt-0 border-2 border-solid border-dark-600 rounded-lg">
-                <div className=" w-auto" key={elem.id}>
-                  <>
-                    {" "}
-                    <Link
-                      to={`/users/${elem.user_id}`}
-                      onClick={() => {
-                        dispatch(setUserId(elem.user_id));
-                      }}
-                    >
-                      <p>{elem.firstname}</p>
-                    </Link>
-                    {elem.photo ? <img class="object-cover object-center lg:w-1/2 lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]" alt="" width="300px" height="150px" src={elem.photo} /> :
-                      <video controls width="300px" height="150px" class="object-cover object-center lg:w-1/2 lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]">
-                        <source src={elem.video} type="video/mp4" />
-                      </video>}
-                    {
-                      <button class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
-                        onClick={() => {
-                          getPostComment(elem.id);
-                          setShow(elem.user_id);
-                          setPostId(elem.id)
-                        }}
-                      >
-                        showComment
-                      </button>
-                    }
-                    {elem.id == postId &&
-                      // get if there is a value
-                      elem.comment?.map((comment, i) => {
-                        return (
-                          <section class="max-w-md p-4 mx-auto bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
-                            <div className="comment" key={i}>
-                              <h2 class="font-semibold text-gray-800 dark:text-white">
-                                {comment.firstname}
-                              </h2>
-                              <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">{comment?.comment}</p>
-                              {comment.commenter == userId && (
-                                <div>
-                                  <button
-                                    class=" text-xs bg-green-900 font-medium rounded-lg hover:bg-green-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
+              <>
+                <div class="flex bg-white drop-shadow-2xl rounded-lg my-6">
+                  <div class="flex flex-col px-4 py-6 my-6 mx-6">
+                    <div className="" key={elem.id}>
+                      <>
+                        <div class="flex items-center justify-between">
+                          {" "}
+                          <Link
+                            to={`/users/${elem.user_id}`}
+                            onClick={() => {
+                              dispatch(setUserId(elem.user_id));
+                            }}
+                          >
+                            {elem.photo && (
+                              <img
+                                class="w-12 h-12 rounded-full object-cover mr-4 shadow"
+                                src={elem.photo}
+                                alt="avatar"
+                              />
+                            )}
+                            <h2 class="text-lg font-semibold text-gray-900 -mt-1">
+                              {elem.firstname}
+                            </h2>
+                          </Link>
+                          <small class="text-sm text-gray-700">
+                            {elem.created_at}
+                          </small>
+                        </div>
+                        {elem.photo ? (
+                          <img
+                            class="object-cover justify-items-center object-center lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]"
+                            alt=""
+                            width="300px"
+                            height="150px"
+                            src={elem.photo}
+                          />
+                        ) : (
+                          <video
+                            controls
+                            width="300px"
+                            height="150px"
+                            class="object-cover object-center lg:w-1/2 lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]"
+                          >
+                            <source src={elem.video} type="video/mp4" />
+                          </video>
+                        )}
+                        <div class="mt-4 flex items-center px-4 py-6 my-6 mx-6">
+                          <div class="flex mr-12 text-gray-700 text-sm mr-6 hover:bg-red-300">
+                            <svg
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              class="w-10 h-10 mr-1"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                              />
+                            </svg>
+                            <span>12</span>
+                          </div>
+                          <div class="flex mr-2 text-gray-700 text-sm mr-6 hover:bg-blue-300">
+                            <svg
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              class="w-10 h-10 mr-1"
+                              stroke="currentColor"
+                              onClick={() => {
+                                getPostComment(elem.id);
+
+                                setShow(elem.user_id);
+                                setPostId(elem.id);
+                              }}
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                              />
+                            </svg>
+                            <span>{elem.comment?.length}</span>
+                          </div>
+                          <div class="flex mr-2 text-gray-700 text-sm mr-6 hover:bg-blue-300">
+                            <svg
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              class="w-10 h-10 mr-1"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                              />
+                            </svg>
+                            <span>share</span>
+                          </div>
+
+                          {elem.user_id == userId && (
+                            <div class="mr-6 hover:bg-red-300">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="w-6 h-6"
+                                onClick={() => {
+                                  handleDeletePost(elem.id);
+                                }}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
+                                />
+                              </svg>
+                            </div>
+                          )}
+
+                          {
+                            // <button class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+                            //   onClick={() => {
+                            //     getPostComment(elem.id);
+                            //     setShow(elem.user_id);
+                            //     setPostId(elem.id)
+                            //   }}
+                            // >
+                            //   showComment
+                            // </button>
+                          }
+                          {elem.id == postId &&
+                            // get if there is a value
+                            elem.comment?.map((comment, i) => {
+                              return (
+                                <section class="max-w-md p-4 mx-auto bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
+                                  <div className="comment" key={i}>
+                                    <h2 class="font-semibold text-gray-800 dark:text-white">
+                                      {comment.firstname}
+                                    </h2>
+                                    <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
+                                      {comment?.comment}
+                                    </p>
+                                    {comment.commenter == userId && (
+                                      <div>
+                                        <button
+                                          class=" text-xs bg-green-900 font-medium rounded-lg hover:bg-green-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
+                                          onClick={() => {
+                                            updateComment(comment.id, elem.id);
+
+                                            console.log(comment);
+                                            //updateComment(comment.id, elem.id)
+                                            setCommId(comment.id);
+                                          }}
+                                        >
+                                          update
+                                        </button>
+                                        <button
+                                          class=" text-xs bg-red-900 font-medium rounded-lg hover:bg-red-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
+                                          onClick={() => {
+                                            console.log(comment.id);
+                                            deleteComment(comment.id, elem.id);
+                                          }}
+                                        >
+                                          delete
+                                        </button>
+                                      </div>
+                                    )}
+                                    {comment.id == commId && (
+                                      <>
+                                        <input
+                                          type="text"
+                                          placeholder="update comment"
+                                          class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                                          onChange={(e) => {
+                                            setUpCommValue(e.target.value);
+                                          }}
+                                        />
+                                        <button
+                                          class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
+                                          onClick={() => {
+                                            updateComment(commId, elem.id);
+                                            setCommId("");
+                                          }}
+                                        >
+                                          update
+                                        </button>
+                                      </>
+                                    )}
+                                  </div>
+                                </section>
+                              );
+                            })}
+                          {comment &&
+                            comment.id === elem.id &&
+                            comment.comments && (
+                              <div>
+                                <h2>Comments:</h2>
+                                {comment.comments.map((comment) => (
+                                  <p key={comment.id}>{comment.text}</p>
+                                ))}
+                              </div>
+                            )}
+                          {elem.user_id == userId && update ? (
+                            <>
+                              {" "}
+                              <input
+                                type="text"
+                                placeholder="body"
+                                class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                                onChange={(e) => {
+                                  setBody(e.target.value);
+                                }}
+                              />
+                              <input
+                                type="text"
+                                placeholder="file"
+                                class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                                onChange={(event) => {
+                                  setImageUpload(event.target.files[0]);
+                                }}
+                              />
+                              <input
+                                type="text"
+                                placeholder="file"
+                                class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                                onChange={(event) => {
+                                  setVideoUpload(event.target.files[0]);
+                                }}
+                              />
+                              <button
+                                class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
+                                onClick={() => {
+                                  // handleUpdatePost(elem.id);
+                                  uploadFile(
+                                    elem.id,
+                                    "update_img",
+                                    "update_vid"
+                                  );
+                                }}
+                              >
+                                UpdateInformtion
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              {elem.user_id == userId && (
+                                <div class="hover:bg-green-300">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-6 h-6"
                                     onClick={() => {
-
-                                      updateComment(comment.id, elem.id)
-
-                                      console.log(comment);
-                                      //updateComment(comment.id, elem.id)
-                                      setCommId(comment.id);
-
-                                    }}
-                                  >update</button>
-                                  <button
-                                    class=" text-xs bg-red-900 font-medium rounded-lg hover:bg-red-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
-                                    onClick={() => {
-                                      console.log(comment.id);
-                                      deleteComment(comment.id, elem.id)
-                                    }}
-                                  >delete</button>
-                                </div>
-                              )}
-                              {
-                                comment.id == commId &&
-                                <>
-                                  <input
-                                    type="text" placeholder="update comment" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-
-                                    onChange={(e) => {
-                                      setUpCommValue(e.target.value)
-                                    }}
-                                  />
-                                  <button
-                                    class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
-                                    onClick={() => {
-                                      updateComment(commId, elem.id);
-                                      setCommId("");
+                                      setUpdate(!update);
                                     }}
                                   >
-                                    update
-                                  </button>
-                                </>
-                              }
-                            </div>
-                          </section>
-                        );
-                      })
-                    }
-                    {comment && comment.id === elem.id && comment.comments && (
-                      <div>
-                        <h2>Comments:</h2>
-                        {comment.comments.map((comment) => (
-                          <p key={comment.id}>{comment.text}</p>
-                        ))}
-                      </div>
-                    )}
-                    {elem.user_id == userId && update ? (
-                      <>
-                        {" "}
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                                    />
+                                  </svg>
+                                </div>
+                                // <button
+                                //   class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
+                                //   onClick={() => {
+                                //     setUpdate(!update);
+                                //   }}
+                                // >
+                                //   update
+                                // </button>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </>
+                      {/* {elem.user_id == userId && (
+                        <button
+                          class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-red-600 rounded-lg hover:bg-red-500 focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-80"
+                          onClick={() => {
+                            handleDeletePost(elem.id);
+                          }}
+                        >
+                          deletePost
+                        </button>
+                      )} */}
+                      {elem.id != show && (
+                        <button
+                          class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+                          onClick={() => {
+                            {
+                              setShow(elem.id);
+                            }
+                          }}
+                        >
+                          Add Comment
+                        </button>
+                      )}
+                      {elem.id == show && (
                         <input
-                          type="text" placeholder="body" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-
+                          type="text"
+                          placeholder="Body"
+                          class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
                           onChange={(e) => {
-                            setBody(e.target.value);
+                            setAddCommentValue(e.target.value);
                           }}
                         />
-                        <input
-                          type="text" placeholder="file" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-                          onChange={(event) => {
-                            setImageUpload(event.target.files[0]);
-                          }}
-                        />
-                        <input
-                          type="text" placeholder="file" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-                          onChange={(event) => {
-                            setVideoUpload(event.target.files[0]);
-                          }}
-                        />
+                      )}
+                      {elem.id == show && (
                         <button
                           class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
                           onClick={() => {
-                            // handleUpdatePost(elem.id);
-                            uploadFile(elem.id, "update_img", "update_vid")
+                            {
+                              createComment(elem.id);
+                              setShow("");
+                            }
                           }}
                         >
-                          UpdateInformtion
+                          Add
                         </button>
-                      </>
-                    ) : (
-                      <>
-                        {elem.user_id == userId && (
-                          <button
-                            class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
-                            onClick={() => {
-                              setUpdate(!update);
-                            }}
-                          >
-                            update
-                          </button>
-                        )}
-                      </>
-                    )}
-                  </>
-                  {elem.user_id == userId && (
-                    <button
-                      class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-red-600 rounded-lg hover:bg-red-500 focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-80"
-                      onClick={() => {
-                        handleDeletePost(elem.id);
-                      }}
-                    >
-                      deletePost
-                    </button>
-                  )}
-                  {elem.id != show && <button
-                    class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
-                    onClick={() => {
-                      {
-                        setShow(elem.id)
-                      }
-                    }}
-                  >
-                    Add Comment
-                  </button>
-                  }
-                  {
-                    elem.id == show && <input
-                      type="text" placeholder="Body" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" onChange={(e) => {
-                        setAddCommentValue(e.target.value);
-                      }} />
-                  }
-                  {
-                    elem.id == show && <button
-                      class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
-                      onClick={() => {
-                        {
-                          createComment(elem.id)
-                          setShow("")
-                        }
-                      }}
-                    >
-                      Add
-                    </button>
-                  }
-                </div>{" "}
-              </div>
+                      )}
+                    </div>{" "}
+                  </div>
+                </div>
+              </>
             );
           })}
         </div>
       </div>
-    </section>
+    </div>
+  );
 };
 
 export default Posts;
