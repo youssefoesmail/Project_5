@@ -23,6 +23,7 @@ import { setUserId, token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
+import "./index.css"
 
 const Posts = () => {
   //setUserPostId
@@ -292,7 +293,7 @@ const Posts = () => {
       <div class="container px-6 py-10 mx-auto">
         <div class="lg:flex-col  lg:items-center">
           <Story />
-          <div class="flex bg-white shadow-lg rounded-lg mx-4 md:mx-auto my-56 max-w-md md:max-w-2xl ">
+          <div class="flex bg-white shadow-lg rounded-lg mx-4 md:mx-auto my-56 max-w-md md:max-w-2xl marginElement"  >
             <div class="flex items-start px-4 py-6">
               <div class="flex items-center justify-between">
                 <input
@@ -340,7 +341,7 @@ const Posts = () => {
           {posts?.map((elem) => {
             return (
               <>
-                <div class="flex bg-white drop-shadow-2xl rounded-lg w-full scroll-mb-6">
+                <div class="flex bg-white drop-shadow-2xl rounded-lg my-6">
                   <div class="flex flex-col px-4 py-6 my-6 mx-6">
                     <div className="" key={elem.id}>
                       <>
@@ -364,14 +365,15 @@ const Posts = () => {
                           </video>}
                         <div class="mt-4 flex items-center px-4 py-6 my-6 mx-6">
                           <div class="flex mr-12 text-gray-700 text-sm mr-6 hover:bg-red-300">
-                            <svg fill="none" viewBox="0 0 24 24" class="w-4 h-4 mr-1" stroke="currentColor">
+                            <svg fill="none" viewBox="0 0 24 24" class="w-10 h-10 mr-1" stroke="currentColor">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                             </svg>
                             <span>12</span>
                           </div>
                           <div class="flex mr-2 text-gray-700 text-sm mr-6 hover:bg-blue-300">
-                            <svg fill="none" viewBox="0 0 24 24" class="w-4 h-4 mr-1" stroke="currentColor" onClick={() => {
+                            <svg fill="none" viewBox="0 0 24 24" class="w-10 h-10 mr-1" stroke="currentColor" onClick={() => {
                               getPostComment(elem.id);
+
                               setShow(elem.user_id);
                               setPostId(elem.id)
                             }}>
@@ -380,7 +382,7 @@ const Posts = () => {
                             <span>{elem.comment?.length}</span>
                           </div>
                           <div class="flex mr-2 text-gray-700 text-sm mr-6 hover:bg-blue-300">
-                            <svg fill="none" viewBox="0 0 24 24" class="w-4 h-4 mr-1" stroke="currentColor">
+                            <svg fill="none" viewBox="0 0 24 24" class="w-10 h-10 mr-1" stroke="currentColor">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                             </svg>
                             <span>share</span>
