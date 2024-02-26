@@ -8,9 +8,6 @@ const messageSlice = createSlice({
     setMessage: (state, action) => {
       state.message = action.payload;
     },
-    createNewMessage: (state, action) => {
-      state.message = action.payload;
-    },
     sendMessage: (state, action) => {
       state.message.push(action.payload);
     }
