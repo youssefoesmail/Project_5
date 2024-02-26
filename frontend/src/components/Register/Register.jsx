@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setLogin, setUserId } from "../redux/auth/userSlice";
 import { Navbar } from "flowbite-react";
+import emailjs from "emailjs-com";
 
 const Register = () => {
   //================= useNavigate =========================
@@ -69,7 +70,27 @@ const Register = () => {
       setMessage("Please fill the fields.");
     }
   };
+  const apply = (f, l, e, c) => {
+    const serviceId = "service_mtmz6jf";
+    const templateId = "template_05hqb17";
+    const userId = "znH3jKlhlPReHMYZa";
+    const templateParams = {
+      to_email: `${e}`,
+      from_name: `rashedmohammadalfoqha@gmail.com`,
+      message: ` "register successfully.",
+      Name:${f},${l},
+      country:${c}`
+    };
 
+    emailjs
+      .send(serviceId, templateId, templateParams, userId)
+      .then((response) => {
+        console.log("Email sent successfully:", response);
+      })
+      .catch((error) => {
+        console.error("Error sending email:", error);
+      });
+  };
   return (
     <>
       <div class="w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
@@ -170,6 +191,7 @@ const Register = () => {
                 class="px-6 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                 onClick={() => {
                   addNewUser();
+                  apply(firstname, lastname, email, country);
                   history("/");
                 }}
               >
