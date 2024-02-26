@@ -3,10 +3,11 @@ const { pool } = require("../models/db");
 const getAllPost = (req, res) => {
   pool
     .query(
-      `SELECT posts.*,users.firstname ,users.lastname,users.email,users.age,users.country
+      `SELECT posts.*, users.firstname, users.lastname, users.email, users.age, users.country
       FROM posts
       INNER JOIN users ON posts.user_id = users.id
-      WHERE posts.is_deleted = 0;`
+      WHERE posts.is_deleted = 0
+      ORDER BY created_at;`
     )
 
     .then((result) => {

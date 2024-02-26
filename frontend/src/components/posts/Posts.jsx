@@ -15,7 +15,7 @@ import {
   uploadBytes,
   getDownloadURL,
   listAll,
-  list,
+  list
 } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
@@ -23,7 +23,14 @@ import { setUserId, token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
-
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  WhatsappIcon
+} from "react-share";
 const Posts = () => {
   //setUserPostId
   const [body, setBody] = useState("");
@@ -52,21 +59,43 @@ const Posts = () => {
       posts: state.posts.posts,
       comment: state.posts.comment,
       userId: state.auth.userId,
-      users: state.posts.users,
+      users: state.posts.users
     };
   });
+  const ShareButtons = (shareUrl) => {
+    return (
+      <div>
+        <FacebookShareButton url={shareUrl}>
+          <FacebookIcon size={32} round />
+        </FacebookShareButton>
+
+        <TwitterShareButton url={shareUrl}>
+          <TwitterIcon size={32} round />
+        </TwitterShareButton>
+
+        <WhatsappShareButton url={shareUrl}>
+          <WhatsappIcon size={32} round />
+        </WhatsappShareButton>
+      </div>
+    );
+    // <div className="mt-8 lg:px-6 lg:mt-0 border-2 border-solid border-dark-600 rounded-lg">
+    //         <div className="w-auto" key={elem.id}>
+    //           <ShareButtons shareUrl={`your-post-url/${elem.id}`} title={elem.body} />
+    //         </div>
+    //       </div>
+  };
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
       photo: imageUrls[imageUrls.length - 1] || null,
-      video: videoUrls[videoUrls.length - 1] || null,
+      video: videoUrls[videoUrls.length - 1] || null
     };
 
     axios
       .post("http://localhost:5000/posts", NewPost, {
         headers: {
-          authorization: `Bearer ${auth.token}`,
-        },
+          authorization: `Bearer ${auth.token}`
+        }
       })
       .then((result) => {
         dispatch(createNewPost(result.data.result));
@@ -155,12 +184,12 @@ const Posts = () => {
         },
         {
           headers: {
-            authorization: `Bearer ${auth.token}`,
-          },
+            authorization: `Bearer ${auth.token}`
+          }
         }
       );
       dispatch(updateComments({ comment: result.data.result, id, pID }));
-      setUpCommValue("")
+      setUpCommValue("");
     } catch (err) {
       console.log(err);
     }
@@ -171,17 +200,17 @@ const Posts = () => {
 
   const deleteComment = async (id, pID) => {
     try {
-      const result = await axios.delete(`http://localhost:5000/comments/post/${id}`,
+      const result = await axios.delete(
+        `http://localhost:5000/comments/post/${id}`,
         {
           headers: {
             authorization: `Bearer ${auth.token}`
           }
         }
       );
-      console.log("===================>", result.data.message,);
+      console.log("===================>", result.data.message);
       dispatch(deleteComments({ id, pID }));
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
     }
   };
@@ -190,8 +219,8 @@ const Posts = () => {
     axios
       .delete(`http://localhost:5000/posts/${postId}`, {
         headers: {
-          authorization: `Bearer ${auth.token}`,
-        },
+          authorization: `Bearer ${auth.token}`
+        }
       })
       .then((result) => {
         // console.log(result);
@@ -206,13 +235,13 @@ const Posts = () => {
     const updatePost = {
       body,
       photo: img_url,
-      video: vid_url,
+      video: vid_url
     };
     axios
       .put(`http://localhost:5000/posts/${postId}`, updatePost, {
         headers: {
-          authorization: `Bearer ${auth.token}`,
-        },
+          authorization: `Bearer ${auth.token}`
+        }
       })
       .then((result) => {
         setUpdate(!update);
@@ -223,8 +252,6 @@ const Posts = () => {
       });
 
     console.log(updatePost);
-
-
   };
   const clearInput = () => {
     setBody("");
@@ -236,14 +263,13 @@ const Posts = () => {
     setVideoUpload("");
   };
   const uploadFile = (id, str1, str2) => {
-    let urlim = ""
+    let urlim = "";
     if (imageUpload == null) return;
     const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
     uploadBytes(imageRef, imageUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         setImageUrls((prev) => [...prev, url]);
-        urlim = url
-
+        urlim = url;
       });
     });
     if (videoUpload == null) return;
@@ -252,12 +278,10 @@ const Posts = () => {
       getDownloadURL(snapshot.ref).then((url) => {
         setVideoUrls((prev) => [...prev, url]);
         if (str2 == "update_vid") {
-          handleUpdatePost(id, urlim, url)
+          handleUpdatePost(id, urlim, url);
         }
       });
     });
-
-
   };
 
   useEffect(() => {
@@ -293,21 +317,23 @@ const Posts = () => {
         <div class="lg:flex-col  lg:items-center">
           <Story />
           <input
-            type="text" placeholder="Body" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-
+            type="text"
+            placeholder="Body"
+            class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
             onChange={(e) => {
               setBody(e.target.value);
             }}
           />
           <input
-            type="file" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+            type="file"
+            class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
             onChange={(event) => {
               setImageUpload(event.target.files[0]);
             }}
           />
           <input
-            type="file" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-
+            type="file"
+            class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
             onChange={(event) => {
               setVideoUpload(event.target.files[0]);
             }}
@@ -324,8 +350,11 @@ const Posts = () => {
           </button>
           <button
             class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
-
-            onClick={uploadFile}> Upload</button>
+            onClick={uploadFile}
+          >
+            {" "}
+            Upload
+          </button>
           {posts?.map((elem) => {
             return (
               <div class="mt-8  lg:px-6 lg:mt-0 border-2 border-solid border-dark-600 rounded-lg">
@@ -340,16 +369,31 @@ const Posts = () => {
                     >
                       <p>{elem.firstname}</p>
                     </Link>
-                    {elem.photo ? <img class="object-cover object-center lg:w-1/2 lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]" alt="" width="300px" height="150px" src={elem.photo} /> :
-                      <video controls width="300px" height="150px" class="object-cover object-center lg:w-1/2 lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]">
+                    {elem.photo ? (
+                      <img
+                        class="object-cover object-center lg:w-1/2 lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]"
+                        alt=""
+                        width="300px"
+                        height="150px"
+                        src={elem.photo}
+                      />
+                    ) : (
+                      <video
+                        controls
+                        width="300px"
+                        height="150px"
+                        class="object-cover object-center lg:w-1/2 lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]"
+                      >
                         <source src={elem.video} type="video/mp4" />
-                      </video>}
+                      </video>
+                    )}
                     {
-                      <button class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+                      <button
+                        class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
                         onClick={() => {
                           getPostComment(elem.id);
                           setShow(elem.user_id);
-                          setPostId(elem.id)
+                          setPostId(elem.id);
                         }}
                       >
                         showComment
@@ -364,38 +408,42 @@ const Posts = () => {
                               <h2 class="font-semibold text-gray-800 dark:text-white">
                                 {comment.firstname}
                               </h2>
-                              <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">{comment?.comment}</p>
+                              <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
+                                {comment?.comment}
+                              </p>
                               {comment.commenter == userId && (
                                 <div>
                                   <button
                                     class=" text-xs bg-green-900 font-medium rounded-lg hover:bg-green-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
                                     onClick={() => {
-
-                                      updateComment(comment.id, elem.id)
+                                      updateComment(comment.id, elem.id);
 
                                       console.log(comment);
                                       //updateComment(comment.id, elem.id)
                                       setCommId(comment.id);
-
                                     }}
-                                  >update</button>
+                                  >
+                                    update
+                                  </button>
                                   <button
                                     class=" text-xs bg-red-900 font-medium rounded-lg hover:bg-red-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
                                     onClick={() => {
                                       console.log(comment.id);
-                                      deleteComment(comment.id, elem.id)
+                                      deleteComment(comment.id, elem.id);
                                     }}
-                                  >delete</button>
+                                  >
+                                    delete
+                                  </button>
                                 </div>
                               )}
-                              {
-                                comment.id == commId &&
+                              {comment.id == commId && (
                                 <>
                                   <input
-                                    type="text" placeholder="update comment" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-
+                                    type="text"
+                                    placeholder="update comment"
+                                    class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
                                     onChange={(e) => {
-                                      setUpCommValue(e.target.value)
+                                      setUpCommValue(e.target.value);
                                     }}
                                   />
                                   <button
@@ -408,12 +456,11 @@ const Posts = () => {
                                     update
                                   </button>
                                 </>
-                              }
+                              )}
                             </div>
                           </section>
                         );
-                      })
-                    }
+                      })}
                     {comment && comment.id === elem.id && comment.comments && (
                       <div>
                         <h2>Comments:</h2>
@@ -426,20 +473,25 @@ const Posts = () => {
                       <>
                         {" "}
                         <input
-                          type="text" placeholder="body" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-
+                          type="text"
+                          placeholder="body"
+                          class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
                           onChange={(e) => {
                             setBody(e.target.value);
                           }}
                         />
                         <input
-                          type="text" placeholder="file" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                          type="text"
+                          placeholder="file"
+                          class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
                           onChange={(event) => {
                             setImageUpload(event.target.files[0]);
                           }}
                         />
                         <input
-                          type="text" placeholder="file" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                          type="text"
+                          placeholder="file"
+                          class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
                           onChange={(event) => {
                             setVideoUpload(event.target.files[0]);
                           }}
@@ -448,7 +500,7 @@ const Posts = () => {
                           class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
                           onClick={() => {
                             // handleUpdatePost(elem.id);
-                            uploadFile(elem.id, "update_img", "update_vid")
+                            uploadFile(elem.id, "update_img", "update_vid");
                           }}
                         >
                           UpdateInformtion
@@ -479,36 +531,41 @@ const Posts = () => {
                       deletePost
                     </button>
                   )}
-                  {elem.id != show && <button
-                    class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
-                    onClick={() => {
-                      {
-                        setShow(elem.id)
-                      }
-                    }}
-                  >
-                    Add Comment
-                  </button>
-                  }
-                  {
-                    elem.id == show && <input
-                      type="text" placeholder="Body" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" onChange={(e) => {
+                  {elem.id != show && (
+                    <button
+                      class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+                      onClick={() => {
+                        {
+                          setShow(elem.id);
+                        }
+                      }}
+                    >
+                      Add Comment
+                    </button>
+                  )}
+                  {elem.id == show && (
+                    <input
+                      type="text"
+                      placeholder="Body"
+                      class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                      onChange={(e) => {
                         setAddCommentValue(e.target.value);
-                      }} />
-                  }
-                  {
-                    elem.id == show && <button
+                      }}
+                    />
+                  )}
+                  {elem.id == show && (
+                    <button
                       class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
                       onClick={() => {
                         {
-                          createComment(elem.id)
-                          setShow("")
+                          createComment(elem.id);
+                          setShow("");
                         }
                       }}
                     >
                       Add
                     </button>
-                  }
+                  )}
                 </div>{" "}
               </div>
             );

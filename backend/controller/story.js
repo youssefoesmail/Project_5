@@ -2,6 +2,9 @@ const { pool } = require("../models/db");
 
 const getAllStories = (req, res) => {
   const query = `SELECT * FROM story a WHERE is_deleted=0;`;
+  const updateQuery = `UPDATE story
+  SET is_deleted = 1
+  WHERE created_at <= NOW() - INTERVAL '24 HOURS' AND is_deleted = 0;`;
   pool
     .query(query)
     .then((result) => {
@@ -10,6 +13,7 @@ const getAllStories = (req, res) => {
         message: "All the stories",
         result: result.rows
       });
+      return pool.query(updateQuery);
     })
     .catch((err) => {
       res.status(500).json({
