@@ -311,10 +311,73 @@ const Posts = () => {
         console.log(err);
       });
   }, []);
+
+  return (
+    
+    <div class="bg-white dark:bg-gray-900">
+      
+
 <section class="bg-white dark:bg-gray-900">
+
       <div class="container px-6 py-10 mx-auto">
+        
         <div class="lg:flex-col  lg:items-center">
+        <Link to={`/reels/`}>
+          <button
+                  class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+                >
+                  Reels
+                </button>
+                          </Link>
           <Story />
+
+        
+          <div class="flex bg-white shadow-lg rounded-lg mx-4 md:mx-auto my-56 max-w-md md:max-w-2xl marginElement"  >
+            <div class="flex items-start px-4 py-6">
+              <div class="flex items-center justify-between">
+                <input
+                  type="text" placeholder="Body" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+
+                  onChange={(e) => {
+                    setBody(e.target.value);
+                  }}
+                />
+                <input
+                  type="file" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                  onChange={(event) => {
+                    setImageUpload(event.target.files[0]);
+                  }}
+                />
+                <input
+                  type="file" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+
+                  onChange={(event) => {
+                    setVideoUpload(event.target.files[0]);
+                  }}
+                />
+              </div>
+              <div class="flex items-center justify-between">
+                <button
+                  class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+                  onClick={() => {
+                    handleCreateNewPost();
+                    clearInput();
+                  }}
+                >
+                  createNewPost
+                </button>
+              </div>
+              <div class="flex items-center justify-between">
+                <button
+                  class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
+
+                  onClick={uploadFile}> Upload
+                </button>
+              </div>
+            </div>
+
+          </div>
+
           <input
             type="text" placeholder="Body" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
 
@@ -349,6 +412,7 @@ const Posts = () => {
             class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
 
             onClick={uploadFile}> Upload</button>
+
           {posts?.map((elem) => {
             return (
               <div class="mt-8  lg:px-6 lg:mt-0 border-2 border-solid border-dark-600 rounded-lg">
