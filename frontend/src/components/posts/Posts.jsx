@@ -24,6 +24,8 @@ import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
 import "./index.css"
+import "./index.css";
+import { Dropdown } from 'flowbite-react';
 
 const Posts = () => {
   //setUserPostId
@@ -310,12 +312,25 @@ const Posts = () => {
                 <input
                   type="text" placeholder="Body" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
 
+    <div class="bg-white dark:bg-gray-900">
+      <div class="container px-6 py-10 mx-auto">
+        <div class="lg:flex-col  lg:items-center">
+          <Story />
+          <div class="flex bg-white shadow-lg rounded-lg mx-4 md:mx-auto my-56 max-w-md md:max-w-2xl marginElement">
+            <div class="flex items-start px-4 py-6">
+              <div class="flex items-center justify-between">
+                <input
+                  type="text"
+                  placeholder="Body"
+                  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
                   onChange={(e) => {
                     setBody(e.target.value);
                   }}
                 />
                 <input
                   type="file" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                  type="file"
+                  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
                   onChange={(event) => {
                     setImageUpload(event.target.files[0]);
                   }}
@@ -323,6 +338,8 @@ const Posts = () => {
                 <input
                   type="file" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
 
+                  type="file"
+                  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
                   onChange={(event) => {
                     setVideoUpload(event.target.files[0]);
                   }}
@@ -417,12 +434,23 @@ const Posts = () => {
                             //   showComment
                             // </button>
                           }
+
+                          <br />
+
                           {elem.id == postId &&
                             // get if there is a value
                             elem.comment?.map((comment, i) => {
                               return (
-                                <section class="max-w-md p-4 mx-auto bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
+                                <section class="w-96 p-4 mx-20px bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
+
                                   <div className="comment" key={i}>
+                                    <Dropdown label="" dismissOnClick={false}>
+                                      <Dropdown.Item>Dashboard</Dropdown.Item>
+                                      <Dropdown.Item>Settings</Dropdown.Item>
+                                      <Dropdown.Item>Earnings</Dropdown.Item>
+                                      <Dropdown.Item>Sign out</Dropdown.Item>
+                                    </Dropdown>
+
                                     <h2 class="font-semibold text-gray-800 dark:text-white">
                                       {comment.firstname}
                                     </h2>
@@ -562,6 +590,52 @@ const Posts = () => {
                       {
                         elem.id == show && <input
                           type="text" placeholder="Body" class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" onChange={(e) => {
+                      <div class="relative flex">
+                        <input
+                          type="text"
+                          placeholder="Write your message!"
+                          class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
+                          onChange={(e) => {
+                            // setMessageText(e.target.value);
+                          }}
+                        />
+                        <button
+                          id="send"
+                          type="button"
+                          class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
+                          onClick={() => {
+                            // createNewMessage();
+                          }}
+                        >
+                          <span class="font-bold">Send</span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            class="h-6 w-6 ml-2 transform rotate-90"
+                          >
+                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                          </svg>
+                        </button>
+                      </div>
+                      {elem.id != show && (
+                        <button
+                          class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+                          onClick={() => {
+                            {
+                              setShow(elem.id);
+                            }
+                          }}
+                        >
+                          Add Comment
+                        </button>
+                      )}
+                      {elem.id == show && (
+                        <input
+                          type="text"
+                          placeholder="Body"
+                          class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                          onChange={(e) => {
                             setAddCommentValue(e.target.value);
                           }} />
                       }
