@@ -289,10 +289,21 @@ const Posts = () => {
       });
   }, []);
   return (
+    
     <div class="bg-white dark:bg-gray-900">
+      
       <div class="container px-6 py-10 mx-auto">
+        
         <div class="lg:flex-col  lg:items-center">
+        <Link to={`/reels/`}>
+          <button
+                  class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+                >
+                  Reels
+                </button>
+                          </Link>
           <Story />
+        
           <div class="flex bg-white shadow-lg rounded-lg mx-4 md:mx-auto my-56 max-w-md md:max-w-2xl marginElement"  >
             <div class="flex items-start px-4 py-6">
               <div class="flex items-center justify-between">
