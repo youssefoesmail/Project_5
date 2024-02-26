@@ -79,7 +79,8 @@ const Message = () => {
     });
 
     socket.on("message", (data) => {
-      dispatch(createNewMessage(data));
+      dispatch(sendMessage(data));
+      console.log(data);
     });
 
     return () => {
@@ -87,14 +88,14 @@ const Message = () => {
     };
   }, []);
 
-  const sendMessage = () => {
+  const createNewMessage = () => {
     const newMessage = {
       receiver_id: to,
-      from: auth.userId,
+      sender_id: auth.userId,
       messages: messageText
     };
 
-    dispatch(createNewMessage(newMessage));
+    dispatch(sendMessage(newMessage));
 
     axios
       .post(`http://localhost:5000/messages/${to}`, newMessage, {
@@ -329,7 +330,6 @@ const Message = () => {
         <div class="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
           <div class="relative flex items-center space-x-4">
             <div class="relative">
-            
               {personal.photo ? (
                 <img
                   src={personal.photo}
@@ -485,7 +485,7 @@ const Message = () => {
                 type="button"
                 class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
                 onClick={() => {
-                  sendMessage();
+                  createNewMessage();
                 }}
               >
                 <span class="font-bold">Send</span>
