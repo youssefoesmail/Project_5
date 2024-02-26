@@ -385,26 +385,30 @@ const Message = () => {
         </div>
         <div
           id="messages"
-          class="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
+          className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
         >
-          <div class="chat-message">
-            <div class="flex items-end">
-              <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
-                <div></div>
-              </div>
-              <div>
-                {messages?.map((elem, i) =>
-                  elem.receiver_id === to ? (
-                    <div key={i}>
-                      <span className="px-4 py-2 rounded-lg inline-block bg-gray-300 text-gray-600">
-                        {elem.messages}
-                      </span>
-                    </div>
-                  ) : null
-                )}
+          {messages?.map((elem, i) => (
+            <div key={i} className="chat-message">
+              <div className="flex items-end">
+                <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
+                  <div></div>
+                </div>
+                <div>
+                  <div
+                    className={elem.receiver_id === to ? "order-2" : "order-1"}
+                  >
+                    <span
+                      className={`px-4 py-2 rounded-lg inline-block ${
+                        elem.receiver_id === to ? "bg-gray-300" : "bg-blue-600"
+                      } text-${elem.receiver_id === to ? "gray-600" : "white"}`}
+                    >
+                      {elem.messages}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
         <div class="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
           <div class="relative flex">
