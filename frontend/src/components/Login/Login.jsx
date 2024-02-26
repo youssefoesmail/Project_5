@@ -61,7 +61,7 @@ const Login = () => {
   useEffect(() => {
     if (isLoggedIn) {
       console.log(isLoggedIn);
-      history("/Home");
+      history("/post");
     }
   });
 

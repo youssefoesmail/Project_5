@@ -9,16 +9,18 @@ import {
 import axios from "axios";
 import { setFollowers } from "../redux/followers/followers";
 import "./index.css";
+import { setUserInfo } from "../redux/personalPage/personal";
 
 const Message = () => {
   const [to, setTo] = useState("");
   const [messageText, setMessageText] = useState(""); // Use a separate state for the message text
   const dispatch = useDispatch();
-  const { auth, messages, followers } = useSelector((state) => {
+  const { auth, messages, followers, personal } = useSelector((state) => {
     return {
       messages: state.message.message,
       followers: state.followers,
-      auth: state.auth
+      auth: state.auth,
+      personal: state.personal.personal
     };
   });
 
@@ -55,8 +57,19 @@ const Message = () => {
         console.log(err);
       });
   };
-
+  const personalPage = () => {
+    axios
+      .get(`http://localhost:5000/users/${auth.userId}`)
+      .then((result) => {
+        dispatch(setUserInfo(result.data.result[0]));
+        console.log(result.data.result[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
+    personalPage();
     getFollowers();
     getAllMessage();
     const socket = io("http://localhost:8080/", {
@@ -104,7 +117,7 @@ const Message = () => {
 
     socket.emit("message", newMessage);
   };
-  console.log(messages);
+  console.log(personal);
   //   {message.length > 0 &&
   //     message.map((message) => {
   //       return (
@@ -316,20 +329,26 @@ const Message = () => {
         <div class="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
           <div class="relative flex items-center space-x-4">
             <div class="relative">
-              <span class="absolute text-green-500 right-0 bottom-0">
-                <svg width="20" height="20">
-                  <circle cx="8" cy="8" r="8" fill="currentColor"></circle>
-                </svg>
-              </span>
-              <img
-                src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144"
-                alt=""
-                class="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
-              />
+            
+              {personal.photo ? (
+                <img
+                  src={personal.photo}
+                  alt=""
+                  class="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
+                />
+              ) : (
+                <img
+                  src="https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671122.jpg?w=826&t=st=1708943431~exp=1708944031~hmac=8c7a5395dac4611b0f9b5e202be4b31eb2302075e072940832d61722b1d0fc49"
+                  alt=""
+                  class="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
+                />
+              )}
             </div>
             <div class="flex flex-col leading-tight">
               <div class="text-2xl mt-1 flex items-center">
-                <span class="text-gray-700 mr-3">Anderson Vanhron</span>
+                <span class="text-gray-700 mr-3">
+                  {personal.firstname} {personal.lastname}
+                </span>
               </div>
             </div>
           </div>
