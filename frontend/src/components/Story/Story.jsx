@@ -15,8 +15,6 @@ import {
 import { storage } from "../firebase";
 import { v4 } from "uuid";
 const Story = () => {
-  const [video, setVideo] = useState(null);
-  const [photo, setPhoto] = useState(null);
   const [storyImageUpload, setStoryImageUpload] = useState(null);
   const [storyImageUrls, setStoryImageUrls] = useState([] || null);
   const storyImageListRef = ref(storage, "storyImages/");
@@ -93,7 +91,6 @@ const Story = () => {
   useEffect(() => {
     getAllStory();
   }, []);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
    useEffect(() => {
     console.log("Slideshow component mounted");
@@ -107,13 +104,6 @@ const Story = () => {
       clearInterval(interval);
     };
   }, [story]); 
-  const goToNextSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % story.length);
-  };
-
-  const goToPrevSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide - 1 + story.length) % story.length);
-  };
   console.log(story);
   return (
     <div>
@@ -158,27 +148,34 @@ const Story = () => {
       </button>
       <button onClick={uploadFile}> Upload</button>
       
-      <Card className="card-slider">
-        <Card.Body>
-          <div className="slider">
-            <div className="slides" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
-              {story.map((slide, index) => (
-                <Card key={index} className="slide">
-                  <Card.Img variant="top" src={slide.photo} />
-                </Card>
-              ))}
+      
+<section className=" md:flex flex-col items-center justify-center">
+        <div className="pt-10 pb-10">
+        </div>
+        <ul className="md:flex items-center justify-center md:space-x-8">
+        <li className="flex flex-col items-center space-y-2">
+                <div className="bg-gradient-to-tr from-yellow-500 to-pink-600 rounded-full p-1 relative">
+                    <a className="block bg-white p-1 rounded-full transform transition hover:-rotate-12 duration-300" href="#">
+                        <img className="h-24 w-24 rounded-full" src="https://i.ibb.co/yhh0Ljy/profile.jpg" alt="image"/>
+                    </a>
+                    <button className="transition duration-500 absolute bottom-0 right-0 bg-blue-700 h-8 w-8 rounded-full text-white text-2xl font-semibold border-4 border-white flex justify-center items-center hover:bg-blue-900">+</button>
+                </div>
+                <p>you</p>
+            </li>
+        {story.map((slide, index) => (
+        <div>
+               <li class="flex flex-col items-center space-y-2">
+                <div class="bg-gradient-to-tr from-yellow-500 to-pink-600 rounded-full p-1">
+                    <a class="block bg-white p-1 rounded-full transform transition hover:-rotate-12 duration-300" href="#">
+                        <img class="h-24 w-24 rounded-full" src={slide.photo} alt="image"/>
+                    </a>
+                </div>
+                <p>tahmina_tis_353</p>
+            </li>
             </div>
-          </div>
-          <div className="controls">
-            <Button variant="outline-primary" onClick={goToPrevSlide}>
-              &lt; 
-            </Button>
-            <Button variant="outline-primary" onClick={goToNextSlide}>
-              &gt; 
-            </Button>
-          </div>
-        </Card.Body>
-      </Card>
+              ))}
+               </ul>
+    </section>
     </div>
   );
 };
