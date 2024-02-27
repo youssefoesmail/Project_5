@@ -3,16 +3,18 @@ const usersSlice = createSlice({
   name: "users",
   initialState: {
     users: {},
-    postUser: []
+    postUser: [],
   },
   reducers: {
     setPost: (state, action) => {
-      state.postUser = state.postUser;
+      //console.log("result1",action.payload);
+      state.postUser = action.payload;
     },
     setUsers: (state, action) => {
-      state.users = state.users;
-    }
-  }
+      //console.log("result",action.payload);
+      state.users = action.payload;
+    },
+  },
 });
 export const { setPost, setUsers } = usersSlice.actions;
 export default usersSlice.reducer;
