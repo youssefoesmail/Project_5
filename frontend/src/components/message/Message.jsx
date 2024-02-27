@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
-import {
-  setMessage,
-  createNewMessage,
-  sendMessage
-} from "../redux/message/message";
+import { setMessage, createMessage } from "../redux/message/message";
 import axios from "axios";
 import { setFollowers } from "../redux/followers/followers";
 import "./index.css";
@@ -13,8 +9,6 @@ import { setUserInfo } from "../redux/personalPage/personal";
 
 const Message = () => {
   const [to, setTo] = useState("");
-  const [form, setForm] = useState("");
-
   const [messageText, setMessageText] = useState("");
   const dispatch = useDispatch();
   const { auth, messages, followers, personal } = useSelector((state) => {
@@ -59,45 +53,48 @@ const Message = () => {
         console.log(err);
       });
   };
+
   const personalPage = () => {
     axios
       .get(`http://localhost:5000/users/${auth.userId}`)
       .then((result) => {
         dispatch(setUserInfo(result.data.result[0]));
-        console.log(result.data.result[0]);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
   useEffect(() => {
+    const socket = io("http://localhost:8080/", {
+      extraHeaders: {
+        user_id: auth.userId,
+        token: auth.token
+      }
+    });
     personalPage();
     getFollowers();
     getAllMessage();
-    const socket = io("http://localhost:8080/", {
-      extraHeaders: {
-        user_id: auth.userId
-      }
-    });
 
     socket.on("message", (data) => {
-      dispatch(sendMessage(data));
+      dispatch(setMessage([...messages, data]));
       console.log(data);
     });
 
     return () => {
-      socket.off("message");
+      socket.off("message", receiveMessage);
     };
-  }, []);
-
+  }, [auth.userId, auth.token, dispatch]);
+  const receiveMessage = (data) => {
+    console.log(data);
+    dispatch(setMessage([...messages, data]));
+  };
   const createNewMessage = () => {
     const newMessage = {
       receiver_id: to,
       sender_id: auth.userId,
       messages: messageText
     };
-
-    dispatch(sendMessage(newMessage));
 
     axios
       .post(`http://localhost:5000/messages/${to}`, newMessage, {
@@ -106,21 +103,29 @@ const Message = () => {
         }
       })
       .then((result) => {
+        dispatch(createMessage(result.data.result));
         console.log("Message stored in the database:", result.data.result);
       })
       .catch((err) => {
         console.error("Error storing message:", err);
       });
-
+  };
+  const sendMessage = () => {
     const socket = io("http://localhost:8080/", {
       extraHeaders: {
-        user_id: auth.userId
+        user_id: auth.userId,
+        token: auth.token
       }
     });
+    console.log(messages);
 
-    socket.emit("message", newMessage);
+    socket.emit("message", {
+      receiver_id: to,
+      sender_id: auth.userId,
+      messages: messageText
+    });
   };
-  console.log(personal);
+
   //   {message.length > 0 &&
   //     message.map((message) => {
   //       return (
@@ -363,12 +368,16 @@ const Message = () => {
                     class="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
                   >
                     {elem.photo ? (
-                      <img
-                        src={elem.photo}
-                        onClick={() => {
-                          handleFollowersId(elem.followed_user_id);
-                        }}
-                      />
+                      <>
+                        <img
+                          src={elem.photo}
+                          alt={elem.firstname}
+                          onClick={() => {
+                            handleFollowersId(elem.followed_user_id);
+                          }}
+                        />
+                        {elem.firstname}
+                      </>
                     ) : (
                       <img
                         onClick={() => {
@@ -378,6 +387,7 @@ const Message = () => {
                       />
                     )}
                   </button>
+                  {elem.firstname}
                 </>
               );
             })}
@@ -492,6 +502,7 @@ const Message = () => {
                 class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
                 onClick={() => {
                   createNewMessage();
+                  sendMessage();
                 }}
               >
                 <span class="font-bold">Send</span>
@@ -513,3 +524,31 @@ const Message = () => {
 };
 
 export default Message;
+{
+  /* <div
+id="messages"
+className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
+>
+{messages?.map((elem, i) => (
+  <div key={i} className="chat-message">
+    <div className="flex items-end">
+      <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
+        <div></div>
+      </div>
+      <div>
+        <div
+          className={elem.receiver_id === to ? "order-2" : "order-1"}
+        >
+          <span
+            className={`px-4 py-2 rounded-lg inline-block ${
+              elem.receiver_id === to ? "bg-gray-300" : "bg-blue-600"
+            } text-${elem.receiver_id === to ? "gray-600" : "white"}`}
+          >
+            {elem.messages}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+))} */
+}
