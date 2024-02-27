@@ -22,6 +22,27 @@ import {
 import { storage } from "../firebase";
 import { v4 } from "uuid";
 import { setFollowers } from "../redux/followers/followers";
+
+import { Button, Modal } from 'flowbite-react';
+import { useNavigate } from "react-router-dom";
+
+
+const Personal = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { auth, personal, post ,followers,cover,photo} = useSelector((state) => {
+    return {
+      photo:state.personal.photo,
+      followers:state.followers.followers,
+      cover:state.personal.cover,
+      auth: state.auth,
+      post: state.personal.post,
+      personal: state.personal.personal,
+    };
+  });
+
+  console.log("cpver",cover);
+  
 import { Button, Modal } from "flowbite-react";
 
 const Personal = () => {
@@ -396,6 +417,73 @@ const Personal = () => {
               </Modal>
             </div>
           </div>
+        </Modal.Body>
+        <Modal.Footer>
+          {show && <Button onClick={() => {
+              axios
+                .put(
+                  `http://localhost:5000/users/${auth.userId}`,
+                  {
+                    cover: coverImageUrls[coverImageUrls.length - 1],
+                  },
+                  {
+                    headers: {
+                      authorization: `Bearer ${auth.token}`,
+                    },
+                  }
+                )
+                .then((result) => {
+                  console.log("restult", result.data);
+                  dispatch(setUserInfo(result.data.result));
+                  
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+           
+            setOpenModal(false)
+          }}>I accept</Button>}
+          <Button color="gray" onClick={() => setOpenModal(false)}>
+            Decline
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      
+      <main className="flex flex-col items-center justify-center w-full ">
+      <div className="container px-6 py-16 mx-auto text-center">
+  <div className="container ">
+  <div class="flex justify-center mt-10">
+            <img class="object-cover w-full h-96 rounded-xl lg:w-4/5" src={personal.cover || cover} />
+            
+
+      <button onClick={() => setOpenModal(true)} className="px-4 py-2 font-medium text-gray-600 transition-colors duration-200 sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5 sm:w-6 sm:h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+        </svg>
+    </button>
+        </div>
+
+        
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Header>Followers</Modal.Header>
+        <Modal.Body>
+          <div className="space-y-6">
+            {followers.map((elem,i)=>{
+              return <>
+              <div class="flex items-center gap-x-2" onClick={()=>{
+                navigate(`/users/${elem.followed_user_id}`)
+              }}>
+        <img class="object-cover w-16 h-16 rounded-full" src={elem.photo || photo} alt=""/>
+        
+        <div>
+            <h1 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">{elem.firstname} {elem.lastname} </h1>
+
+            <p class="text-base text-gray-500 dark:text-gray-400">{elem.email}</p>
+        </div>
+    </div>
+              </>
+            })}
+
         </main>
 
         <div className="bg-white py-24 sm:py-32">
