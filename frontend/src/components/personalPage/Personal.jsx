@@ -18,10 +18,12 @@ import { storage } from "../firebase";
 import { v4 } from "uuid";
 import { setFollowers } from "../redux/followers/followers";
 import { Button, Modal } from 'flowbite-react';
+import { useNavigate } from "react-router-dom";
 
 
 const Personal = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { auth, personal, post ,followers,cover,photo} = useSelector((state) => {
     return {
       photo:state.personal.photo,
@@ -234,7 +236,9 @@ const Personal = () => {
           <div className="space-y-6">
             {followers.map((elem,i)=>{
               return <>
-              <div class="flex items-center gap-x-2">
+              <div class="flex items-center gap-x-2" onClick={()=>{
+                navigate(`/users/${elem.followed_user_id}`)
+              }}>
         <img class="object-cover w-16 h-16 rounded-full" src={elem.photo || photo} alt=""/>
         
         <div>
