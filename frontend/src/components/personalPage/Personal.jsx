@@ -17,6 +17,8 @@ import {
 import { storage } from "../firebase";
 import { v4 } from "uuid";
 import { setFollowers } from "../redux/followers/followers";
+import { Button, Modal } from 'flowbite-react';
+
 
 const Personal = () => {
   const dispatch = useDispatch();
@@ -29,8 +31,13 @@ const Personal = () => {
     };
   });
 
+  
 
-  const [show, setShow] = useState(false)
+
+  const [openModal, setOpenModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+
   const [user, setUser] = useState(null);
   const [coverImageUpload, setcoverImageUpload] = useState(null);
   const [coverImageUrls, setcoverImageUrls] = useState([] || null);
@@ -60,7 +67,7 @@ const Personal = () => {
         console.log(result.data.result);
       })
       .catch((err) => {
-        log;
+        
       });
   };
 
@@ -72,7 +79,7 @@ const Personal = () => {
         }
       })
       .then((result) => {
-        console.log(result.data.result);
+        console.log("followers",result.data.result);
         dispatch(setFollowers(result.data.result));
       })
       .catch((err) => {
@@ -93,7 +100,6 @@ const Personal = () => {
   console.log(personal);
 
   const uploadFile = () => {
-   
     if (coverImageUpload == null) return;
     const coverImageRef = ref(
       storage,
@@ -116,7 +122,7 @@ const Personal = () => {
       });
     });
   };
-
+  console.log("userId",auth.userId);
   useEffect(() => {
    
     listAll(coverImageListRef).then((response) => {
@@ -142,87 +148,94 @@ const Personal = () => {
     <>
     <div>
       <Navbar/>
-
-
-
       
 
+      
+      <Modal show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Header>Terms of Service</Modal.Header>
+        <Modal.Body>
+          <div className="space-y-6">
+          <div>
+    <label for="image" class="block text-sm text-gray-500 dark:text-gray-300">Image</label>
 
+<button onClick={()=>{uploadFile()}}> 3la Rase</button>
+    <input onChange={(e)=>{
+      setcoverImageUrls(e.target.files[0])
 
-
-
-
+    }} type="file" class="block w-full px-3 py-2 mt-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg file:bg-gray-200 file:text-gray-700 file:text-sm file:px-4 file:py-1 file:border-none file:rounded-full dark:file:bg-gray-800 dark:file:text-gray-200 dark:text-gray-300 placeholder-gray-400/70 dark:placeholder-gray-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:focus:border-blue-300" />
+</div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => {
+              axios
+                .put(
+                  `http://localhost:5000/users/${auth.userId}`,
+                  {
+                    cover: coverImageUrls[coverImageUrls.length - 1],
+                  },
+                  {
+                    headers: {
+                      authorization: `Bearer ${auth.token}`,
+                    },
+                  }
+                )
+                .then((result) => {
+                  console.log("restult", result.data);
+                  dispatch(setUserInfo(result.data.result));
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+           
+            setOpenModal(false)
+          }}>I accept</Button>
+          <Button color="gray" onClick={() => setOpenModal(false)}>
+            Decline
+          </Button>
+        </Modal.Footer>
+      </Modal>
       
       <main className="flex flex-col items-center justify-center w-full ">
       <div className="container px-6 py-16 mx-auto text-center">
   <div className="container ">
   <div class="flex justify-center mt-10">
-            <img class="object-cover w-full h-96 rounded-xl lg:w-4/5" src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80" />
-        </div>
-
+            <img class="object-cover w-full h-96 rounded-xl lg:w-4/5" src={personal.cover} />
             
-    
-{ show&&
-    <div x-data="{ isOpen: false }" class="relative flex justify-center">
-    
-    <button onClick="isOpen = false" class="px-4 py-2 font-medium text-gray-600 transition-colors duration-200 sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 sm:w-6 sm:h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+
+      <button onClick={() => setOpenModal(true)} className="px-4 py-2 font-medium text-gray-600 transition-colors duration-200 sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5 sm:w-6 sm:h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
         </svg>
     </button>
+        </div>
 
-    <div x-show="isOpen" 
-        x-transition:enter="transition duration-300 ease-out"
-        x-transition:enter-start="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
-        x-transition:enter-end="translate-y-0 opacity-100 sm:scale-100"
-        x-transition:leave="transition duration-150 ease-in"
-        x-transition:leave-start="translate-y-0 opacity-100 sm:scale-100"
-        x-transition:leave-end="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
-        class="fixed inset-0 z-10 overflow-y-auto" 
-        aria-labelledby="modal-title" role="dialog" aria-modal="true"
-    >
-        <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Header>Followers</Modal.Header>
+        <Modal.Body>
+          <div className="space-y-6">
+            {followers.map((elem,i)=>{
+              return <>
+              <div class="flex items-center gap-x-2">
+        <img class="object-cover w-16 h-16 rounded-full" src={elem.photo} alt=""/>
+        
+        <div>
+            <h1 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">{elem.firstname} {elem.lastname} </h1>
 
-            <div class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl rtl:text-right dark:bg-gray-900 sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
-                <div>
-                    <div class="flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                        </svg>
-                    </div>
-
-                    <div class="mt-2 text-center">
-                        <h3 class="text-lg font-medium leading-6 text-gray-800 capitalize dark:text-white" id="modal-title">Archive Project</h3>
-                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                            Lorem, ipsum dolor sit amet consectetur
-                            adipisicing elit. Aspernatur dolorum aliquam ea, ratione deleniti porro officia? Explicabo
-                            maiores suscipit.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="mt-5 sm:flex sm:items-center sm:justify-between">
-                    <a href="#" class="text-sm text-blue-500 hover:underline">Learn more</a>
-
-                    <div class="sm:flex sm:items-center ">
-                        <button onClick="isOpen = false" class="w-full px-4 py-2 mt-2 text-sm font-medium tracking-wide text-gray-700 capitalize transition-colors duration-300 transform border border-gray-200 rounded-md sm:mt-0 sm:w-auto sm:mx-2 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800 hover:bg-gray-100 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-40">
-                            Cancel
-                        </button>
-
-                        <button class="w-full px-4 py-2 mt-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-md sm:w-auto sm:mt-0 hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40">
-                            Archive
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <p class="text-base text-gray-500 dark:text-gray-400">{elem.email}</p>
         </div>
     </div>
-</div>
-}
-    
-    
-   
+              </>
+            })}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button color="gray" onClick={() => setShowModal(false)}>
+            Back
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
 
 
@@ -232,10 +245,11 @@ const Personal = () => {
       
         <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase dark:text-white">{personal.firstname} {personal.lastname}</h3>
 
-        <a href="#"
+        <a href="#" onClick={() => setShowModal(true)}
                             class="mx-2 text-gray-600 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
                             aria-label="Reddit">
-                            
+                              
+
                             <p class="text-center text-gray-500 dark:text-gray-400">followers {followers.length} </p>
                         </a>
       </div>

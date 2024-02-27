@@ -99,8 +99,31 @@ const getUserById = (req, res) => {
     });
 };
 
+const updateData = (req,res)=>{
+  const { id } = req.params;
+  const { photo, cover } = req.body;
+  const query = `UPDATE users SET photo = COALESCE($1, photo),cover = COALESCE($2, cover) WHERE id=$3 AND is_deleted = 0  RETURNING *`;
+  const values = [photo, cover, id];
+  pool
+    .query(query, values)
+    .then((result) => {
+      res.status(201).json({
+        success: true,
+        message: "Updated data successfully",
+        result: result.rows
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err
+      });
+    });
+}
 module.exports = {
   login,
   register,
-  getUserById
+  getUserById,
+  updateData,
 };
