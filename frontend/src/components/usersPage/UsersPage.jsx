@@ -6,30 +6,31 @@ import { setPost, setUsers } from "../redux/users/usersSlice";
 import Navbar from '../Navbars/NavbarLogin';
 import { Avatar ,Card,Badge } from 'flowbite-react';
 import { setFollowers } from "../redux/followers/followers";
+import { HiCheck, HiClock } from 'react-icons/hi';
+
 
 
 const UsersPage = () => {
-  const { users,auth,post,personal,followers } = useSelector((state) => {
+  const { posts,users,auth,followers } = useSelector((state) => {
     return {
       followers:state.followers.followers,
       auth: state.auth,
       users: state.users.users,
-      post: state.personal.post,
-      personal: state.personal.personal
-
+      posts:state.users.postUser,
+      users:state.users.users,
     };
   });
   const dispatch = useDispatch();
   const { id } = useParams();
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/posts/${id}`,{
+      .get(`http://localhost:5000/posts/followers/${id}`,{
         headers: {
           authorization: `Bearer ${auth.token}`
         }
       })
       .then((result) => {
-        console.log(result.data.post);
+        console.log("result",result);
         dispatch(setPost(result.data.result));
       })
       .catch((err) => {});
@@ -37,7 +38,7 @@ const UsersPage = () => {
       axios
       .get(`http://localhost:5000/users/${id}`)
       .then((result) => {
-        dispatch(setUserInfo(result.data.result[0]));
+        dispatch(setUsers(result.data.result[0]));
         console.log(result.data.result[0]);
       })
       .catch((err) => {
@@ -52,6 +53,8 @@ const UsersPage = () => {
       .catch((err) => {});
 
   }, []);
+
+  console.log("posts",posts);
   return (
     
     <>
@@ -64,7 +67,7 @@ const UsersPage = () => {
       <div className="container px-6 py-16 mx-auto text-center">
   <div className="container ">
   <div class="flex justify-center mt-10">
-            <img class="object-cover w-full h-96 rounded-xl lg:w-4/5" src={personal.cover} />
+            <img class="object-cover w-full h-96 rounded-xl lg:w-4/5" src={users.cover} />
             
 
       <button className="px-4 py-2 font-medium text-gray-600 transition-colors duration-200 sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
@@ -80,9 +83,9 @@ const UsersPage = () => {
 
         </div>
         <div class="w-56 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg md:w-64 dark:bg-gray-800">
-      <Avatar img={personal.photo} size="xl" />
+      <Avatar img={users.photo} size="xl" />
       
-        <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase dark:text-white">{personal.firstname} {personal.lastname}</h3>
+        <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase dark:text-white">{users.firstname} {users.lastname}</h3>
 
         <a href="#" 
                             class="mx-2 text-gray-600 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
@@ -111,7 +114,7 @@ const UsersPage = () => {
       </div>
     </div>
     <ul role="list" className="grid gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-16 xl:col-span-2">
-    {post.map((elem) => {
+    {posts?.map((elem) => {
         return (
           <>
           <li>

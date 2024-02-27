@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { setPosts, setUserInfo } from "../redux/personalPage/personal";
+import { setPosts, setUserInfo,setCover,setPhoto } from "../redux/personalPage/personal";
 import Posts from "../posts/Posts";
 import { Avatar ,Card,Badge } from 'flowbite-react';
 import Navbar from '../Navbars/NavbarLogin';
@@ -22,29 +22,33 @@ import { Button, Modal } from 'flowbite-react';
 
 const Personal = () => {
   const dispatch = useDispatch();
-  const { auth, personal, post ,followers} = useSelector((state) => {
+  const { auth, personal, post ,followers,cover,photo} = useSelector((state) => {
     return {
+      photo:state.personal.photo,
       followers:state.followers.followers,
+      cover:state.personal.cover,
       auth: state.auth,
       post: state.personal.post,
-      personal: state.personal.personal
+      personal: state.personal.personal,
     };
   });
 
+  console.log("cpver",cover);
   
 
 
   const [openModal, setOpenModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
+  const [show, setShow] = useState(false)
+  const [onModal, setOnModal] = useState(false)
 
   const [user, setUser] = useState(null);
-  const [coverImageUpload, setcoverImageUpload] = useState(null);
-  const [coverImageUrls, setcoverImageUrls] = useState([] || null);
+  const [coverImageUpload, setCoverImageUpload] = useState(null);
+  const [coverImageUrls, setCoverImageUrls] = useState([] || null);
   const coverImageListRef = ref(storage, "coverImages/");
 
-  const [photoImageUpload, setphotoImageUpload] = useState(null);
-  const [photoImageUrls, setphotoImageUrls] = useState([] || null);
+  const [photoImageUpload, setPhotoImageUpload] = useState(null);
+  const [photoImageUrls, setPhotoImageUrls] = useState([] || null);
   const photoImageListRef = ref(storage, "photoImages/");
 
   
@@ -103,12 +107,14 @@ const Personal = () => {
     if (coverImageUpload == null) return;
     const coverImageRef = ref(
       storage,
-      `covers/${coverImageUpload.name + v4()}`
+      `storys/${coverImageUpload.name + v4()}`
     );
     uploadBytes(coverImageRef, coverImageUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
-        setcoverImageUrls((prev) => [...prev, url]);
+        setCoverImageUrls((prev) => [...prev, url]);
         console.log(url);
+        dispatch(setCover(url))
+        setShow(true);
       });
     });
     if (photoImageUpload == null) return;
@@ -118,17 +124,20 @@ const Personal = () => {
     );
     uploadBytes(photoImageListRef, photoImageUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
-        setphotoImageUrls((prev) => [...prev, url]);
+        setPhotoImageUrls((prev) => [...prev, url]);
+        dispatch(setPhoto(url))
+        console.log(url);
+        setShow(true)
       });
     });
   };
-  console.log("userId",auth.userId);
+  
   useEffect(() => {
    
     listAll(coverImageListRef).then((response) => {
       response.items.forEach((item) => {
         getDownloadURL(item).then((url) => {
-          setcoverImageUrls((prev) => [...prev, url]);
+          setCoverImageUrls((prev) => [...prev, url]);
           
         });
       });
@@ -136,7 +145,7 @@ const Personal = () => {
     listAll(photoImageListRef).then((response) => {
       response.items.forEach((item) => {
         getDownloadURL(item).then((url) => {
-          setphotoImageUrls((prev) => [...prev, url]);
+          setPhotoImageUrls((prev) => [...prev, url]);
         });
       });
     });
@@ -155,19 +164,26 @@ const Personal = () => {
         <Modal.Header>Terms of Service</Modal.Header>
         <Modal.Body>
           <div className="space-y-6">
-          <div>
-    <label for="image" class="block text-sm text-gray-500 dark:text-gray-300">Image</label>
+          <div  className="flex space-y-6" >
+    <label for="image" className=" block text-sm text-gray-500 dark:text-gray-300">Image</label>
+      
+    
 
-<button onClick={()=>{uploadFile()}}> 3la Rase</button>
     <input onChange={(e)=>{
-      setcoverImageUrls(e.target.files[0])
-
+      setCoverImageUpload(e.target.files[0]);
     }} type="file" class="block w-full px-3 py-2 mt-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg file:bg-gray-200 file:text-gray-700 file:text-sm file:px-4 file:py-1 file:border-none file:rounded-full dark:file:bg-gray-800 dark:file:text-gray-200 dark:text-gray-300 placeholder-gray-400/70 dark:placeholder-gray-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:focus:border-blue-300" />
+
+<button onClick={()=>{uploadFile()}} className="px-4 py-2 font-medium text-gray-600 transition-colors duration-200 sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5 sm:w-6 sm:h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+        </svg>
+    </button>
+    
 </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => {
+          {show && <Button onClick={() => {
               axios
                 .put(
                   `http://localhost:5000/users/${auth.userId}`,
@@ -183,13 +199,14 @@ const Personal = () => {
                 .then((result) => {
                   console.log("restult", result.data);
                   dispatch(setUserInfo(result.data.result));
+                  
                 })
                 .catch((err) => {
                   console.log(err);
                 });
            
             setOpenModal(false)
-          }}>I accept</Button>
+          }}>I accept</Button>}
           <Button color="gray" onClick={() => setOpenModal(false)}>
             Decline
           </Button>
@@ -200,7 +217,7 @@ const Personal = () => {
       <div className="container px-6 py-16 mx-auto text-center">
   <div className="container ">
   <div class="flex justify-center mt-10">
-            <img class="object-cover w-full h-96 rounded-xl lg:w-4/5" src={personal.cover} />
+            <img class="object-cover w-full h-96 rounded-xl lg:w-4/5" src={personal.cover || cover} />
             
 
       <button onClick={() => setOpenModal(true)} className="px-4 py-2 font-medium text-gray-600 transition-colors duration-200 sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
@@ -218,7 +235,7 @@ const Personal = () => {
             {followers.map((elem,i)=>{
               return <>
               <div class="flex items-center gap-x-2">
-        <img class="object-cover w-16 h-16 rounded-full" src={elem.photo} alt=""/>
+        <img class="object-cover w-16 h-16 rounded-full" src={elem.photo || photo} alt=""/>
         
         <div>
             <h1 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">{elem.firstname} {elem.lastname} </h1>
@@ -232,7 +249,7 @@ const Personal = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button color="gray" onClick={() => setShowModal(false)}>
-            Back
+            Decline
           </Button>
         </Modal.Footer>
       </Modal>
@@ -241,7 +258,7 @@ const Personal = () => {
 
         </div>
         <div class="w-56 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg md:w-64 dark:bg-gray-800">
-      <Avatar img={personal.photo} size="xl" />
+      <Avatar onClick={() => setOnModal(true)} img={personal.photo} size="xl" />
       
         <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase dark:text-white">{personal.firstname} {personal.lastname}</h3>
 
@@ -252,6 +269,63 @@ const Personal = () => {
 
                             <p class="text-center text-gray-500 dark:text-gray-400">followers {followers.length} </p>
                         </a>
+        
+      
+      <Modal show={onModal} onClose={() => setOnModal(false)}>
+        <Modal.Header>Terms of Service</Modal.Header>
+        <Modal.Body>
+          
+        <div className="space-y-6">
+          <div  className="flex space-y-6" >
+    <label for="image" className=" block text-sm text-gray-500 dark:text-gray-300">Image</label>
+      
+    
+
+    <input onChange={(e)=>{
+      setPhotoImageUpload(e.target.files[0]);
+    }} type="file" class="block w-full px-3 py-2 mt-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg file:bg-gray-200 file:text-gray-700 file:text-sm file:px-4 file:py-1 file:border-none file:rounded-full dark:file:bg-gray-800 dark:file:text-gray-200 dark:text-gray-300 placeholder-gray-400/70 dark:placeholder-gray-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:focus:border-blue-300" />
+
+<button onClick={()=>{uploadFile()}} className="px-4 py-2 font-medium text-gray-600 transition-colors duration-200 sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5 sm:w-6 sm:h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+        </svg>
+    </button>
+    
+</div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+        {show && <Button onClick={() => {
+              axios
+                .put(
+                  `http://localhost:5000/users/${auth.userId}`,
+                  {
+                    photo: photoImageUrls[photoImageUrls.length - 1],
+                  },
+                  {
+                    headers: {
+                      authorization: `Bearer ${auth.token}`,
+                    },
+                  }
+                )
+                .then((result) => {
+                  console.log("restult", result.data);
+                  dispatch(setUserInfo(result.data.result));
+                  
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+           
+            setOnModal(false)
+          }}>I accept</Button>}
+          <Button color="gray" onClick={() => setOnModal(false)}>
+            Decline
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+        
       </div>
       </div>
       </main>
