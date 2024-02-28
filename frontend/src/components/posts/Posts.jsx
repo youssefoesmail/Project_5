@@ -93,8 +93,8 @@ const Posts = () => {
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
-      photo: imageUrls[imageUrls.length - 1] || null,
-      video: videoUrls[videoUrls.length - 1] || null
+      photo: imageUrls[imageUrls.length - 1],
+      video: videoUrls[videoUrls.length - 1]
     };
 
     axios
@@ -104,6 +104,7 @@ const Posts = () => {
         }
       })
       .then((result) => {
+        console.log(NewPost);
         dispatch(createNewPost(result.data.result));
       })
       .catch((err) => {
