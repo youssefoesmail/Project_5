@@ -24,9 +24,9 @@ import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
 import "./index.css";
-import { Dropdown } from 'flowbite-react';
-import { Button, Modal } from 'flowbite-react';
-import moment from "moment"
+import { Dropdown } from "flowbite-react";
+import { Button, Modal } from "flowbite-react";
+import moment from "moment";
 
 const Posts = () => {
   //setUserPostId
@@ -47,10 +47,8 @@ const Posts = () => {
   const [commId, setCommId] = useState("");
   const [upCommValue, setUpCommValue] = useState("");
   const [openModal, setOpenModal] = useState("");
-  const [info, setInfo] = useState(null)
-  const [dropDown, setDropDown] = useState("")
-
-
+  const [info, setInfo] = useState(null);
+  const [dropDown, setDropDown] = useState("");
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
@@ -138,7 +136,7 @@ const Posts = () => {
       if (result.data.success) {
         const comments = result.data.result;
         dispatch(setComments({ comment: comments, id }));
-        setInfo(result.data.result)
+        setInfo(result.data.result);
       } else throw Error;
     } catch (error) {
       if (!error.response) {
@@ -388,17 +386,19 @@ const Posts = () => {
                                 src={elem.photo}
                                 alt="avatar"
                               />
-                            ) : (<img
-                              class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-                              src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
-                              alt="avatar"
-                            />)}
+                            ) : (
+                              <img
+                                class="w-12 h-12 rounded-full object-cover mr-4 shadow"
+                                src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                                alt="avatar"
+                              />
+                            )}
                             <h2 class="text-lg font-semibold text-gray-900 -mt-1">
                               {elem.firstname}
                             </h2>
                           </Link>
                           <small class="text-sm text-gray-700">
-                            {moment(elem.created_at).endOf('day').fromNow()}
+                            {moment(elem.created_at).endOf("day").fromNow()}
                           </small>
                         </div>
                         {elem.photo ? (
@@ -437,7 +437,6 @@ const Posts = () => {
                             <span>12</span>
                           </div>
 
-
                           <div class="flex mr-2 text-gray-700 text-sm mr-6 hover:bg-blue-300">
                             <svg
                               fill="none"
@@ -449,16 +448,20 @@ const Posts = () => {
                                 getPostComment(elem.id);
                                 console.log(elem.user_id, show);
                                 setShow(elem.user_id);
-                                { elem.id != postId ? setPostId(elem.id) : setPostId("") }
-                                setInfo(elem.comment)
+                                {
+                                  elem.id != postId
+                                    ? setPostId(elem.id)
+                                    : setPostId("");
+                                }
+                                setInfo(elem.comment);
                                 console.log(userId);
                               }}
-                            // onClick={() => {
-                            //   getPostComment(elem.id);
+                              // onClick={() => {
+                              //   getPostComment(elem.id);
 
-                            //   setShow(elem.user_id);
-                            //   setPostId(elem.id);
-                            // }}
+                              //   setShow(elem.user_id);
+                              //   setPostId(elem.id);
+                              // }}
                             >
                               <path
                                 stroke-linecap="round"
@@ -469,7 +472,6 @@ const Posts = () => {
                             </svg>
                             <span>{elem.comment?.length}</span>
                           </div>
-
 
                           <div class="flex mr-2 text-gray-700 text-sm mr-6 hover:bg-blue-300">
                             <svg
@@ -523,10 +525,7 @@ const Posts = () => {
                           }
 
                           <br />
-                          <>
-
-
-                          </>
+                          <></>
                           {/* <Modal show={openModal}  onClose={() => { setOpenModal("") }}>
                               <Modal.Header>Comments</Modal.Header>
                               <Modal.Body>
@@ -679,17 +678,28 @@ const Posts = () => {
                             return (
                               <section class="w-96 p-4 mx-20px bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
                                 <div className="comment" key={i}>
-                                  <small class="text-sm text-gray-700" id="date">{moment(comment.created_at).endOf('day').fromNow()}</small>
+                                  <small
+                                    class="text-sm text-gray-700"
+                                    id="date"
+                                  >
+                                    {moment(comment.created_at)
+                                      .endOf("day")
+                                      .fromNow()}
+                                  </small>
                                   <h2 class="font-semibold text-gray-800 dark:text-white">
-                                    {comment.photo ? <img
-                                      class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-                                      src={comment.photo}
-                                      alt="avatar"
-                                    /> : <img
-                                      class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-                                      src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
-                                      alt="avatar"
-                                    />}
+                                    {comment.photo ? (
+                                      <img
+                                        class="w-12 h-12 rounded-full object-cover mr-4 shadow"
+                                        src={comment.photo}
+                                        alt="avatar"
+                                      />
+                                    ) : (
+                                      <img
+                                        class="w-12 h-12 rounded-full object-cover mr-4 shadow"
+                                        src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                                        alt="avatar"
+                                      />
+                                    )}
                                     {comment.firstname}
                                   </h2>
                                   <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
@@ -697,7 +707,6 @@ const Posts = () => {
                                   </p>
                                   {console.log(comment.commenter, userId)}
                                   {comment.commenter == userId && (
-
                                     <div class="flex items-center justify-between">
                                       {/* <><button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button" onClick={() => { 
                                         dropDown == comment.id ? setDropDown("") : setDropDown(comment.id) }}>
@@ -745,10 +754,22 @@ const Posts = () => {
                                           >
                                             delete
                                           </button> */}
-                                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" onClick={() => {
-                                        setCommId(comment.id);
-                                      }} >
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="w-6 h-6"
+                                        onClick={() => {
+                                          setCommId(comment.id);
+                                        }}
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                                        />
                                       </svg>
                                       <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -817,40 +838,47 @@ const Posts = () => {
                           Add Comment
                         </button>
                       )}
-                      {elem.id == show && <div class="relative flex">
-                        <input
-                          type="text"
-                          placeholder="Write your message!"
-                          class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
-                          onChange={(e) => {
-                            setAddCommentValue(e.target.value);
-                          }}
-                        />
-                        <button
-                          id="send"
-                          type="button"
-                          class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
-                          onClick={() => {
-                            // createNewMessage();
-                          }}
-                        >
-                          <span class="font-bold" onClick={() => {
-                            {
-                              console.log("hg");
-                              createComment(elem.id);
-                              setShow("");
-                            }
-                          }}>Add</span>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            class="h-6 w-6 ml-2 transform rotate-90"
+                      {elem.id == show && (
+                        <div class="relative flex">
+                          <input
+                            type="text"
+                            placeholder="Write your message!"
+                            class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
+                            onChange={(e) => {
+                              setAddCommentValue(e.target.value);
+                            }}
+                          />
+                          <button
+                            id="send"
+                            type="button"
+                            class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
+                            onClick={() => {
+                              // createNewMessage();
+                            }}
                           >
-                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
-                          </svg>
-                        </button>
-                      </div>}
+                            <span
+                              class="font-bold"
+                              onClick={() => {
+                                {
+                                  console.log("hg");
+                                  createComment(elem.id);
+                                  setShow("");
+                                }
+                              }}
+                            >
+                              Add
+                            </span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              class="h-6 w-6 ml-2 transform rotate-90"
+                            >
+                              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                            </svg>
+                          </button>
+                        </div>
+                      )}
                       {/* {elem.id == show && (
                         <input
                           type="text"

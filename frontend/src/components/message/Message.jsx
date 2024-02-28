@@ -390,6 +390,7 @@ const Message = () => {
                     )}
                   </button>
                   {elem.firstname}
+                  {elem.followed_user_id}
                 </>
               );
             })}
