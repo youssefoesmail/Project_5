@@ -613,6 +613,15 @@ const Posts = () => {
                                     <div className="comment" key={i}>
 
                                       <h2 class="font-semibold text-gray-800 dark:text-white">
+                                        {comment.photo ? <img
+                                          class="w-12 h-12 rounded-full object-cover mr-4 shadow"
+                                          src={comment.photo}
+                                          alt="avatar"
+                                        /> : <img
+                                        class="w-12 h-12 rounded-full object-cover mr-4 shadow"
+                                          src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                                          alt="avatar"
+                                        />}
                                         {comment.firstname}
                                       </h2>
                                       <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
