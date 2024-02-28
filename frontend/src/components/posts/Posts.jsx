@@ -50,21 +50,24 @@ const Posts = () => {
   const [openModal, setOpenModal] = useState("");
   const [info, setInfo] = useState(null)
   const [dropDown, setDropDown] = useState("")
+  const [counter, setCounter] = useState(0)
 
 
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
-  const { posts, auth, comment, userId, users } = useSelector((state) => {
+  const { posts, auth, comment, userId, users, like } = useSelector((state) => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
       comment: state.posts.comment,
       userId: state.auth.userId,
-      users: state.posts.users
+      users: state.posts.users,
+      like: state.posts.like
     };
   });
+
   const ShareButtons = (shareUrl) => {
     return (
       <div>
@@ -221,6 +224,46 @@ const Posts = () => {
     }
   };
   // ====================================================
+
+  //!============ createLike =========================
+
+  const createLike = async (id) => {
+    try {
+      const result = await axios.post(
+        `http://localhost:5000/likes/search/${id}`,
+        {
+          headers: {
+            authorization: `Bearer ${auth.token}`
+          }
+        }
+      );
+      console.log("===================>", result.data.message);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  // ====================================================
+
+  //!============ deleteLike =========================
+
+  const deleteLike = async (id, pID) => {
+    try {
+      const result = await axios.delete(
+        `http://localhost:5000/comments/post/${id}`,
+        {
+          headers: {
+            authorization: `Bearer ${auth.token}`
+          }
+        }
+      );
+      console.log("===================>", result.data.message);
+      dispatch(deleteComments({ id, pID }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  // ====================================================
+
   const handleDeletePost = (postId) => {
     axios
       .delete(`http://localhost:5000/posts/${postId}`, {
@@ -312,6 +355,17 @@ const Posts = () => {
       .get("http://localhost:5000/posts")
       .then((result) => {
         dispatch(setPosts(result.data.posts));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/likes")
+      .then((result) => {
+        dispatch(setLikes(result.data.posts));
       })
       .catch((err) => {
         console.log(err);
@@ -447,7 +501,7 @@ const Posts = () => {
                           </video>
                         )}
                         <div class="mt-4 flex items-center px-4 py-6 my-6 mx-6">
-                          <div class="flex mr-12 text-gray-700 text-sm mr-6 hover:bg-red-300">
+                          <div class="flex mr-12 text-gray-700 text-sm mr-6 hover:bg-red-300" onClick={()=>{createLike(elem.id)}}>
                             <svg
                               fill="none"
                               viewBox="0 0 24 24"
@@ -461,7 +515,13 @@ const Posts = () => {
                                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                               />
                             </svg>
-                            <span>12</span>
+                            <span>111</span>
+                            {/* {
+                            like.map((likePost, i) => {
+                              likePost.post_id == elem.id && setCounter(counter + 1) 
+                              console.log(counter);
+                              return <span>{counter}</span>
+                            })} */}
                           </div>
 
 

@@ -1,7 +1,7 @@
 const {pool}=require('../models/db');
 
 const CreateLike = (req,res)=>{
-    const {user_id} = req.body;
+    const user_id = req.token.userId;
     const post_id = req.params.id;
     const values = [user_id,post_id];
     const query = `INSERT INTO likes (user_id,post_id) VALUES ($1, $2) RETURNING *;`;
