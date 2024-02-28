@@ -4,6 +4,6 @@ const authentication = require("../middleware/Authentication");
 const messagesRouter = express.Router();
 
 messagesRouter.post("/:id", authentication, createNewMessage);
-messagesRouter.get("/", authentication, getAllMessage);
+messagesRouter.get("/:id", authentication, getAllMessage);
 
 module.exports = messagesRouter;

@@ -39,9 +39,9 @@ const Message = () => {
       });
   };
 
-  const getAllMessage = () => {
+  const getAllMessage = (id) => {
     axios
-      .get(`http://localhost:5000/messages`, {
+      .get(`http://localhost:5000/messages/${id}`, {
         headers: {
           authorization: `Bearer ${auth.token}`
         }
@@ -76,7 +76,6 @@ const Message = () => {
     personalPage();
     getFollowers();
     getAllMessage();
-
     socket.on("message", (data) => {
       dispatch(setMessage([...messages, data]));
       console.log(data);
@@ -88,7 +87,7 @@ const Message = () => {
   }, [auth.userId, auth.token, dispatch]);
   const receiveMessage = (data) => {
     console.log(data);
-    dispatch(setMessage((prev)=>[...prev, data]));
+    dispatch(setMessage((prev) => [...prev, data]));
   };
   const createNewMessage = () => {
     const newMessage = {
@@ -105,6 +104,7 @@ const Message = () => {
       })
       .then((result) => {
         dispatch(createMessage(result.data.result));
+        dispatch(setMessage([...messages, result.data.result[0]]));
         console.log("Message stored in the database:", result.data.result);
       })
       .catch((err) => {
@@ -119,11 +119,10 @@ const Message = () => {
         token: auth.token
       }
     });
-    console.log(messages);
 
     socket.emit("message", {
       receiver_id: to,
-      sender_id: auth.userId *1,
+      sender_id: auth.userId,
       messages: messageText
     });
   };
@@ -376,14 +375,15 @@ const Message = () => {
                           alt={elem.firstname}
                           onClick={() => {
                             handleFollowersId(elem.followed_user_id);
+                            getAllMessage(elem.followed_user_id);
                           }}
                         />
-                        {elem.firstname}
                       </>
                     ) : (
                       <img
                         onClick={() => {
                           handleFollowersId(elem.followed_user_id);
+                          getAllMessage(elem.followed_user_id);
                         }}
                         src="https://img.freepik.com/free-vector/saudi-arab-man-wearing-thobe-with-confused-thinking-facial-expression-hand-drawn-sketch-vector-illustration_460848-9982.jpg?w=740&t=st=1708875035~exp=1708875635~hmac=2f42ea874951d7f3e2cc6f20577b0a472979bdc15aa20446beacc9e53084b26c"
                       />
@@ -395,34 +395,39 @@ const Message = () => {
             })}
           </div>
         </div>
-        <div
-          id="messages"
-          className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
-        >
-          {messages?.map((elem, i) => (
-            
-            <div key={i} className="chat-message">
-              <div className="flex items-end">
-                <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
-                  <div></div>
-                </div>
-                <div>
-                  <div
-                    className={elem.receiver_id === to ? "order-2" : "order-1"}
+        {messages?.map((elem, i) => (
+          <div key={i} className="chat-message">
+            <div className="flex items-end">
+              <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
+                <div></div>
+              </div>
+              <div>
+                <div
+                  className={
+                    (elem.sender_id === auth.userId &&
+                      elem.receiver_id === to) ||
+                    (elem.sender_id === to && elem.receiver_id === auth.userId)
+                      ? "order-2 sender-message"
+                      : "order-1 receiver-message"
+                  }
+                >
+                  <span
+                    className={`px-4 py-2 rounded-lg inline-block ${
+                      (elem.sender_id === auth.userId &&
+                        elem.receiver_id === to) ||
+                      (elem.sender_id === to &&
+                        elem.receiver_id === auth.userId)
+                        ? "bg-green-400 text-white"
+                        : "bg-blue-400 text-black"
+                    }`}
                   >
-                    <span
-                      className={`px-4 py-2 rounded-lg inline-block ${
-                        elem.receiver_id === to ? "bg-gray-300" : "bg-blue-600"
-                      } text-${elem.receiver_id === to ? "gray-600" : "white"}`}
-                    >
-                      {elem.messages}
-                    </span>
-                  </div>
+                    {messages && elem.messages}
+                  </span>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
         <div class="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
           <div class="relative flex">
             <span class="absolute inset-y-0 flex items-center">

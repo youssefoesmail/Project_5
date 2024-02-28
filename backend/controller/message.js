@@ -8,7 +8,7 @@ const createNewMessage = (req, res) => {
   if (!receiver_id) {
     return res.status(400).json({
       success: false,
-      message: "Receiver ID is required.",
+      message: "Receiver ID is required."
     });
   }
   pool
@@ -18,7 +18,6 @@ const createNewMessage = (req, res) => {
         success: true,
         messages: "send Message Successfully",
         result: result.rows
-
       });
     })
     .catch((err) => {
@@ -29,25 +28,23 @@ const createNewMessage = (req, res) => {
     });
 };
 const getAllMessage = (req, res) => {
-  const { receiver_id } = req.params;
+  const { id } = req.params;
   const sender_id = req.token.userId;
-  const query = `SELECT messages.*, sender.id AS sender_id, receiver.id AS receiver_id
-  FROM messages
-  JOIN users AS sender ON messages.sender_id = sender.id
-  JOIN users AS receiver ON messages.receiver_id = receiver.id
-  WHERE (sender.id = $1 and receiver.id = $1 ) UNION 
-  SELECT messages.*, sender.id AS sender_id, receiver.id AS receiver_id
-  FROM messages
-  JOIN users AS sender ON messages.sender_id = sender.id
-  JOIN users AS receiver ON messages.receiver_id = receiver.id
-  WHERE (receiver.id = $1 and sender.id = $1);`;
-  const value = [sender_id];
+  const query = `
+    SELECT messages.*, sender.id AS sender_id, receiver.id AS receiver_id
+    FROM messages
+    JOIN users AS sender ON messages.sender_id = sender.id
+    JOIN users AS receiver ON messages.receiver_id = receiver.id
+    WHERE (sender.id = $1 AND receiver.id = $2) OR (receiver.id = $1 AND sender.id = $2);
+  `;
+  const values = [sender_id, id];
+
   pool
-    .query(query, value) 
+    .query(query, values)
     .then((result) => {
       res.status(200).json({
         success: true,
-        messages: "get Message Successfully",
+        message: "Get messages successfully",
         result: result.rows
       });
     })
@@ -58,6 +55,7 @@ const getAllMessage = (req, res) => {
       });
     });
 };
+
 module.exports = {
   createNewMessage,
   getAllMessage
