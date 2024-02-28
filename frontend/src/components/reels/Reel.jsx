@@ -8,11 +8,10 @@ import {
   uploadBytes,
   getDownloadURL,
   listAll,
-  list,
+
 } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
-
 const Reel = () => {
   const [reelVideoUpload, setReelVideoUpload] = useState(null);
   const [reelVideoUrls, setReelVideoUrls] = useState([] || null);
@@ -91,33 +90,17 @@ const Reel = () => {
   return (
     <div>
     <input
-      type="file"
-      onChange={(event) => {
-        setReelVideoUpload(event.target.files[0]);
-      }}
-    />
-    <button onClick={uploadFile}>Upload</button>
-    <button onClick={handleCreateNewReel}>Upload</button>
-    <h1>Reels</h1>
-    <div
-      className="reels-container"
-      style={{ overflowX: "hidden",gap:"5%" ,height:"100vh"}}
-
-    >
-      {reelVideoUrls.map((videoUrl, index) => (
-        <Card
-          key={index}
-          className="reel"
-          style={{ display: "block", height:"100%" }}
-        >
-          <Card.Body>
-            <video src={videoUrl} controls width="100%" height="100%" />
-          </Card.Body>
-        </Card>
-      ))}
+    type="file"
+    onChange={(event) => {
+      setReelVideoUpload(event.target.files[0]);
+    }}
+  />
+  <button onClick={uploadFile}>Upload</button>
+  <button onClick={handleCreateNewReel}>Upload</button>
+  <h1>Reels</h1>
+  <Reels videos={reels} />
     </div>
-  </div>
-  );
+  )
 };
 
 export default Reel;

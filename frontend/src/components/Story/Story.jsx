@@ -15,16 +15,19 @@ import { setUserInfo } from "../redux/personalPage/personal";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
 import { Button, Modal,FileInput, Label } from 'flowbite-react';
-
+import { useNavigate } from "react-router-dom";
 const Story = () => {
-  const [storyImageUpload, setStoryImageUpload] = useState(null);
-  const [storyImageUrls, setStoryImageUrls] = useState([] || null);
-  const storyImageListRef = ref(storage, "storyImages/");
-
+  const navigate=useNavigate();
+  const [storyUpload, setStoryUpload] = useState(null);
+  const [storyUrls, setStoryUrls] = useState([] || null);
+  const storyListRef = ref(storage, "storyImages/");
+  const [show, setShow] = useState(false);
   const [storyVideoUpload, setStoryVideoUpload] = useState(null);
   const [storyVideoUrls, setStoryVideoUrls] = useState([] || null);
   const storyVideoListRef = ref(storage, "storyVideos/");
   const [openModal, setOpenModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [show2, setShow2] = useState("");
 
   const { story, auth, personal } = useSelector((state) => {
     return {
@@ -48,41 +51,48 @@ const Story = () => {
       .catch((err) => {});
   };
   const uploadFile = () => {
-    if (storyImageUpload == null) return;
-    const storyImageRef = ref(
-      storage,
-      `storys/${storyImageUpload.name + v4()}`
-    );
-    uploadBytes(storyImageRef, storyImageUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        setStoryImageUrls((prev) => [...prev, url]);
-        console.log(url);
-      });
-    });
-    if (storyVideoUpload == null) return;
-    const storyVideoRef = ref(
-      storage,
-      `storys/${storyVideoUpload.name + v4()}`
-    );
-    uploadBytes(storyVideoRef, storyVideoUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        setStoryVideoUrls((prev) => [...prev, url]);
-      });
-    });
+    console.log(storyUpload.type);
+    if (storyUpload !== null) {
+      if (storyUpload.type=="image/jpeg"||"image/png") {
+        const storyRef = ref(
+          storage,
+          `ImageStorys/${storyUpload.name + v4()}`
+        );
+        uploadBytes(storyRef, storyUpload).then((snapshot) => {
+          getDownloadURL(snapshot.ref).then((url) => {
+            setStoryUrls((prev) => [...prev, url]);
+            console.log(url);
+            setShow(true);
+          });
+        });
+      }
+      else{
+        if (storyUpload !== null){
+          if (storyUpload.type=="video/webm"||"video/mp4") {
+          const storyRef = ref(
+            storage,
+            `VideoStorys/${storyUpload.name + v4()}`
+          );
+          uploadBytes(storyRef, storyUpload).then((snapshot) => {
+            getDownloadURL(snapshot.ref).then((url) => {
+              setStoryUrls((prev) => [...prev, url]);
+              console.log(url);
+              setShow(true);
+            });
+          });
+      }
+        }
+  }
+   
+  }
+
   };
 
   useEffect(() => {
-    listAll(storyImageListRef).then((response) => {
+    listAll(storyListRef).then((response) => {
       response.items.forEach((item) => {
         getDownloadURL(item).then((url) => {
-          setStoryImageUrls((prev) => [...prev, url]);
-        });
-      });
-    });
-    listAll(storyVideoListRef).then((response) => {
-      response.items.forEach((item) => {
-        getDownloadURL(item).then((url) => {
-          setStoryVideoUrls((prev) => [...prev, url]);
+          setStoryUrls((prev) => [...prev, url]);
         });
       });
     });
@@ -104,6 +114,16 @@ const Story = () => {
     getAllStory();
     
   }, []);
+  const function1= (show2) => {
+    console.log(show2);
+    if (show2.includes("ImageStorys")) {
+      console.log("true");
+      return true
+    }
+    console.log("false");
+    return false
+  }
+  
   const handleCreateNewStory = () => {
     axios
     .post(
@@ -128,94 +148,90 @@ const Story = () => {
     });
     setOpenModal(false)
   };
-console.log(storyImageUrls);
+console.log(story);
   return (
     <div>
-      <div class="flex bg-white shadow-lg rounded-lg mx-4 md:mx-auto my-56 max-w-md md:max-w-2xl marginElement">
-        <div class="flex items-start px-4 py-6">
-          <div class="flex items-center justify-between"></div>
-          <input
-            type="file"
-            class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-            onChange={(event) => {
-              setStoryImageUpload(event.target.files[0]);
-            }}
-          />
-          <input
-            type="file"
-            class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-            onChange={(event) => {
-              setStoryVideoUpload(event.target.files[0]);
-            }}
-          />
-        </div>
-      </div>
+     
+     <Modal show={openModal} onClose={() => setOpenModal(false)}>
+          <Modal.Header>Terms of Service</Modal.Header>
+          <Modal.Body>
+            <div className="space-y-6">
+              <div className="flex space-y-6">
+                <label
+                  for="image"
+                  className=" block text-sm text-gray-500 dark:text-gray-300"
+                >
+                  Image
+                </label>
 
-      <button
-         class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
-         onClick={() => {
-           handleCreateNewStory();
-         }}
-      >
-        createNewStory
-      </button>
-      <button onClick={uploadFile}> Upload</button>
-      <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header></Modal.Header>
-        <Modal.Body>
-          <div className="space-y-6">
-          <div className="flex w-full items-center justify-center">
-      <Label 
-        htmlFor="dropzone-file"
-        className="dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-      >
-        <div className="flex flex-col items-center justify-center pb-6 pt-5">
-       
-          <svg 
-            className="fill-current w-12 h-12 mb-3 text-blue-700" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-          >
-            
-            <path
-              d="M19.479 10.092c-.212-3.951-3.473-7.092-7.479-7.092-4.005 0-7.267 3.141-7.479 7.092-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h13c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408zm-7.479-1.092l4 4h-3v4h-2v-4h-3l4-4z"/>
-          </svg>
-          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-            <span className="font-semibold">Click to upload</span> or drag and drop
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-        </div>
-        
-        <FileInput id="dropzone-file" onChange={(event) => {setStoryImageUpload(event.target.files[0]);}}className="hidden" />
-        </Label>
-    </div>
-          </div>
-          <h1 class="pt-8 pb-3 font-semibold sm:text-lg text-gray-900">
-              To Upload
-            </h1>
+                <input
+                  onChange={(e) => {
+                    setStoryUpload(e.target.files[0]);
+                  }}
+                  type="file" 
+                  class="block w-full px-3 py-2 mt-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg file:bg-gray-200 file:text-gray-700 file:text-sm file:px-4 file:py-1 file:border-none file:rounded-full dark:file:bg-gray-800 dark:file:text-gray-200 dark:text-gray-300 placeholder-gray-400/70 dark:placeholder-gray-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:focus:border-blue-300"
+                />
+                 
+                <button
+                  onClick={() => {
+                    uploadFile();
+                  }}
+                  className="px-4 py-2 font-medium text-gray-600 transition-colors duration-200 sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    className="w-5 h-5 sm:w-6 sm:h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            {show && (
+              <Button
+                onClick={() => {
+                  axios
+                    .post(
+                      `http://localhost:5000/story`,
+                      {
+                        video: storyUrls[storyUrls.length - 1]
+                      },
+                      {
+                        headers: {
+                          authorization: `Bearer ${auth.token}`
+                        }
+                      }
+                    )
+                    .then((result) => {
+                      console.log("restult", result.data);
+                      dispatch(createNewStory(result.data.result));
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
 
-            <ul id="gallery" className="flex flex-1 flex-wrap -m-1">
-             { storyImageUrls.map((slide, index) => (<div>
-              <li id="empty" className="h-full w-full text-center flex flex-col items-center justify-center items-center">
-
-              <img className="mx-auto w-32" src={slide} alt="no data" />
-              </li>
-             </div>)
-             )
-            };
-                
-              
-            </ul>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button  onClick={uploadFile}>Upload</Button>
-          <Button   onClick={() => {
-           handleCreateNewStory();
-         }}>I accept</Button>
-          <Button color="gray" onClick={() => setOpenModal(false)}>
-            Decline
-          </Button>
-          
-        </Modal.Footer>
-      </Modal>
+                  setOpenModal(false);
+                }}
+              >
+                I accept
+              </Button>
+            )}
+            <Button color="gray" onClick={() => setOpenModal(false)}>
+              Decline
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      
       <section className=" md:flex flex-col items-center justify-center">
         <ul className="md:flex items-center justify-center md:space-x-8">
           <li className="flex flex-col items-center space-y-2">
@@ -226,7 +242,7 @@ console.log(storyImageUrls);
               >
                 <img
                   className="h-24 w-24 rounded-full"
-                  src="https://i.ibb.co/yhh0Ljy/profile.jpg"
+                  src={personal.photo}
                   alt="image"
                 />
               </a>
@@ -244,12 +260,32 @@ console.log(storyImageUrls);
                     class="block bg-white p-1 rounded-full transform transition hover:-rotate-12 duration-300"
                     href="#"
                   >
+                    
                     <img
                       class="h-24 w-24 rounded-full"
-                      src={slide.photo}
+                      src={slide.video}
                       alt="image"
+                      onClick={() => {setShow2(slide.video), setShowModal(true)}}
                     />
+                    
                   </a>
+                  <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Body>
+          <div className="space-y-6">
+            {function1(show2) &&(
+            <img src={slide.video} />
+            )}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+       
+          <Button onClick={() => setShowModal(false)}>I accept</Button>
+          
+          <Button color="gray" onClick={() => setShowModal(false)}>
+            Decline
+          </Button>
+        </Modal.Footer>
+      </Modal>
                 </div>
                 <p>{slide.firstname}</p>
               </li>
