@@ -24,7 +24,7 @@ import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
 import "./index.css";
-import { Dropdown } from 'flowbite-react';
+import { Avatar, Dropdown } from 'flowbite-react';
 import { Button, Modal } from 'flowbite-react';
 import moment from "moment"
 
@@ -385,19 +385,43 @@ const Posts = () => {
                             }}
                           >
                             {elem.photo ? (
-                              <img
-                                class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-                                src={elem.photo}
-                                alt="avatar"
-                              />
-                            ) : (<img
-                              class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-                              src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
-                              alt="avatar"
-                            />)}
-                            <h2 class="text-lg font-semibold text-gray-900 -mt-1">
-                              {elem.firstname}
-                            </h2>
+                              <div class="flex items-center gap-x-2">
+                                <img
+                                  class="object-cover w-16 h-16 rounded-full"
+                                  src={elem.photo || photo}
+                                  alt=""
+                                />
+
+                                <div>
+                                  <h1 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">
+                                    {elem.firstname} {elem.lastname}{" "}
+                                  </h1>
+
+                                  <p class="text-base text-gray-500 dark:text-gray-400">
+                                    {elem.email}
+                                  </p>
+                                </div>
+                              </div>
+                            ) : (
+                              <div class="flex items-center gap-x-2">
+                                <img
+                                  class="object-cover w-16 h-16 rounded-full"
+                                  src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                                  alt=""
+                                />
+
+                                <div>
+                                  <h1 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">
+                                    {elem.firstname} {elem.lastname}{" "}
+                                  </h1>
+
+                                  <p class="text-base text-gray-500 dark:text-gray-400">
+                                    {elem.email}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                            <br />
                           </Link>
                           <small class="text-sm text-gray-700">
                             {moment(elem.created_at).endOf('day').fromNow()}
@@ -681,16 +705,50 @@ const Posts = () => {
                                 <div className="comment" key={i}>
                                   <small class="text-sm text-gray-700" id="date">{moment(comment.created_at).endOf('day').fromNow()}</small>
                                   <h2 class="font-semibold text-gray-800 dark:text-white">
-                                    {comment.photo ? <img
-                                      class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-                                      src={comment.photo}
-                                      alt="avatar"
-                                    /> : <img
-                                      class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-                                      src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
-                                      alt="avatar"
-                                    />}
-                                    {comment.firstname}
+                                    <Link
+                                      to={`/users/${elem.user_id}`}
+                                      onClick={() => {
+                                        dispatch(setUserId(elem.user_id));
+                                      }}
+                                    >
+                                      {comment.photo ?
+                                        <div class="flex items-center gap-x-2">
+                                          <img
+                                            class="object-cover w-8 h-8 rounded-full"
+                                            src={comment.photo}
+                                            alt=""
+                                          />
+
+                                          <div>
+                                            <h4 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">
+                                              {elem.firstname} {elem.lastname}{" "}
+                                            </h4>
+
+                                            <p class="text-base text-gray-500 dark:text-gray-400">
+                                              {elem.email}
+                                            </p>
+                                          </div>
+                                        </div>
+                                        :
+                                        <div class="flex items-center gap-x-2">
+                                          <img
+                                            class="object-cover w-8 h-8 rounded-full"
+                                            src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                                            alt=""
+                                          />
+
+                                          <div>
+                                            <h4 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">
+                                              {elem.firstname} {elem.lastname}{" "}
+                                            </h4>
+
+                                            <p class="text-base text-gray-500 dark:text-gray-400">
+                                              {elem.email}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      }
+                                    </Link>
                                   </h2>
                                   <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
                                     {comment?.comment}
@@ -848,7 +906,7 @@ const Posts = () => {
                           >
                             <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
                           </svg>
-                        </button> : <button class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-red-500 hover:bg-red-400 focus:outline-none" onClick={()=>setShow("")}>close</button>}
+                        </button> : <button class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-red-500 hover:bg-red-400 focus:outline-none" onClick={() => setShow("")}>close</button>}
                       </div>}
                       {/* {elem.id == show && (
                         <input
