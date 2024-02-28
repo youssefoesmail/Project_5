@@ -679,7 +679,7 @@ const Posts = () => {
                             return (
                               <section class="w-96 p-4 mx-20px bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
                                 <div className="comment" key={i}>
-                                  <small class="text-sm text-gray-700">{moment(comment.created_at).endOf('day').fromNow()}</small>
+                                  <small class="text-sm text-gray-700" id="date">{moment(comment.created_at).endOf('day').fromNow()}</small>
                                   <h2 class="font-semibold text-gray-800 dark:text-white">
                                     {comment.photo ? <img
                                       class="w-12 h-12 rounded-full object-cover mr-4 shadow"

@@ -47,6 +47,7 @@ const Message = () => {
         }
       })
       .then((result) => {
+        console.log(result.data.result);
         dispatch(setMessage(result.data.result));
       })
       .catch((err) => {
@@ -87,7 +88,7 @@ const Message = () => {
   }, [auth.userId, auth.token, dispatch]);
   const receiveMessage = (data) => {
     console.log(data);
-    dispatch(setMessage([...messages, data]));
+    dispatch(setMessage((prev)=>[...prev, data]));
   };
   const createNewMessage = () => {
     const newMessage = {
@@ -110,6 +111,7 @@ const Message = () => {
         console.error("Error storing message:", err);
       });
   };
+
   const sendMessage = () => {
     const socket = io("http://localhost:8080/", {
       extraHeaders: {
@@ -121,7 +123,7 @@ const Message = () => {
 
     socket.emit("message", {
       receiver_id: to,
-      sender_id: auth.userId,
+      sender_id: auth.userId *1,
       messages: messageText
     });
   };
@@ -398,6 +400,7 @@ const Message = () => {
           className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
         >
           {messages?.map((elem, i) => (
+            
             <div key={i} className="chat-message">
               <div className="flex items-end">
                 <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">

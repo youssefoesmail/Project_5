@@ -8,10 +8,12 @@ import {
   uploadBytes,
   getDownloadURL,
   listAll,
-
+  list
 } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
+import { Reels } from "@sayings/react-reels";
+
 const Reel = () => {
   const [reelVideoUpload, setReelVideoUpload] = useState(null);
   const [reelVideoUrls, setReelVideoUrls] = useState([] || null);
@@ -20,7 +22,7 @@ const Reel = () => {
   const { reels, auth } = useSelector((state) => {
     return {
       reels: state.reels.reels,
-      auth: state.auth,
+      auth: state.auth
     };
   });
 
@@ -30,8 +32,8 @@ const Reel = () => {
     axios
       .get(`http://localhost:5000/reel`, {
         headers: {
-          authorization: `Bearer ${auth.token}`,
-        },
+          authorization: `Bearer ${auth.token}`
+        }
       })
       .then((result) => {
         console.log(result.data.result);
@@ -55,12 +57,12 @@ const Reel = () => {
       .post(
         `http://localhost:5000/reels`,
         {
-          video: reelVideoUrls[reelVideoUrls.length - 1],
+          video: reelVideoUrls[reelVideoUrls.length - 1]
         },
         {
           headers: {
-            authorization: `Bearer ${auth.token}`,
-          },
+            authorization: `Bearer ${auth.token}`
+          }
         }
       )
       .then((result) => {
@@ -85,22 +87,37 @@ const Reel = () => {
   useEffect(() => {
     getAllReels();
   }, []);
- 
 
   return (
     <div>
-    <input
-    type="file"
-    onChange={(event) => {
-      setReelVideoUpload(event.target.files[0]);
-    }}
-  />
-  <button onClick={uploadFile}>Upload</button>
-  <button onClick={handleCreateNewReel}>Upload</button>
-  <h1>Reels</h1>
-  <Reels videos={reels} />
+      <input
+        type="file"
+        onChange={(event) => {
+          setReelVideoUpload(event.target.files[0]);
+        }}
+      />
+      <button onClick={uploadFile}>Upload</button>
+      <button onClick={handleCreateNewReel}>Upload</button>
+      <h1>Reels</h1>
+      <div
+        className="reels-container"
+        style={{ overflowX: "hidden", gap: "5%", height: "100vh" }}
+      >
+        {reelVideoUrls?.map((videoUrl, index) => (
+          <Card
+            key={index}
+            className="reel"
+            style={{ display: "block", height: "100%" }}
+          >
+            <Card.Body>
+              <video src={videoUrl} controls width="100%" height="100%" />
+            </Card.Body>
+          </Card>
+        ))}
+        <Reels videos={reelVideoUrls} />
+      </div>
     </div>
-  )
+  );
 };
 
 export default Reel;
