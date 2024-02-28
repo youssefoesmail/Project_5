@@ -11,11 +11,13 @@ import UsersPage from "./components/usersPage/UsersPage";
 import { useSelector } from "react-redux";
 import Message from "./components/message/Message";
 import io from "socket.io-client";
+import Home from "./components/home/Home";
 
 function App() {
-  const { auth } = useSelector((state) => {
+  const { auth, isLoggedIn } = useSelector((state) => {
     return {
-      auth: state.auth
+      auth: state.auth,
+      isLoggedIn: state.isLoggedIn
     };
   });
 
@@ -48,7 +50,7 @@ function App() {
           <Route path="/reels" element={<Reel />} />
           <Route path="/personal" element={<Personal />} />
           <Route path="/post" element={<Posts />} />
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={isLoggedIn ? <Home /> : <Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/comments" element={<Comments />} />
           <Route path="/followers" element={<FollowPost />} />
