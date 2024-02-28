@@ -13,7 +13,7 @@ const authentication = require("../middleware/Authentication");
 const authorization = require("../middleware/Authorization");
 const postRouter = express.Router();
 postRouter.get("/", getAllPost);
-postRouter.post(
+postRouter.post( 
   "/",
   authentication,
   authorization("CREATE_POST"),

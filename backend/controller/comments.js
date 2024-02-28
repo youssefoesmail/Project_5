@@ -9,7 +9,7 @@ const createNewCommentPost = (req, res) => {
   const query = `INSERT INTO comment_posts (comment, commenter, post_id) VALUES ($1,$2,$3) RETURNING *`;
   const data = [comment, commenter, post_id];
 
-  pool
+  pool 
     .query(query, data)
     .then((result) => {
       res.status(201).json({
@@ -28,7 +28,7 @@ const createNewCommentPost = (req, res) => {
 };
 const getCommentByPostId = (req, res) => {
   const { id } = req.params;
-  const query = `SELECT comment_posts.comment, comment_posts.post_id, users.firstName, comment_posts.commenter,comment_posts.id, comment_posts.is_deleted
+  const query = `SELECT comment_posts.comment, comment_posts.created_at, comment_posts.post_id, users.firstName, users.photo, comment_posts.commenter,comment_posts.id, comment_posts.is_deleted
   FROM comment_posts
   JOIN users ON users.id = comment_posts.commenter
   WHERE comment_posts.post_id =$1 AND comment_posts.is_deleted = 0;`;

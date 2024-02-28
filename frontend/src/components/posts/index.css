@@ -1,3 +1,12 @@
 .marginElement{
     margin-bottom: 100px !important;
 }
+
+.postUI{
+    margin: 200px;
+}
+
+#date{
+    position: relative;
+    left: 280px;
+}
