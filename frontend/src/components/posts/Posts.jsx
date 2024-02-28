@@ -604,141 +604,7 @@ const Posts = () => {
                         </div>
                           } */}
                           <br />
-                          <div>
-                            {elem.id == postId &&
-                              // get if there is a value
-                              elem.comment?.map((comment, i) => {
-                                return (
-                                  <section class="w-96 p-4 mx-20px bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
-                                    <div className="comment" key={i}>
 
-                                      <h2 class="font-semibold text-gray-800 dark:text-white">
-                                        {comment.photo ? <img
-                                          class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-                                          src={comment.photo}
-                                          alt="avatar"
-                                        /> : <img
-                                        class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-                                          src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
-                                          alt="avatar"
-                                        />}
-                                        {comment.firstname}
-                                      </h2>
-                                      <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
-                                        {comment?.comment}
-                                      </p>
-                                      {comment.commenter == userId && (
-
-                                        <div class="flex items-center justify-between">
-                                          {/* <><button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button" onClick={() => { 
-                                        dropDown == comment.id ? setDropDown("") : setDropDown(comment.id) }}>
-                                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
-                                          <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-                                        </svg>
-                                      </button>
-
-
-                                      {dropDown == comment.id && <div id="dropdownDots" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
-                                          <li>
-                                            <a onClick={() => {
-                                              updateComment(comment.id, elem.id);
-                                              setDropDown("")
-                                              setCommId(comment.id);
-                                            }} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">update</a>
-                                          </li>
-                                          <li>
-                                            <a onClick={() => {
-                                              setDropDown("");
-                                              deleteComment(comment.id, elem.id);
-                                            }} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">delete</a>
-                                          </li>
-                                        </ul>
-                                      </div>}</> */}
-                                          {/* <button
-                                            class=" text-xs bg-green-900 font-medium rounded-lg hover:bg-green-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
-                                            onClick={() => {
-                                              updateComment(comment.id, elem.id);
-
-                                              console.log(comment);
-                                              //updateComment(comment.id, elem.id)
-                                              setCommId(comment.id);
-                                            }}
-                                          >
-                                            update
-                                          </button>
-                                          <button
-                                            class=" text-xs bg-red-900 font-medium rounded-lg hover:bg-red-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
-                                            onClick={() => {
-                                              console.log(comment.id);
-                                              deleteComment(comment.id, elem.id);
-                                            }}
-                                          >
-                                            delete
-                                          </button> */}
-                                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" onClick={() => {
-                                            setCommId(comment.id);
-                                          }} >
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                                          </svg>
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            strokeWidth={1.5}
-                                            stroke="currentColor"
-                                            className="w-6 h-6"
-                                            onClick={() => {
-                                              deleteComment(comment.id, elem.id);
-                                            }}
-                                          >
-                                            <path
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
-                                            />
-                                          </svg>
-                                        </div>
-                                      )}
-                                      {comment.id == commId && (
-                                        <>
-                                          <input
-                                            type="text"
-                                            placeholder="update comment"
-                                            class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-                                            onChange={(e) => {
-                                              setUpCommValue(e.target.value);
-                                            }}
-                                          />
-                                          <button
-                                            class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
-                                            onClick={() => {
-                                              updateComment(commId, elem.id);
-                                              setCommId("");
-                                            }}
-                                          >
-                                            update
-                                          </button>
-                                        </>
-                                      )}
-                                    </div>
-                                  </section>
-                                );
-                              })}
-
-                          </div>
-
-
-                          {comment &&
-                            comment.id === elem.id &&
-                            comment.comments && (
-                              <div>
-                                <h2>Comments:</h2>
-                                {comment.comments.map((comment) => (
-                                  <p key={comment.id}>{comment.text}</p>
-                                ))}
-                              </div>
-                            )}
                           {elem.user_id == userId && update ? (
                             <>
                               {" "}
@@ -825,34 +691,138 @@ const Posts = () => {
                           deletePost
                         </button>
                       )} */}
-                      <div class="relative flex">
-                        <input
-                          type="text"
-                          placeholder="Write your message!"
-                          class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
-                          onChange={(e) => {
-                            // setMessageText(e.target.value);
-                          }}
-                        />
-                        <button
-                          id="send"
-                          type="button"
-                          class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
-                          onClick={() => {
-                            // createNewMessage();
-                          }}
-                        >
-                          <span class="font-bold">Send</span>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            class="h-6 w-6 ml-2 transform rotate-90"
-                          >
-                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
-                          </svg>
-                        </button>
+                      <div>
+                        {elem.id == postId &&
+                          // get if there is a value
+                          elem.comment?.map((comment, i) => {
+                            return (
+                              <section class="w-96 p-4 mx-20px bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
+                                <div className="comment" key={i}>
+
+                                  <h2 class="font-semibold text-gray-800 dark:text-white">
+                                    {comment.photo ? <img
+                                      class="w-12 h-12 rounded-full object-cover mr-4 shadow"
+                                      src={comment.photo}
+                                      alt="avatar"
+                                    /> : <img
+                                      class="w-12 h-12 rounded-full object-cover mr-4 shadow"
+                                      src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                                      alt="avatar"
+                                    />}
+                                    {comment.firstname}
+                                  </h2>
+                                  <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
+                                    {comment?.comment}
+                                  </p>
+                                  {comment.commenter == userId && (
+
+                                    <div class="flex items-center justify-between">
+                                      {/* <><button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button" onClick={() => { 
+                                        dropDown == comment.id ? setDropDown("") : setDropDown(comment.id) }}>
+                                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
+                                          <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+                                        </svg>
+                                      </button>
+
+
+                                      {dropDown == comment.id && <div id="dropdownDots" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
+                                          <li>
+                                            <a onClick={() => {
+                                              updateComment(comment.id, elem.id);
+                                              setDropDown("")
+                                              setCommId(comment.id);
+                                            }} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">update</a>
+                                          </li>
+                                          <li>
+                                            <a onClick={() => {
+                                              setDropDown("");
+                                              deleteComment(comment.id, elem.id);
+                                            }} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">delete</a>
+                                          </li>
+                                        </ul>
+                                      </div>}</> */}
+                                      {/* <button
+                                            class=" text-xs bg-green-900 font-medium rounded-lg hover:bg-green-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
+                                            onClick={() => {
+                                              updateComment(comment.id, elem.id);
+
+                                              console.log(comment);
+                                              //updateComment(comment.id, elem.id)
+                                              setCommId(comment.id);
+                                            }}
+                                          >
+                                            update
+                                          </button>
+                                          <button
+                                            class=" text-xs bg-red-900 font-medium rounded-lg hover:bg-red-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
+                                            onClick={() => {
+                                              console.log(comment.id);
+                                              deleteComment(comment.id, elem.id);
+                                            }}
+                                          >
+                                            delete
+                                          </button> */}
+                                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" onClick={() => {
+                                        setCommId(comment.id);
+                                      }} >
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                      </svg>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="w-6 h-6"
+                                        onClick={() => {
+                                          deleteComment(comment.id, elem.id);
+                                        }}
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
+                                        />
+                                      </svg>
+                                    </div>
+                                  )}
+                                  {comment.id == commId && (
+                                    <>
+                                      <input
+                                        type="text"
+                                        placeholder="update comment"
+                                        class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                                        onChange={(e) => {
+                                          setUpCommValue(e.target.value);
+                                        }}
+                                      />
+                                      <button
+                                        class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
+                                        onClick={() => {
+                                          updateComment(commId, elem.id);
+                                          setCommId("");
+                                        }}
+                                      >
+                                        update
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
+                              </section>
+                            );
+                          })}
                       </div>
+                      {comment &&
+                        comment.id === elem.id &&
+                        comment.comments && (
+                          <div>
+                            <h2>Comments:</h2>
+                            {comment.comments.map((comment) => (
+                              <p key={comment.id}>{comment.text}</p>
+                            ))}
+                          </div>
+                        )}
                       {elem.id != show && (
                         <button
                           class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
@@ -865,7 +835,41 @@ const Posts = () => {
                           Add Comment
                         </button>
                       )}
-                      {elem.id == show && (
+                      {elem.id == show && <div class="relative flex">
+                        <input
+                          type="text"
+                          placeholder="Write your message!"
+                          class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
+                          onChange={(e) => {
+                            setAddCommentValue(e.target.value);
+                          }}
+                        />
+                        <button
+                          id="send"
+                          type="button"
+                          class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
+                          onClick={() => {
+                            // createNewMessage();
+                          }}
+                        >
+                          <span class="font-bold" onClick={() => {
+                            {
+                              console.log("hg");
+                              createComment(elem.id);
+                              setShow("");
+                            }
+                          }}>Add</span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            class="h-6 w-6 ml-2 transform rotate-90"
+                          >
+                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                          </svg>
+                        </button>
+                      </div>}
+                      {/* {elem.id == show && (
                         <input
                           type="text"
                           placeholder="Body"
@@ -874,8 +878,8 @@ const Posts = () => {
                             setAddCommentValue(e.target.value);
                           }}
                         />
-                      )}
-                      {elem.id == show && (
+                      )} */}
+                      {/* {elem.id == show && (
                         <button
                           class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
                           onClick={() => {
@@ -887,7 +891,7 @@ const Posts = () => {
                         >
                           Add
                         </button>
-                      )}
+                      )} */}
                     </div>{" "}
                   </div>
                 </div>
