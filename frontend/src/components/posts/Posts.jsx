@@ -25,6 +25,8 @@ import Story from "../Story/Story";
 import { Link } from "react-router-dom";
 import "./index.css";
 import { Dropdown } from 'flowbite-react';
+import { Button, Modal } from 'flowbite-react';
+import moment from "moment"
 
 const Posts = () => {
   //setUserPostId
@@ -44,6 +46,10 @@ const Posts = () => {
   const [addCommentValue, setAddCommentValue] = useState("");
   const [commId, setCommId] = useState("");
   const [upCommValue, setUpCommValue] = useState("");
+  const [openModal, setOpenModal] = useState("");
+  const [info, setInfo] = useState(null)
+  const [dropDown, setDropDown] = useState("")
+
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
@@ -131,6 +137,7 @@ const Posts = () => {
       if (result.data.success) {
         const comments = result.data.result;
         dispatch(setComments({ comment: comments, id }));
+        setInfo(result.data.result)
       } else throw Error;
     } catch (error) {
       if (!error.response) {
@@ -380,7 +387,7 @@ const Posts = () => {
                                 src={elem.photo}
                                 alt="avatar"
                               />
-                            ): (<img
+                            ) : (<img
                               class="w-12 h-12 rounded-full object-cover mr-4 shadow"
                               src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
                               alt="avatar"
@@ -390,7 +397,7 @@ const Posts = () => {
                             </h2>
                           </Link>
                           <small class="text-sm text-gray-700">
-                            {elem.created_at}
+                            {moment(elem.created_at).endOf('day').fromNow()}
                           </small>
                         </div>
                         {elem.photo ? (
@@ -435,11 +442,15 @@ const Posts = () => {
                               class="w-10 h-10 mr-1"
                               stroke="currentColor"
                               onClick={() => {
+                                setOpenModal(true)
                                 getPostComment(elem.id);
-
-                                setShow(elem.user_id);
-                                setPostId(elem.id);
                               }}
+                            // onClick={() => {
+                            //   getPostComment(elem.id);
+
+                            //   setShow(elem.user_id);
+                            //   setPostId(elem.id);
+                            // }}
                             >
                               <path
                                 stroke-linecap="round"
@@ -502,77 +513,192 @@ const Posts = () => {
                           }
 
                           <br />
+                          <>
+                            <div class="flex mr-2 text-gray-700 text-sm mr-6 hover:bg-blue-300">
+                              <svg
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                class="w-10 h-10 mr-1"
+                                stroke="currentColor"
+                                onClick={() => {
+                                  setOpenModal(elem.id);
+                                  getPostComment(elem.id);
+                                  setShow(elem.user_id);
+                                  setPostId(elem.id);
+                                  setInfo(elem.comment)
 
-                          {elem.id == postId &&
-                            // get if there is a value
-                            elem.comment?.map((comment, i) => {
-                              return (
-                                <section class="w-96 p-4 mx-20px bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
+                                }}
+                              // onClick={() => {
+                              //   getPostComment(elem.id);
 
-                                  <div className="comment" key={i}>
-                                    <Dropdown label="" dismissOnClick={false}>
-                                      <Dropdown.Item>Dashboard</Dropdown.Item>
-                                      <Dropdown.Item>Settings</Dropdown.Item>
-                                      <Dropdown.Item>Earnings</Dropdown.Item>
-                                      <Dropdown.Item>Sign out</Dropdown.Item>
-                                    </Dropdown>
+                              //   setShow(elem.user_id);
+                              //   setPostId(elem.id);
+                              // }}
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                                />
+                              </svg>
+                              <span>{elem.comment?.length}</span>
+                            </div>
 
-                                    <h2 class="font-semibold text-gray-800 dark:text-white">
-                                      {comment.firstname}
-                                    </h2>
-                                    <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
-                                      {comment?.comment}
-                                    </p>
-                                    {comment.commenter == userId && (
-                                      <div>
-                                        <button
-                                          class=" text-xs bg-green-900 font-medium rounded-lg hover:bg-green-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
-                                          onClick={() => {
-                                            updateComment(comment.id, elem.id);
-
-                                            console.log(comment);
-                                            //updateComment(comment.id, elem.id)
-                                            setCommId(comment.id);
-                                          }}
-                                        >
-                                          update
+                          </>
+                          {/* <Modal show={openModal}  onClose={() => { setOpenModal("") }}>
+                              <Modal.Header>Comments</Modal.Header>
+                              <Modal.Body>
+                                <div className="space-y-6">
+                       {  console.log(info)}
+                                   {// get if there is a value
+                                    info?.map((comments, i) => {
+                                      return (
+                                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                         {comments.firstname}
+                                        
+                                        </p>
+                                      );
+                                    })} 
+                                  <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                    {elem.id}
+                                  </p>
+                                </div>
+                              </Modal.Body>
+                              <Modal.Footer>
+                              </Modal.Footer>
+                            </Modal> */}
+                          {/* {
+                            show&&<div id="default-modal" tabindex="-1" aria-hidden="true" class=" overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-40 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                            <div class="relative p-4 w-full max-w-2xl max-h-full">
+                              
+                                <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                 
+                                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                            Terms of Service
+                                        </h3>
+                                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">
+                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                            </svg>
+                                            <span class="sr-only">Close modal</span>
                                         </button>
-                                        <button
-                                          class=" text-xs bg-red-900 font-medium rounded-lg hover:bg-red-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
-                                          onClick={() => {
-                                            console.log(comment.id);
-                                            deleteComment(comment.id, elem.id);
-                                          }}
-                                        >
-                                          delete
-                                        </button>
-                                      </div>
-                                    )}
-                                    {comment.id == commId && (
-                                      <>
-                                        <input
-                                          type="text"
-                                          placeholder="update comment"
-                                          class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-                                          onChange={(e) => {
-                                            setUpCommValue(e.target.value);
-                                          }}
-                                        />
-                                        <button
-                                          class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
-                                          onClick={() => {
-                                            updateComment(commId, elem.id);
-                                            setCommId("");
-                                          }}
-                                        >
-                                          update
-                                        </button>
-                                      </>
-                                    )}
-                                  </div>
-                                </section>
-                              );
-                            })}
+                                    </div>
+                            
+                                    <div class="p-4 md:p-5 space-y-4">
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.
+                                        </p>
+                                    </div>
+                                 
+                                    <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                        <button data-modal-hide="default-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>
+                                        <button data-modal-hide="default-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                          } */}
+                          <br />
+                          <div>
+                            {elem.id == postId &&
+                              // get if there is a value
+                              elem.comment?.map((comment, i) => {
+                                return (
+                                  <section class="w-96 p-4 mx-20px bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
+                                    <div className="comment" key={i}>
+                                      <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button" onClick={() => { 
+                                        if (dropDown)
+                                         { setDropDown("") }
+                                          else
+                                          {setDropDown(comment.id)} }}>
+                                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
+                                          <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+                                        </svg>
+                                      </button>
+
+
+                                      {dropDown == comment.id && <div id="dropdownDots" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
+                                          <li>
+                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                                          </li>
+                                          <li>
+                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                                          </li>
+                                          <li>
+                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                                          </li>
+                                        </ul>
+                                        <div class="py-2">
+                                          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Separated link</a>
+                                        </div>
+                                      </div>}
+
+                                      <h2 class="font-semibold text-gray-800 dark:text-white">
+                                        {comment.firstname}
+                                      </h2>
+                                      <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
+                                        {comment?.comment}
+                                      </p>
+                                      {comment.commenter == userId && (
+                                        <div>
+                                          <button
+                                            class=" text-xs bg-green-900 font-medium rounded-lg hover:bg-green-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
+                                            onClick={() => {
+                                              updateComment(comment.id, elem.id);
+
+                                              console.log(comment);
+                                              //updateComment(comment.id, elem.id)
+                                              setCommId(comment.id);
+                                            }}
+                                          >
+                                            update
+                                          </button>
+                                          <button
+                                            class=" text-xs bg-red-900 font-medium rounded-lg hover:bg-red-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
+                                            onClick={() => {
+                                              console.log(comment.id);
+                                              deleteComment(comment.id, elem.id);
+                                            }}
+                                          >
+                                            delete
+                                          </button>
+                                        </div>
+                                      )}
+                                      {comment.id == commId && (
+                                        <>
+                                          <input
+                                            type="text"
+                                            placeholder="update comment"
+                                            class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                                            onChange={(e) => {
+                                              setUpCommValue(e.target.value);
+                                            }}
+                                          />
+                                          <button
+                                            class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
+                                            onClick={() => {
+                                              updateComment(commId, elem.id);
+                                              setCommId("");
+                                            }}
+                                          >
+                                            update
+                                          </button>
+                                        </>
+                                      )}
+                                    </div>
+                                  </section>
+                                );
+                              })}
+
+                          </div>
+
+
                           {comment &&
                             comment.id === elem.id &&
                             comment.comments && (
