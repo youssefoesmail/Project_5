@@ -374,13 +374,17 @@ const Posts = () => {
                               dispatch(setUserId(elem.user_id));
                             }}
                           >
-                            {elem.photo && (
+                            {elem.photo ? (
                               <img
                                 class="w-12 h-12 rounded-full object-cover mr-4 shadow"
                                 src={elem.photo}
                                 alt="avatar"
                               />
-                            )}
+                            ): (<img
+                              class="w-12 h-12 rounded-full object-cover mr-4 shadow"
+                              src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                              alt="avatar"
+                            />)}
                             <h2 class="text-lg font-semibold text-gray-900 -mt-1">
                               {elem.firstname}
                             </h2>
