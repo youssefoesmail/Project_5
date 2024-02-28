@@ -9,15 +9,23 @@ import {
   uploadBytes,
   getDownloadURL,
   listAll,
+
+=======
   list
+
 } from "firebase/storage";
 import { setUserInfo } from "../redux/personalPage/personal";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
+
+import { Button, Modal, } from 'flowbite-react';
+const Story = () => {
+
 import { Button, Modal, FileInput, Label } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 const Story = () => {
   const navigate = useNavigate();
+
   const [storyUpload, setStoryUpload] = useState(null);
   const [storyUrls, setStoryUrls] = useState([] || null);
   const storyListRef = ref(storage, "storyImages/");
@@ -110,6 +118,12 @@ const Story = () => {
       console.log("true");
       return true;
     }
+
+    console.log("false");
+    return false
+  }
+  
+
     return false;
   };
 
@@ -136,6 +150,7 @@ const Story = () => {
       });
     setOpenModal(false);
   };
+
   return (
     <div>
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
@@ -257,6 +272,26 @@ const Story = () => {
                     />
                   </a>
                   <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Body>
+          <div className="space-y-6">
+            
+          <img 
+                  class="object-cover w-full h-96 rounded-xl lg:w-4/5"
+                  src={show2}
+                  
+                />
+            
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+       
+          
+          <Button color="gray" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
                     <Modal.Body>
                       <div className="space-y-6">
                         {function1(show2) && <img src={slide.video} />}
