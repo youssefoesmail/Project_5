@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { setPosts, setUserInfo,setCover,setPhoto } from "../redux/personalPage/personal";
 import Posts from "../posts/Posts";
-import { Avatar ,Card,Badge } from 'flowbite-react';
+import { Avatar ,Card,Badge, Footer } from 'flowbite-react';
 import Navbar from '../Navbars/NavbarLogin';
 import { HiCheck, HiClock } from 'react-icons/hi';
 import {
@@ -19,6 +19,7 @@ import { v4 } from "uuid";
 import { setFollowers } from "../redux/followers/followers";
 import { Button, Modal } from 'flowbite-react';
 import { useNavigate } from "react-router-dom";
+import FooterDown from "../FooterDown/FooterDown"
 
 
 const Personal = () => {
@@ -386,8 +387,8 @@ const Personal = () => {
   </div>
 
 </div>
-
-
+    
+    <FooterDown/>
     </div>
     </>
   );
