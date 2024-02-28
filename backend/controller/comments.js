@@ -9,7 +9,7 @@ const createNewCommentPost = (req, res) => {
   const query = `INSERT INTO comment_posts (comment, commenter, post_id) VALUES ($1,$2,$3) RETURNING *`;
   const data = [comment, commenter, post_id];
 
-  pool
+  pool 
     .query(query, data)
     .then((result) => {
       res.status(201).json({
