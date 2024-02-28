@@ -149,7 +149,6 @@ const Personal = () => {
     <>
       <div>
         <Navbar />
-
         <Modal show={openModal} onClose={() => setOpenModal(false)}>
           <Modal.Header>Terms of Service</Modal.Header>
           <Modal.Body>
