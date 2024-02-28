@@ -22,7 +22,9 @@ const postSlice = createSlice({
       });
     },
     deletePost: (state, action) => {
-      state.posts = state.posts.filter((elem) => elem.id !== action.payload.id);
+      state.posts = state.posts.filter(
+        (id, index) => id.id !== action.payload
+      )
     },
     setComments: (state, action) => {
       state.posts = state.posts.map((id, index) => {
