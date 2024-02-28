@@ -1,8 +1,8 @@
 const {pool}=require('../models/db');
 
 const CreateLike = (req,res)=>{
-    const user_id = req.params.id;
-    const post_id = req.query.post_id;
+    const user_id = req.token.userId;
+    const post_id = req.params.id;
     const values = [user_id,post_id];
     const query = `INSERT INTO likes (user_id,post_id) VALUES ($1, $2) RETURNING *;`;
     
@@ -22,6 +22,50 @@ const CreateLike = (req,res)=>{
       });
 };
 
+const getLikeById = (req,res) => {
+  const {id} = req.params;
+  const query = `SELECT likes.*, posts.id
+  FROM likes
+  JOIN posts ON posts.id = likes.post_id
+  WHERE likes.post_id =$1;`;
+  const value = [id];
+  pool
+  .query(query,value)
+  .then((result)=>{
+    res.status(200).json({
+      success: true,
+      result: result.rows
+    })
+  })
+  .catch((err)=>{
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: err
+    })
+  })
+}
+
+const getAllLikes = (req,res) => {
+  pool
+    .query(
+      `SELECT likes.* FROM likes;`
+    )
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: "All likes",
+        posts: result.rows
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        error: err
+      });
+    });
+}
 
 const deleteLike = (req,res)=>{
     const post_id =req.params.id;
@@ -47,4 +91,6 @@ const deleteLike = (req,res)=>{
 module.exports = {
     CreateLike,
     deleteLike,
+    getLikeById,
+    getAllLikes
 }
