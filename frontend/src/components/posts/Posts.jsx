@@ -611,11 +611,18 @@ const Posts = () => {
                                 return (
                                   <section class="w-96 p-4 mx-20px bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
                                     <div className="comment" key={i}>
-                                      <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button" onClick={() => { 
-                                        if (dropDown)
-                                         { setDropDown("") }
-                                          else
-                                          {setDropDown(comment.id)} }}>
+
+                                      <h2 class="font-semibold text-gray-800 dark:text-white">
+                                        {comment.firstname}
+                                      </h2>
+                                      <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
+                                        {comment?.comment}
+                                      </p>
+                                      {comment.commenter == userId && (
+                                        
+                                        <div>
+                                          <><button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button" onClick={() => { 
+                                        dropDown == comment.id ? setDropDown("") : setDropDown(comment.id) }}>
                                         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
                                           <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
                                         </svg>
@@ -625,29 +632,21 @@ const Posts = () => {
                                       {dropDown == comment.id && <div id="dropdownDots" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                                         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
                                           <li>
-                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                                            <a onClick={() => {
+                                              updateComment(comment.id, elem.id);
+                                              setDropDown("")
+                                              setCommId(comment.id);
+                                            }} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">update</a>
                                           </li>
                                           <li>
-                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                                          </li>
-                                          <li>
-                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                                            <a onClick={() => {
+                                              console.log(comment.id);
+                                              deleteComment(comment.id, elem.id);
+                                            }} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">delete</a>
                                           </li>
                                         </ul>
-                                        <div class="py-2">
-                                          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Separated link</a>
-                                        </div>
-                                      </div>}
-
-                                      <h2 class="font-semibold text-gray-800 dark:text-white">
-                                        {comment.firstname}
-                                      </h2>
-                                      <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
-                                        {comment?.comment}
-                                      </p>
-                                      {comment.commenter == userId && (
-                                        <div>
-                                          <button
+                                      </div>}</>
+                                          {/* <button
                                             class=" text-xs bg-green-900 font-medium rounded-lg hover:bg-green-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
                                             onClick={() => {
                                               updateComment(comment.id, elem.id);
@@ -667,7 +666,7 @@ const Posts = () => {
                                             }}
                                           >
                                             delete
-                                          </button>
+                                          </button> */}
                                         </div>
                                       )}
                                       {comment.id == commId && (
