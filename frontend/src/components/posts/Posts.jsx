@@ -8,7 +8,8 @@ import {
   setComments,
   addComments,
   updateComments,
-  deleteComments
+  deleteComments,
+  setLikes
 } from "../redux/post/postSlice";
 import {
   ref,
@@ -24,7 +25,7 @@ import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
 import "./index.css";
-import { Dropdown } from 'flowbite-react';
+import { Avatar, Dropdown } from 'flowbite-react';
 import { Button, Modal } from 'flowbite-react';
 import moment from "moment"
 
@@ -49,21 +50,24 @@ const Posts = () => {
   const [openModal, setOpenModal] = useState("");
   const [info, setInfo] = useState(null)
   const [dropDown, setDropDown] = useState("")
+  const [counter, setCounter] = useState(0)
 
 
 
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
-  const { posts, auth, comment, userId, users } = useSelector((state) => {
+  const { posts, auth, comment, userId, users, like } = useSelector((state) => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
       comment: state.posts.comment,
       userId: state.auth.userId,
-      users: state.posts.users
+      users: state.posts.users,
+      like: state.posts.like
     };
   });
+
   const ShareButtons = (shareUrl) => {
     return (
       <div>
@@ -89,8 +93,8 @@ const Posts = () => {
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
-      photo: imageUrls[imageUrls.length - 1] || null,
-      video: videoUrls[videoUrls.length - 1] || null
+      photo: imageUrls[imageUrls.length - 1],
+      video: videoUrls[videoUrls.length - 1]
     };
 
     axios
@@ -100,6 +104,7 @@ const Posts = () => {
         }
       })
       .then((result) => {
+        console.log(NewPost);
         dispatch(createNewPost(result.data.result));
       })
       .catch((err) => {
@@ -167,6 +172,8 @@ const Posts = () => {
       if (result.data.success) {
         const comments = result.data.result;
         dispatch(addComments({ comment: comments, id }));
+        setAddCommentValue("")
+
       } else throw Error;
     } catch (error) {
       if (!error.response) {
@@ -218,6 +225,46 @@ const Posts = () => {
     }
   };
   // ====================================================
+
+  //!============ createLike =========================
+
+  const createLike = async (id) => {
+    try {
+      const result = await axios.post(
+        `http://localhost:5000/likes/search/${id}`,
+        {
+          headers: {
+            authorization: `Bearer ${auth.token}`
+          }
+        }
+      );
+      console.log("===================>", result.data.message);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  // ====================================================
+
+  //!============ deleteLike =========================
+
+  const deleteLike = async (id, pID) => {
+    try {
+      const result = await axios.delete(
+        `http://localhost:5000/comments/post/${id}`,
+        {
+          headers: {
+            authorization: `Bearer ${auth.token}`
+          }
+        }
+      );
+      console.log("===================>", result.data.message);
+      dispatch(deleteComments({ id, pID }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  // ====================================================
+
   const handleDeletePost = (postId) => {
     axios
       .delete(`http://localhost:5000/posts/${postId}`, {
@@ -314,6 +361,17 @@ const Posts = () => {
         console.log(err);
       });
   }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/likes")
+      .then((result) => {
+        dispatch(setLikes(result.data.posts));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <div class="bg-white dark:bg-gray-900" className="postUI">
       <div class="container px-6 py-10 mx-auto">
@@ -383,19 +441,43 @@ const Posts = () => {
                             }}
                           >
                             {elem.photo ? (
-                              <img
-                                class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-                                src={elem.photo}
-                                alt="avatar"
-                              />
-                            ) : (<img
-                              class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-                              src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
-                              alt="avatar"
-                            />)}
-                            <h2 class="text-lg font-semibold text-gray-900 -mt-1">
-                              {elem.firstname}
-                            </h2>
+                              <div class="flex items-center gap-x-2">
+                                <img
+                                  class="object-cover w-16 h-16 rounded-full"
+                                  src={elem.photo || photo}
+                                  alt=""
+                                />
+
+                                <div>
+                                  <h1 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">
+                                    {elem.firstname} {elem.lastname}{" "}
+                                  </h1>
+
+                                  <p class="text-base text-gray-500 dark:text-gray-400">
+                                    {elem.email}
+                                  </p>
+                                </div>
+                              </div>
+                            ) : (
+                              <div class="flex items-center gap-x-2">
+                                <img
+                                  class="object-cover w-16 h-16 rounded-full"
+                                  src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                                  alt=""
+                                />
+
+                                <div>
+                                  <h1 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">
+                                    {elem.firstname} {elem.lastname}{" "}
+                                  </h1>
+
+                                  <p class="text-base text-gray-500 dark:text-gray-400">
+                                    {elem.email}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                            <br />
                           </Link>
                           <small class="text-sm text-gray-700">
                             {moment(elem.created_at).endOf('day').fromNow()}
@@ -420,7 +502,7 @@ const Posts = () => {
                           </video>
                         )}
                         <div class="mt-4 flex items-center px-4 py-6 my-6 mx-6">
-                          <div class="flex mr-12 text-gray-700 text-sm mr-6 hover:bg-red-300">
+                          <div class="flex mr-12 text-gray-700 text-sm mr-6 hover:bg-red-300" onClick={()=>{createLike(elem.id)}}>
                             <svg
                               fill="none"
                               viewBox="0 0 24 24"
@@ -434,7 +516,13 @@ const Posts = () => {
                                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                               />
                             </svg>
-                            <span>12</span>
+                            <span>111</span>
+                            {/* {
+                            like.map((likePost, i) => {
+                              likePost.post_id == elem.id && setCounter(counter + 1) 
+                              console.log(counter);
+                              return <span>{counter}</span>
+                            })} */}
                           </div>
 
 
@@ -447,18 +535,10 @@ const Posts = () => {
                               onClick={() => {
                                 setOpenModal(elem.id);
                                 getPostComment(elem.id);
-                                console.log(elem.user_id, show);
-                                setShow(elem.user_id);
                                 { elem.id != postId ? setPostId(elem.id) : setPostId("") }
                                 setInfo(elem.comment)
                                 console.log(userId);
                               }}
-                            // onClick={() => {
-                            //   getPostComment(elem.id);
-
-                            //   setShow(elem.user_id);
-                            //   setPostId(elem.id);
-                            // }}
                             >
                               <path
                                 stroke-linecap="round"
@@ -681,16 +761,50 @@ const Posts = () => {
                                 <div className="comment" key={i}>
                                   <small class="text-sm text-gray-700" id="date">{moment(comment.created_at).endOf('day').fromNow()}</small>
                                   <h2 class="font-semibold text-gray-800 dark:text-white">
-                                    {comment.photo ? <img
-                                      class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-                                      src={comment.photo}
-                                      alt="avatar"
-                                    /> : <img
-                                      class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-                                      src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
-                                      alt="avatar"
-                                    />}
-                                    {comment.firstname}
+                                    <Link
+                                      to={`/users/${elem.user_id}`}
+                                      onClick={() => {
+                                        dispatch(setUserId(elem.user_id));
+                                      }}
+                                    >
+                                      {comment.photo ?
+                                        <div class="flex items-center gap-x-2">
+                                          <img
+                                            class="object-cover w-8 h-8 rounded-full"
+                                            src={comment.photo}
+                                            alt=""
+                                          />
+
+                                          <div>
+                                            <h4 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">
+                                              {elem.firstname} {elem.lastname}{" "}
+                                            </h4>
+
+                                            <p class="text-base text-gray-500 dark:text-gray-400">
+                                              {elem.email}
+                                            </p>
+                                          </div>
+                                        </div>
+                                        :
+                                        <div class="flex items-center gap-x-2">
+                                          <img
+                                            class="object-cover w-8 h-8 rounded-full"
+                                            src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                                            alt=""
+                                          />
+
+                                          <div>
+                                            <h4 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">
+                                              {elem.firstname} {elem.lastname}{" "}
+                                            </h4>
+
+                                            <p class="text-base text-gray-500 dark:text-gray-400">
+                                              {elem.email}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      }
+                                    </Link>
                                   </h2>
                                   <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
                                     {comment?.comment}
@@ -826,7 +940,7 @@ const Posts = () => {
                             setAddCommentValue(e.target.value);
                           }}
                         />
-                        <button
+                        {addCommentValue ? <button
                           id="send"
                           type="button"
                           class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
@@ -836,7 +950,6 @@ const Posts = () => {
                         >
                           <span class="font-bold" onClick={() => {
                             {
-                              console.log("hg");
                               createComment(elem.id);
                               setShow("");
                             }
@@ -849,7 +962,7 @@ const Posts = () => {
                           >
                             <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
                           </svg>
-                        </button>
+                        </button> : <button class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-red-500 hover:bg-red-400 focus:outline-none" onClick={() => setShow("")}>close</button>}
                       </div>}
                       {/* {elem.id == show && (
                         <input

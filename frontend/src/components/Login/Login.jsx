@@ -6,7 +6,7 @@ import { setUserId, setLogin } from "../redux/auth/userSlice";
 import { Button } from "flowbite-react";
 import Navbar from "../Navbars/NavbarLogin";
 import { GoogleLogin } from "@react-oauth/google";
-
+import photo from "../images/NotNull-logos_white.png";
 const Login = () => {
   //================= useNavigate =========================
 
@@ -114,13 +114,8 @@ const Login = () => {
                 <div className="px-4 md:px-0 lg:w-6/12">
                   <div className="md:mx-6 md:p-12">
                     <div className="text-center">
-                      <img
-                        className="mx-auto w-48"
-                        src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
-                        alt="logo"
-                      />
                       <h4 className="mb-12 mt-1 pb-1 text-xl font-semibold">
-                        We are The Lotus Team
+                        We are NotNull Team
                       </h4>
                     </div>
 
@@ -211,10 +206,10 @@ const Login = () => {
                 <div
                   className="flex items-center rounded-b-lg lg:w-6/12 lg:rounded-r-lg lg:rounded-bl-none"
                   style={{
-                    background:
-                      "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
+                    background: "linear-gradient(to right, #ffff 0%, #000 100%)"
                   }}
                 >
+                  <img className="mx-auto w-200" src={photo} alt="logo" />
                   <div className="px-4 py-6 text-white md:mx-6 md:p-12">
                     {status
                       ? message && (

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { setLogin, setUserId } from "../redux/auth/userSlice";
 import { Navbar } from "flowbite-react";
 import emailjs from "emailjs-com";
+import photo from "../images/NotNull-logos_black.png";
 
 const Register = () => {
   //================= useNavigate =========================
@@ -94,23 +95,12 @@ const Register = () => {
   return (
     <>
       <div class="w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
+      <img class="w-auto h-21 sm:h-122" src={photo} alt="" />
+
+
         <div class="px-6 py-4">
           <div class="flex justify-center mx-auto">
-            <img
-              class="w-auto h-7 sm:h-8"
-              src="https://merakiui.com/images/logo.svg"
-              alt=""
-            />
           </div>
-
-          <h3 class="mt-3 text-xl font-medium text-center text-gray-600 dark:text-gray-200">
-            Welcome Back
-          </h3>
-
-          <p class="mt-1 text-center text-gray-500 dark:text-gray-400">
-            Login or create account
-          </p>
-
           <form>
             <div class="w-full mt-4">
               <input
@@ -203,7 +193,7 @@ const Register = () => {
 
         <div class="flex items-center justify-center py-4 text-center bg-gray-50 dark:bg-gray-700">
           <span class="text-sm text-gray-600 dark:text-gray-200">
-            Don't have an account?{" "}
+            Welcome, we have been waiting for you for a long time
           </span>
 
           <a

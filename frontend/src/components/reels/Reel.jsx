@@ -12,13 +12,21 @@ import {
   listAll,
   list,
 } from "firebase/storage";
+
+import { Button } from "react-bootstrap";
+import axios from "axios";
+import { setReel, createNewReels } from "../redux/reels/reels";
+import { ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
+
 import { storage } from "../firebase";
 import { v4 } from "uuid";
 import {  Button,Modal } from "flowbite-react";
 
 const Reel = () => {
   const [reelVideoUpload, setReelVideoUpload] = useState(null);
-  const [reelVideoUrls, setReelVideoUrls] = useState([] || null);
+  const [reelVideoUrls, setReelVideoUrls] = useState([]);
+  const [currentReelIndex, setCurrentReelIndex] = useState(0);
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const reelVideoListRef = ref(storage, "ReelVideos/");
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef(null);
@@ -26,12 +34,12 @@ const Reel = () => {
   const [reel, setReels] = useState([]);
   const [show, setShow] = useState(false);
 
-  const { reels, auth } = useSelector((state) => {
-    return {
-      reels: state.reels.reels,
-      auth: state.auth,
-    };
-  });
+
+  const { auth, reels } = useSelector((state) => ({
+    auth: state.auth,
+    reels: state.reels.reels
+  }));
+
 
   const dispatch = useDispatch();
   const onVideoPress = () =>{
@@ -53,10 +61,11 @@ const Reel = () => {
         },
       })
       .then((result) => {
-        console.log(result.data.result);
         dispatch(setReel(result.data.result));
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const uploadFile = () => {
@@ -84,7 +93,6 @@ const Reel = () => {
         }
       )
       .then((result) => {
-        console.log(result.data.result);
         dispatch(createNewReels(result.data.result));
       })
       .catch((err) => {
@@ -94,11 +102,13 @@ const Reel = () => {
 
   useEffect(() => {
     listAll(reelVideoListRef).then((response) => {
+      const uniqueUrls = new Set();
       response.items.forEach((item) => {
         getDownloadURL(item).then((url) => {
-          setReelVideoUrls((prev) => [...prev, url]);
+          uniqueUrls.add(url);
         });
       });
+      setReelVideoUrls(Array.from(uniqueUrls));
     });
   }, []);
 
@@ -179,6 +189,7 @@ const Reel = () => {
                       console.log(err);
                     });
 
+
                     setOnModal(false);
                 }}
               >
@@ -222,6 +233,38 @@ const Reel = () => {
     </div>
       ))}
       </div>    
+
+  const handleNextReel = () => {
+    setCurrentReelIndex((prevIndex) => (prevIndex + 1) % reelVideoUrls.length);
+  };
+
+  return (
+    <div>
+      <Button variant="info" onClick={handleNextReel}>
+        Next Reel
+      </Button>
+      <h1>Reels</h1>
+      {reels.length > 0 ? (
+        <Reels
+          videos={reels}
+          currentIndex={currentReelIndex}
+          onFullscreen={() => setIsFullScreen(true)}
+        />
+      ) : (
+        <p>Loading...</p>
+      )}
+      <input
+        type="file"
+        onChange={(event) => {
+          setReelVideoUpload(event.target.files[0]);
+        }}
+      />
+      <Button variant="primary" onClick={uploadFile}>
+        Upload Video
+      </Button>
+      <Button variant="success" onClick={handleCreateNewReel}>
+        Create Reel
+      </Button>
     </div>
         </div>
     )

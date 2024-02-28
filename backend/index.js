@@ -52,7 +52,7 @@ io.on("connection", (socket) => {
   messageHandler(socket, io);
   socket.on("disconnect", () => {
     console.log(socket.id); /*  */
-    for (const key in client) {
+    for (const key in client) { 
       if (client[key].socket_id === socket.id) {
         delete client[key];
       }
