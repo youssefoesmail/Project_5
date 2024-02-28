@@ -51,6 +51,7 @@ const Posts = () => {
   const [dropDown, setDropDown] = useState("")
 
 
+
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
@@ -314,7 +315,7 @@ const Posts = () => {
       });
   }, []);
   return (
-    <div class="bg-white dark:bg-gray-900">
+    <div class="bg-white dark:bg-gray-900" className="postUI">
       <div class="container px-6 py-10 mx-auto">
         <div class="lg:flex-col  lg:items-center">
           <Story />
@@ -404,14 +405,14 @@ const Posts = () => {
                           <img
                             class="object-cover justify-items-center object-center lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]"
                             alt=""
-                            width="300px"
+                            width="230px"
                             height="150px"
                             src={elem.photo}
                           />
                         ) : (
                           <video
                             controls
-                            width="300px"
+                            width="230px"
                             height="150px"
                             class="object-cover object-center lg:w-1/2 lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]"
                           >
@@ -450,6 +451,7 @@ const Posts = () => {
                                 setShow(elem.user_id);
                                 { elem.id != postId ? setPostId(elem.id) : setPostId("") }
                                 setInfo(elem.comment)
+                                console.log(userId);
                               }}
                             // onClick={() => {
                             //   getPostComment(elem.id);
@@ -677,7 +679,7 @@ const Posts = () => {
                             return (
                               <section class="w-96 p-4 mx-20px bg-white border-gray-200 dark:bg-gray-800 left-12 bottom-16 dark:border-gray-700 border-2 border-solid border-dark-600 rounded-lg">
                                 <div className="comment" key={i}>
-
+                                  <small class="text-sm text-gray-700">{moment(comment.created_at).endOf('day').fromNow()}</small>
                                   <h2 class="font-semibold text-gray-800 dark:text-white">
                                     {comment.photo ? <img
                                       class="w-12 h-12 rounded-full object-cover mr-4 shadow"
@@ -693,6 +695,7 @@ const Posts = () => {
                                   <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
                                     {comment?.comment}
                                   </p>
+                                  {console.log(comment.commenter, userId)}
                                   {comment.commenter == userId && (
 
                                     <div class="flex items-center justify-between">
