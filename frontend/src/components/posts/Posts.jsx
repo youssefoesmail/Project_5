@@ -167,6 +167,8 @@ const Posts = () => {
       if (result.data.success) {
         const comments = result.data.result;
         dispatch(addComments({ comment: comments, id }));
+        setAddCommentValue("")
+
       } else throw Error;
     } catch (error) {
       if (!error.response) {
@@ -447,8 +449,6 @@ const Posts = () => {
                               onClick={() => {
                                 setOpenModal(elem.id);
                                 getPostComment(elem.id);
-                                console.log(elem.user_id, show);
-                                setShow(elem.user_id);
                                 { elem.id != postId ? setPostId(elem.id) : setPostId("") }
                                 setInfo(elem.comment)
                                 console.log(userId);
@@ -826,7 +826,7 @@ const Posts = () => {
                             setAddCommentValue(e.target.value);
                           }}
                         />
-                        <button
+                        {addCommentValue ? <button
                           id="send"
                           type="button"
                           class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
@@ -836,7 +836,6 @@ const Posts = () => {
                         >
                           <span class="font-bold" onClick={() => {
                             {
-                              console.log("hg");
                               createComment(elem.id);
                               setShow("");
                             }
@@ -849,7 +848,7 @@ const Posts = () => {
                           >
                             <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
                           </svg>
-                        </button>
+                        </button> : <button class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-red-500 hover:bg-red-400 focus:outline-none" onClick={()=>setShow("")}>close</button>}
                       </div>}
                       {/* {elem.id == show && (
                         <input
