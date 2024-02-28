@@ -477,12 +477,6 @@ const Posts = () => {
                                 setInfo(elem.comment)
                                 console.log(userId);
                               }}
-                            // onClick={() => {
-                            //   getPostComment(elem.id);
-
-                            //   setShow(elem.user_id);
-                            //   setPostId(elem.id);
-                            // }}
                             >
                               <path
                                 stroke-linecap="round"
