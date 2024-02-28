@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { stat } from "fs";
 const postSlice = createSlice({
   name: "posts",
   initialState: {
-    posts: []
+    posts: [],
+    like: []
   },
   reducers: {
     setPosts: (state, action) => {
@@ -65,6 +67,9 @@ const postSlice = createSlice({
         return post
       })
       console.log(state.posts)
+    },
+    setLikes: (state, action) => {
+      state.like = action.payload;
     }
   }
 
@@ -77,6 +82,7 @@ export const {
   setComments,
   addComments,
   updateComments,
-  deleteComments
+  deleteComments,
+  setLikes
 } = postSlice.actions;
 export default postSlice.reducer;

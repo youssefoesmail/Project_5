@@ -8,7 +8,8 @@ import {
   setComments,
   addComments,
   updateComments,
-  deleteComments
+  deleteComments,
+  setLikes
 } from "../redux/post/postSlice";
 import {
   ref,

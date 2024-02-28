@@ -46,6 +46,27 @@ const getLikeById = (req,res) => {
   })
 }
 
+const getAllLikes = (req,res) => {
+  pool
+    .query(
+      `SELECT likes.* FROM likes;`
+    )
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: "All likes",
+        posts: result.rows
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        error: err
+      });
+    });
+}
+
 const deleteLike = (req,res)=>{
     const post_id =req.params.id;
     const values = [post_id]
@@ -70,5 +91,6 @@ const deleteLike = (req,res)=>{
 module.exports = {
     CreateLike,
     deleteLike,
-    getLikeById
+    getLikeById,
+    getAllLikes
 }
