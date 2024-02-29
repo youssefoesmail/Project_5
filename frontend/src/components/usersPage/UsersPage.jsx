@@ -5,25 +5,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPost, setUsers } from "../redux/users/usersSlice";
 import Navbar from '../Navbars/NavbarLogin';
 import { Avatar ,Card,Badge } from 'flowbite-react';
-import { setFollowers } from "../redux/followers/followers";
+import { setFollowers, updateCounter } from "../redux/followers/followers";
 import { HiCheck, HiClock } from 'react-icons/hi';
+import { IoPersonAddSharp,IoPersonOutline } from "react-icons/io5";
 
 
 const UsersPage = () => {
-  const { posts,users,auth,followers } = useSelector((state) => {
+  const { posts,users,auth,followers,counter } = useSelector((state) => {
     return {
       followers:state.followers.followers,
       auth: state.auth,
       users: state.users.users,
       posts:state.users.postUser,
       users:state.users.users,
+      counter:state.followers.counter,
     };
   });
   const dispatch = useDispatch();
   const { id } = useParams();
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/posts/followers/${id}`,{
+      .get(`http://localhost:5000/posts/followers/${id}`, {
         headers: {
           authorization: `Bearer ${auth.token}`
         }
@@ -52,6 +54,34 @@ const UsersPage = () => {
       .catch((err) => {});
 
   }, []);
+  console.log(auth.token);
+
+  const createFollow= ()=>{
+    axios.post(`http://localhost:5000/followers/${id}`, {
+      headers: {
+        authorization: `Bearer ${auth.token}`,
+      }
+    }).then((result) => {
+      console.log(result);
+      dispatch(updateCounter());
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
+  const removeFollow =()=>{
+    axios.delete(`http://localhost:5000/followers/${id}`,{
+      headers: {
+        authorization: `Bearer ${auth.token}`,
+      }
+    }).then((result) => {
+      dispatch(updateCounter());
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
 
   console.log("posts",posts);
   return (
@@ -60,6 +90,7 @@ const UsersPage = () => {
     <div>
       <Navbar/>
       
+
 
       
       <main className="flex flex-col items-center justify-center w-full ">
@@ -86,6 +117,16 @@ const UsersPage = () => {
       
         <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase dark:text-white">{users.firstname} {users.lastname}</h3>
 
+        {counter ?<div onClick={()=>{createFollow()} } className="flex px-4 py-4 font-medium text-gray-600 transition-colors duration-200 sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
+          <h3 className="mx-4 text-center">Follow</h3>
+<IoPersonAddSharp  />
+</div> : <div onClick={()=>{removeFollow()} } className="flex px-4 py-4 font-medium text-gray-600 transition-colors duration-200 sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
+          <h3 className="mx-4 text-center">UnFollow</h3>
+          <IoPersonOutline />
+
+</div>}
+
+
         <a href="#" 
                             class="mx-2 text-gray-600 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
                             aria-label="Reddit">
@@ -93,12 +134,8 @@ const UsersPage = () => {
 
                             <p class="text-center text-gray-500 dark:text-gray-400">followers {followers.length} </p>
                         </a>
-
-                        <button class="px-4 py-2 font-medium text-gray-600 transition-colors duration-200 sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 sm:w-6 sm:h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-        </svg>
-    </button>
+                       
+      
       </div>
       </div>
       </main>
