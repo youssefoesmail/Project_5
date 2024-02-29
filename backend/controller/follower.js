@@ -1,5 +1,21 @@
 const { pool } = require("../models/db");
-
+const getAllFollowers = (req, res) => {
+  const query = `SELECT * FROM users;`
+  pool
+    .query(query)
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        result: result.rows
+      });
+    })
+    .then((err) => {
+      res.status(500).json({
+        success: false,
+        message: "server error"
+      });
+    });
+};
 const createFollower = (req, res) => {
   const following_user_id = req.token.userId;
   const followed_user_id = req.params.id;
@@ -95,5 +111,6 @@ module.exports = {
   createFollower,
   deleteFollower,
   getFollowersUser,
-  userFollower
+  userFollower,
+  getAllFollowers
 };

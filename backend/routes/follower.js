@@ -3,7 +3,8 @@ const {
   createFollower,
   deleteFollower,
   getFollowersUser,
-  userFollower
+  userFollower,
+  getAllFollowers
 } = require("../controller/follower");
 const authentication = require("../middleware/Authentication");
 
@@ -13,5 +14,6 @@ followerRouter.post("/:id", authentication, createFollower);
 followerRouter.delete("/:id", authentication, deleteFollower);
 followerRouter.get("/userFollowers/:id", authentication, getFollowersUser);
 followerRouter.get("/", authentication, userFollower);
+followerRouter.get("/all", authentication, getAllFollowers);
 
 module.exports = followerRouter;
