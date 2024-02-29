@@ -17,10 +17,10 @@ function App() {
   const { auth, isLoggedIn } = useSelector((state) => {
     return {
       auth: state.auth,
-      isLoggedIn: state.isLoggedIn
+      isLoggedIn: state.auth.isLoggedIn
     };
   });
-
+  console.log("isLoggedIn", isLoggedIn);
   useEffect(() => {
     console.log(auth.userId);
     const socket = io("http://localhost:8080/", {
@@ -50,7 +50,7 @@ function App() {
           <Route path="/reels" element={<Reel />} />
           <Route path="/personal" element={<Personal />} />
           <Route path="/post" element={<Posts />} />
-          <Route path="/" element={isLoggedIn ? <Home /> : <Login />} />
+          <Route path="/Home" element={isLoggedIn ? <Home /> : <Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/comments" element={<Comments />} />
           <Route path="/followers" element={<FollowPost />} />
