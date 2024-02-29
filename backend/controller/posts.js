@@ -75,10 +75,10 @@ const updatePost = (req, res) => {
 };
 
 const createNewPost = (req, res) => {
-  const { body, video, photo } = req.body;
+  const { body, video, pic } = req.body;
   const user_id = req.token.userId;
-  const query = `INSERT INTO posts (body, video, photo, user_id) VALUES ($1, $2, $3, $4) RETURNING *;`;
-  const data = [body, video || null, photo || null, user_id];
+  const query = `INSERT INTO posts (body, video,pic, user_id) VALUES ($1, $2, $3, $4) RETURNING *;`;
+  const data = [body, video || null, pic || null, user_id];
   pool
     .query(query, data)
     .then((result) => {
@@ -92,7 +92,7 @@ const createNewPost = (req, res) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err
+        err: err.message
       });
     });
 };

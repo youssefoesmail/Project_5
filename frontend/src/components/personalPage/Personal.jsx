@@ -6,7 +6,9 @@ import {
   setPosts,
   setUserInfo,
   setCover,
-  setPhoto
+  setPhoto,
+  createNewFollowed,
+  deleteFollowers 
 } from "../redux/personalPage/personal";
 import Posts from "../posts/Posts";
 import { Avatar, Card, Badge } from "flowbite-react";
@@ -75,7 +77,34 @@ const Personal = () => {
       })
       .catch((err) => {});
   };
-
+  const createNewFollow = (id) => {
+    axios
+      .post(`http://localhost:5000/followers/${id}`, {
+        headers: {
+          authorization: `Bearer ${auth.token}`
+        }
+      })
+      .then((result) => {
+        dispatch(createNewFollowed(result.data.result));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const deleteFollowers = (id) => {
+    axios
+      .post(`http://localhost:5000/followers/${id}`, {
+        headers: {
+          authorization: `Bearer ${auth.token}`
+        }
+      })
+      .then((result) => {
+        dispatch(deleteFollowers(result.data.result));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const getFollowers = () => {
     axios
       .get(`http://localhost:5000/followers`, {

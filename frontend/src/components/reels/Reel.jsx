@@ -8,7 +8,7 @@ import { storage } from "../firebase";
 import { v4 } from "uuid";
 import { Reels } from "@sayings/react-reels";
 
-const Reel = () => {
+const reelsPage = () => {
   const [reelVideoUpload, setReelVideoUpload] = useState(null);
   const [reelVideoUrls, setReelVideoUrls] = useState([]);
   const [currentReelIndex, setCurrentReelIndex] = useState(0);
@@ -17,20 +17,21 @@ const Reel = () => {
 
   const { auth, reels } = useSelector((state) => ({
     auth: state.auth,
-    reels: state.reels.reels
+    reels: state.reels
   }));
-
+  console.log(reels);
   const dispatch = useDispatch();
 
   const getAllReels = () => {
     axios
-      .get(`http://localhost:5000/reel`, {
+      .get(`http://localhost:5000/reels`, {
         headers: {
           authorization: `Bearer ${auth.token}`
         }
       })
       .then((result) => {
-        dispatch(setReel(result.data.result));
+        console.log(result.data.reels);
+        dispatch(setReel(result.data.reels));
       })
       .catch((err) => {
         console.log(err);
@@ -61,10 +62,10 @@ const Reel = () => {
         }
       )
       .then((result) => {
-        dispatch(createNewReels(result.data.result));
+        dispatch(createNewReels(result.data.reels));
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.message);
       });
   };
 
@@ -73,6 +74,7 @@ const Reel = () => {
       const uniqueUrls = new Set();
       response.items.forEach((item) => {
         getDownloadURL(item).then((url) => {
+          console.log(url);
           uniqueUrls.add(url);
         });
       });
@@ -91,17 +93,22 @@ const Reel = () => {
   return (
     <div>
       <Button variant="info" onClick={handleNextReel}>
-        Next Reel
+        Next reels
       </Button>
       <h1>Reels</h1>
-      {reels.length > 0 ? (
-        <Reels
-          videos={reels}
-          currentIndex={currentReelIndex}
-          onFullscreen={() => setIsFullScreen(true)}
-        />
+      {reels && reels.length > 0 ? (
+        <>
+          {reels.reels.map((elem, index) => (
+            <Reels
+              key={elem.id || index} // Ensure each Reels component has a unique key
+              videos={elem} // Verify that this structure matches what @sayings/react-reels expects
+              currentIndex={currentReelIndex}
+              onFullscreen={() => setIsFullScreen(true)}
+            />
+          ))}
+        </>
       ) : (
-        <p>Loading...</p>
+        <p>No reels available</p>
       )}
       <input
         type="file"
@@ -113,10 +120,10 @@ const Reel = () => {
         Upload Video
       </Button>
       <Button variant="success" onClick={handleCreateNewReel}>
-        Create Reel
+        Create reels
       </Button>
     </div>
   );
 };
 
-export default Reel;
+export default reelsPage;

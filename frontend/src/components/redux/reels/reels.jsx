@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-const reelSlice = createSlice({
+const reelsSlice = createSlice({
   name: "reels",
   initialState: {
     reels: [],
@@ -27,5 +27,5 @@ const reelSlice = createSlice({
   }
 });
 export const { createNewReels, setReel, setCommentReels, createCommentReels } =
-  reelSlice.actions;
-export default reelSlice.reducer;
+  reelsSlice.actions;
+export default reelsSlice.reducer;
