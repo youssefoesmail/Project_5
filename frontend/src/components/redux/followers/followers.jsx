@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const followersSlice = createSlice({
   name: "followers",
   initialState: {
-    followers: []
+    followers: [],counter:true,
   },
   reducers: {
     setFollowers: (state, action) => {
@@ -16,9 +16,12 @@ const followersSlice = createSlice({
       state.followers = state.followers.filter(
         (elem) => elem.id !== action.payload.id
       );
+    },
+    updateCounter:(state,action)=>{
+      state.counter = false;
     }
   }
 });
-export const { setFollowers, createNewFollowed, deleteFollowers } =
+export const { setFollowers, createNewFollowed, deleteFollowers,updateCounter } =
   followersSlice.actions;
 export default followersSlice.reducer;
