@@ -53,9 +53,6 @@ const Home = () => {
                         <th scope="col" class="text-sm font-medium px-6 py-4">
                           AGE
                         </th>
-                        <th scope="col" class="text-sm font-medium px-6 py-4">
-                          ADD
-                        </th>
                         <th
                           scope="col"
                           class="rounded-tr-lg text-sm font-medium px-6 py-4"
@@ -99,22 +96,15 @@ const Home = () => {
                               <td class="text-sm font-normal px-6 py-4 whitespace-nowrap text-left">
                                 <div class="flex flex-col">
                                   <p class="mb-0.5">
-                                    Regional Paradigm Technican
-                                  </p>
-                                  <p class="mb-0.5 text-gray-500">
-                                    Optimization
+                                    {elem.country}
                                   </p>
                                 </div>
                               </td>
                               <td class="align-middle text-sm font-normal px-6 py-4 whitespace-nowrap text-left">
                                 <span class="text-xs py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-medium bg-green-200 text-green-600 rounded-full">
-                                  Active
+                                  {elem.age}
                                 </span>
                               </td>
-                              <td class="align-middle text-gray-500 text-sm font-normal px-6 py-4 whitespace-nowrap text-left">
-                                Admin
-                              </td>
-                              <td class="align-middle text-right text-sm font-normal px-6 py-4 whitespace-nowrap text-left"></td>
                             </tr>
                           </>
                         );
