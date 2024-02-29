@@ -43,8 +43,8 @@ const createFollower = (req, res) => {
 const deleteFollower = (req, res) => {
   const following_user_id = req.params.id;
   const values = [following_user_id];
-  const query = `UPDATE follows SET is_deleted=1 WHERE following_user_id=$1;`;
-
+  const query = `DELETE FROM follows WHERE following_user_id=$1;`;
+  
   pool
     .query(query, values)
     .then((result) => {

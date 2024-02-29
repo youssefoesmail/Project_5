@@ -7,6 +7,8 @@ import Navbar from "../Navbars/NavbarLogin";
 import { Avatar, Card, Badge } from "flowbite-react";
 import {
   createNewFollowed,
+  deleteFollowers,
+  setAmount,
   setFollowers,
   updateCounter
 } from "../redux/followers/followers";
@@ -14,14 +16,16 @@ import { HiCheck, HiClock } from "react-icons/hi";
 import { IoPersonAddSharp, IoPersonOutline } from "react-icons/io5";
 
 const UsersPage = () => {
-  const { posts, users, auth, followers, counter } = useSelector((state) => {
+  const { posts, users, auth, followers, counter,amount } = useSelector((state) => {
     return {
       followers: state.followers.followers,
       auth: state.auth,
       users: state.users.users,
       posts: state.users.postUser,
       users: state.users.users,
-      counter: state.followers.counter
+      counter: state.followers.counter,
+      amount:state.followers.amount,
+
     };
   });
   const dispatch = useDispatch();
@@ -52,7 +56,7 @@ const UsersPage = () => {
         }
       })
       .then((result) => {
-        dispatch(updateCounter());
+        dispatch(deleteFollowers(id));
       })
       .catch((err) => {
         console.log(err);
@@ -69,10 +73,12 @@ const UsersPage = () => {
       .then((result) => {
         console.log("followers", result.data.result);
         dispatch(setFollowers(result.data.result));
+        dispatch(setAmount(followers.length));
       })
       .catch((err) => {
         console.log(err);
       });
+      
     axios
       .get(`http://localhost:5000/posts/followers/${id}`, {
         headers: {
@@ -105,6 +111,9 @@ const UsersPage = () => {
   console.log(auth.token);
 
   console.log("posts", posts);
+  console.log("length",followers.length);
+
+
   return (
     <>
       <div>
