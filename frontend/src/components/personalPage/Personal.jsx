@@ -26,7 +26,7 @@ import { Button, Modal } from "flowbite-react";
 
 const Personal = () => {
   const dispatch = useDispatch();
-  const { auth, personal, post, followers, cover, photo } = useSelector(
+  const { auth, personal, post, followers, cover, photo,search,pool } = useSelector(
     (state) => {
       return {
         photo: state.personal.photo,
@@ -34,18 +34,18 @@ const Personal = () => {
         cover: state.personal.cover,
         auth: state.auth,
         post: state.personal.post,
-        personal: state.personal.personal
+        personal: state.personal.personal,
+        search:state.search.search,
+        pool:state.search.pool,
       };
     }
   );
-
-  console.log("cpver", cover);
+  const [first, setFirst] = useState(!pool)
 
   const [openModal, setOpenModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [show, setShow] = useState(false);
   const [onModal, setOnModal] = useState(false);
-
+const [show, setShow] = useState(false)
   const [user, setUser] = useState(null);
   const [coverImageUpload, setCoverImageUpload] = useState(null);
   const [coverImageUrls, setCoverImageUrls] = useState([] || null);
@@ -91,6 +91,19 @@ const Personal = () => {
         console.log(err);
       });
   };
+  const createFollow= ()=>{
+    axios.post(`http://localhost:5000/followers/${id}`, {
+      headers: {
+        authorization: `Bearer ${auth.token}`,
+      }
+    }).then((result) => {
+      console.log(result);
+      dispatch(updateCounter());
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
 
   useEffect(() => {
     getFollowers();
@@ -144,6 +157,7 @@ const Personal = () => {
       });
     });
   }, []);
+
 
   return (
     <>
@@ -229,7 +243,42 @@ const Personal = () => {
             </Button>
           </Modal.Footer>
         </Modal>
+{ first&&
+        <Modal dismissible show={true} onClose={() => setFirst(false)}>
+        <Modal.Header>Terms of Service</Modal.Header>
+        <Modal.Body>
+          <div className="space-y-6">
+            {search.map((user)=>{
+              return <>
+              <div class="flex items-center gap-x-2">
+                            <img
+                              class="object-cover w-16 h-16 rounded-full"
+                              src={user.photo}
+                              alt=""
+                            />
 
+                            <div>
+                              <h1 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">
+                                {user.firstname} {user.lastname}{" "}
+                              </h1>
+
+                              <p class="text-base text-gray-500 dark:text-gray-400">
+                                {user.email}
+                              </p>
+                            </div>
+                          </div>
+              </>
+            })}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setFirst(false)}>I accept</Button>
+          <Button color="gray" onClick={() => setFirst(false)}>
+            Decline
+          </Button>
+        </Modal.Footer>
+      </Modal>
+}
         <main className="flex flex-col items-center justify-center w-full ">
           <div className="container px-6 py-16 mx-auto text-center">
             <div className="container ">
@@ -259,6 +308,9 @@ const Personal = () => {
                   </svg>
                 </button>
               </div>
+
+
+
 
               <Modal show={showModal} onClose={() => setShowModal(false)}>
                 <Modal.Header>Followers</Modal.Header>
