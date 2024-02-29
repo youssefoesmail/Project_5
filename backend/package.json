@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@sayings/react-reels": "^1.0.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.1",
@@ -8,8 +7,7 @@
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "pg": "^8.11.3",
-    "socket.io": "^4.7.4",
-    "swiper": "^11.0.6"
+    "socket.io": "^4.7.4"
   },
   "name": "meraki_academy_project_5_fork",
   "description": "",

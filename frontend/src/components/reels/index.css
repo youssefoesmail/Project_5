@@ -1,9 +1,0 @@
-.reel-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .reel {
-    width: 200px;
-  }
