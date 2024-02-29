@@ -27,6 +27,7 @@ import "./index.css";
 import { Dropdown } from 'flowbite-react';
 import { Button, Modal } from 'flowbite-react';
 import moment from "moment"
+import {FacebookShareButton, WhatsappShareButton, TelegramShareButton, TwitterShareButton, FacebookIcon, TwitterIcon, WhatsappIcon, TelegramIcon} from "react-share"
 
 const Posts = () => {
   //setUserPostId
@@ -542,23 +543,19 @@ const Posts = () => {
                             </svg>
                             <span>{elem.comment?.length}</span>
                           </div>
-
-
-                          <div class="flex mr-2 text-gray-700 text-sm mr-6 hover:bg-blue-300">
-                            <svg
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              class="w-10 h-10 mr-1"
-                              stroke="currentColor"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-                              />
-                            </svg>
-                            <span>share</span>
+                          <div class="flex mr-2 text-sm mr-6">
+                            <FacebookShareButton url="http://localhost:5173/post">
+                              <FacebookIcon class="w-8 h-8 rounded-full"/>
+                            </FacebookShareButton>
+                            <TwitterShareButton url="http://localhost:5173/post" class="ml-4">
+                              <TwitterIcon class="w-8 h-8 rounded-full"/>
+                            </TwitterShareButton>
+                            <WhatsappShareButton url="http://localhost:5173/post" class="ml-4">
+                              <WhatsappIcon class="w-8 h-8 rounded-full"/>
+                            </WhatsappShareButton>
+                            <TelegramShareButton url="http://localhost:5173/post" class="ml-4">
+                              <TelegramIcon class="w-8 h-8 rounded-full"/>
+                            </TelegramShareButton>
                           </div>
 
                           {elem.user_id == userId && (
