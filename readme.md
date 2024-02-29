@@ -27,7 +27,7 @@
 
 ## 🧐 About <a name = "about"></a>
 
-A site that helps you find jobs for users, the site was created to help every person find what suits them in a simple way.
+NotNull Social Space is a social media platform that provides users with a space to connect, share, and engage with others. This platform aims to create a vibrant community where users can express themselves, share their experiences, and build meaningful connections.
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
