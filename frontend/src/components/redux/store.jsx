@@ -7,6 +7,7 @@ import reelsReducer from "./reels/reels";
 import usersReducer from "./users/usersSlice";
 import messageReducer from "./message/message";
 import followersReducer from "./followers/followers";
+import searchReducer from "./search/Search";
 export default configureStore({
   reducer: {
     posts: postReducer,
@@ -16,6 +17,7 @@ export default configureStore({
     reels: reelsReducer,
     users: usersReducer,
     message: messageReducer,
-    followers: followersReducer
+    followers: followersReducer,
+    search: searchReducer
   }
 });

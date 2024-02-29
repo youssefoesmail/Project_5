@@ -14,7 +14,7 @@ io.use(auth);
 app.use(express.json());
 app.use(cors());
 const postRouter = require("./routes/posts");
-const userRouter = require("./routes/users"); 
+const userRouter = require("./routes/users");
 const storyRouter = require("./routes/story");
 const commentsRouter = require("./routes/comments");
 const rolesRouter = require("./routes/role");
@@ -34,7 +34,7 @@ app.use("/messages", messagesRouter);
 const PORT = process.env.PORT || 5000;
 app.use("*", (req, res) => res.status(404).json("NO content at this path"));
 app.listen(PORT, () => {
-  console.log(`server on ${PORT}`); 
+  console.log(`server on ${PORT}`);
 });
 io.on("connection", (socket) => {
   console.log(socket.id);
@@ -52,11 +52,11 @@ io.on("connection", (socket) => {
   messageHandler(socket, io);
   socket.on("disconnect", () => {
     console.log(socket.id); /*  */
-    for (const key in client) { 
+    for (const key in client) {
       if (client[key].socket_id === socket.id) {
         delete client[key];
       }
     }
-    console.log(client); 
+    console.log(client);
   });
 });

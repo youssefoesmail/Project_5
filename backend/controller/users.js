@@ -98,7 +98,7 @@ const getUserById = (req, res) => {
     });
 };
 
-const updateData = (req,res)=>{
+const updateData = (req, res) => {
   const { id } = req.params;
   const { photo, cover } = req.body;
   const query = `UPDATE users SET photo = COALESCE($1, photo),cover = COALESCE($2, cover) WHERE id=$3 AND is_deleted = 0  RETURNING *`;
@@ -119,10 +119,25 @@ const updateData = (req,res)=>{
         err: err
       });
     });
-}
+};
+const search = async (req, res) => {
+  const { name } = req.query;
+  const query =
+    "SELECT * FROM users WHERE CONCAT(firstname, ' ', lastname) LIKE $1";
+  const value = [`%${name}%`];
+
+  try {
+    const result = await pool.query(query, value);
+    res.json(result.rows);
+    console.log(result.rows);
+  } catch (err) {
+    res.json(err);
+  }
+};
 module.exports = {
   login,
   register,
   getUserById,
   updateData,
+  search
 };

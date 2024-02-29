@@ -14,20 +14,36 @@ import {
 } from "flowbite-react";
 import img from "../images/NotNull-logos_transparent.png";
 import { setLogin, setUserId } from "../redux/auth/userSlice";
-
+import axios from "axios";
+import { useState, Fragment } from "react";
+import { setUsers } from "../redux/search/Search";
+import { Link } from "react-router-dom";
 const NavbarLogin = () => {
-  const { photo, name, isLoggedIn, token } = useSelector((state) => {
-    return {
-      photo: state.personal.personal.photo,
-      name: state.personal.personal,
-      token: state.auth.token,
-      isLoggedIn: state.auth.isLoggedIn
-    };
-  });
   const dispatch = useDispatch();
+  const [name, setName] = useState("");
+  const { photo, nameUsers, isLoggedIn, token, search } = useSelector(
+    (state) => {
+      return {
+        photo: state.personal.personal.photo,
+        nameUsers: state.personal.personal,
+        token: state.auth.token,
+        isLoggedIn: state.auth.isLoggedIn,
+        search: state.search.search
+      };
+    }
+  );
+  const onSubmitForm = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:5000/users/?name=${name}`);
 
-  console.log(name);
+      const parseResponse = await response.json();
 
+      dispatch(setUsers(parseResponse));
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
   return (
     <nav class="bg-gray-800">
       <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -182,6 +198,43 @@ const NavbarLogin = () => {
           </a>
         </div>
       </div>
+
+      <Fragment>
+        <div className="container text-center">
+          <h1 className="my-5">Party List</h1>
+          <form className="d-flex" onSubmit={onSubmitForm}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter user ..."
+              className="form-control"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <button className="btn btn-success">Submit</button>
+          </form>
+          <table className="table my-5">
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {search.map((user) => (
+                <tr key={user.id}>
+                  <Link to={`users/${user.id}`}>
+                    {user.photo ? <img src={user.photo} /> : <img src="" />}
+                  </Link>
+                  <td>{user.firstname}</td>
+                  <td>{user.lastname}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {search.length === 0 && <p>No Results Found</p>}
+        </div>
+      </Fragment>
     </nav>
   );
 };
