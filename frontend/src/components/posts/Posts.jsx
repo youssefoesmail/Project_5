@@ -52,6 +52,7 @@ const Posts = () => {
   const [dropDown, setDropDown] = useState("")
   const [counter, setCounter] = useState(0)
   const [openUploadModal, setOpenUploadModal] = useState(false);
+  const [acceptUpload, setAcceptUpload] = useState(false);
 
 
 
@@ -105,7 +106,6 @@ const Posts = () => {
         }
       })
       .then((result) => {
-        console.log(NewPost);
         dispatch(createNewPost(result.data.result));
       })
       .catch((err) => {
@@ -386,30 +386,66 @@ const Posts = () => {
             <Modal show={openUploadModal} onClose={() => setOpenUploadModal(false)}>
               <Modal.Body>
                 <div className="space-y-6">
-                  <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                    Photo
-                  </p>
-                  <input
-                  type="file"
-                  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-                  onChange={(event) => {
-                    setImageUpload(event.target.files[0]);
-                  }}/>
-                  <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                    Video
-                  </p>
-                  <input
-                  type="file"
-                  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-                  onChange={(event) => {
-                    setVideoUpload(event.target.files[0]);
-                  }}
-                />
+                  {!videoUpload && <div>
+                    <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                      Photo
+                    </p>
+                    <input
+                      type="file"
+                      class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                      onChange={(event) => {
+                        setImageUpload(event.target.files[0]);
+                      }} />
+                  </div>}
+                  {!imageUpload && <div>
+                    <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                      Video
+                    </p>
+                    <input
+                      type="file"
+                      class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                      onChange={(event) => {
+                        setVideoUpload(event.target.files[0]);
+                      }}
+                    />
+                  </div>}
+                  {imageUpload && <button
+                    class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
+                    onClick={() => {
+                      uploadFile
+                      setAcceptUpload(true)
+                    }
+                    }
+                  >
+                    {" "}
+                    Upload
+                  </button>}
+                  {videoUpload && <button
+                    class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
+                    onClick={() => {
+                      uploadFile
+                      setAcceptUpload(true)
+                    }
+                    }
+                  >
+                    {" "}
+                    Upload
+                  </button>}
                 </div>
               </Modal.Body>
               <Modal.Footer>
-                <Button onClick={() => setOpenUploadModal(false)}>I accept</Button>
-                <Button color="gray" onClick={() => setOpenUploadModal(false)}>
+                {acceptUpload ? <Button class="bg-green-500 text-white rounded" onClick={() => {
+                  setOpenUploadModal(false)
+                  handleCreateNewPost();
+                  clearInput();
+                  setAcceptUpload(false)
+                }}>Accept</Button> :
+                  <Button class="bg-green-500 text-white rounded opacity-50 cursor-not-allowed">Accept</Button>}
+                <Button color="gray" onClick={() => {
+                  setOpenUploadModal(false)
+                  setVideoUpload("");
+                  setImageUpload("");
+                }}>
                   Decline
                 </Button>
               </Modal.Footer>
