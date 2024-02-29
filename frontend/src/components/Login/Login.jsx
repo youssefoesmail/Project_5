@@ -67,7 +67,6 @@ const Login = () => {
 
   return (
     <section className="gradient-form h-full bg-neutral-200 dark:bg-neutral-700">
-      <Navbar />
       <div className="container h-full p-10">
         <div className="g-6 flex h-full flex-wrap items-center justify-center text-neutral-800 dark:text-neutral-200">
           <div className="w-full">
