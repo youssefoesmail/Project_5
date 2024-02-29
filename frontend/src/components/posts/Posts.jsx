@@ -15,8 +15,7 @@ import {
   ref,
   uploadBytes,
   getDownloadURL,
-  listAll,
-  list
+  listAll
 } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
@@ -25,7 +24,7 @@ import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
 import "./index.css";
-import { Avatar, Dropdown } from 'flowbite-react';
+import { Dropdown } from 'flowbite-react';
 import { Button, Modal } from 'flowbite-react';
 import moment from "moment"
 
@@ -43,14 +42,11 @@ const Posts = () => {
   const [message, setMessage] = useState("");
   const [show, setShow] = useState("");
   const [postId, setPostId] = useState("");
-  const [userPostId, setUserPostId] = useState("");
   const [addCommentValue, setAddCommentValue] = useState("");
   const [commId, setCommId] = useState("");
   const [upCommValue, setUpCommValue] = useState("");
-  const [openModal, setOpenModal] = useState("");
-  const [info, setInfo] = useState(null)
-  const [dropDown, setDropDown] = useState("")
-  const [counter, setCounter] = useState(0)
+  const [openUploadModal, setOpenUploadModal] = useState(false);
+  const [acceptUpload, setAcceptUpload] = useState(false);
 
 
 
@@ -85,11 +81,6 @@ const Posts = () => {
       </div>
     );
   };
-  // <div className="mt-8 lg:px-6 lg:mt-0 border-2 border-solid border-dark-600 rounded-lg">
-  //         <div className="w-auto" key={elem.id}>
-  //           <ShareButtons shareUrl={`your-post-url/${elem.id}`} title={elem.body} />
-  //         </div>
-  //       </div>
   const handleCreateNewPost = () => {
     const NewPost = {
       body: body,
@@ -104,34 +95,12 @@ const Posts = () => {
         }
       })
       .then((result) => {
-        console.log(NewPost);
         dispatch(createNewPost(result.data.result));
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
-  //!============ createPostComment ====================
-
-  // const createPostComment = async (id) => {
-  //   try {
-  //     const result = await axios.post(
-  //       `http://localhost:5000/comments/post/${id}`
-  //     );
-  //     if (result.data.success) {
-  //       const comments = result.data.result;
-  //       dispatch(setComments({ comments: comments, post_id: id }));
-  //     } else throw Error;
-  //   } catch (error) {
-  //     if (!error.response.data) {
-  //       return setMessage(error.response.data.message);
-  //     }
-  //     setMessage("Error happened while Get Data, please try again");
-  //   }
-  // };
-
-  //==================================================
 
   //!============ getPostComment ====================
 
@@ -143,7 +112,6 @@ const Posts = () => {
       if (result.data.success) {
         const comments = result.data.result;
         dispatch(setComments({ comment: comments, id }));
-        setInfo(result.data.result)
       } else throw Error;
     } catch (error) {
       if (!error.response) {
@@ -218,46 +186,6 @@ const Posts = () => {
           }
         }
       );
-      console.log("===================>", result.data.message);
-      dispatch(deleteComments({ id, pID }));
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  // ====================================================
-
-  //!============ createLike =========================
-
-  const createLike = async (id) => {
-    try {
-      const result = await axios.post(
-        `http://localhost:5000/likes/search/${id}`,
-        {
-          headers: {
-            authorization: `Bearer ${auth.token}`
-          }
-        }
-      );
-      console.log("===================>", result.data.message);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  // ====================================================
-
-  //!============ deleteLike =========================
-
-  const deleteLike = async (id, pID) => {
-    try {
-      const result = await axios.delete(
-        `http://localhost:5000/comments/post/${id}`,
-        {
-          headers: {
-            authorization: `Bearer ${auth.token}`
-          }
-        }
-      );
-      console.log("===================>", result.data.message);
       dispatch(deleteComments({ id, pID }));
     } catch (err) {
       console.log(err);
@@ -273,7 +201,6 @@ const Posts = () => {
         }
       })
       .then((result) => {
-        // console.log(result);
         dispatch(deletePost(postId));
       })
       .catch((err) => {
@@ -300,8 +227,6 @@ const Posts = () => {
       .catch((err) => {
         console.log(err);
       });
-
-    console.log(updatePost);
   };
   const clearInput = () => {
     setBody("");
@@ -378,52 +303,77 @@ const Posts = () => {
         <div class="lg:flex-col  lg:items-center">
           <Story />
           <div class="flex bg-white shadow-lg rounded-lg mx-4 md:mx-auto my-56 max-w-md md:max-w-2xl marginElement">
-            <div class="flex items-start px-4 py-6">
-              <div class="flex items-center justify-between">
-                <input
-                  type="text"
-                  placeholder="Body"
-                  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-                  onChange={(e) => {
-                    setBody(e.target.value);
-                  }}
-                />
-                <input
-                  type="file"
-                  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-                  onChange={(event) => {
-                    setImageUpload(event.target.files[0]);
-                  }}
-                />
-                <input
-                  type="file"
-                  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-                  onChange={(event) => {
-                    setVideoUpload(event.target.files[0]);
-                  }}
-                />
-              </div>
-              <div class="flex items-center justify-between">
-                <button
-                  class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
-                  onClick={() => {
-                    handleCreateNewPost();
-                    clearInput();
-                  }}
-                >
-                  createNewPost
-                </button>
-              </div>
-              <div class="flex items-center justify-between">
-                <button
-                  class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
-                  onClick={uploadFile}
-                >
-                  {" "}
-                  Upload
-                </button>
-              </div>
-            </div>
+            <button class="px-6 py-2 font-medium tracking-wide w-full text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80" onClick={() => setOpenUploadModal(true)}>
+              Create New Post
+            </button>
+
+            <Modal show={openUploadModal} onClose={() => setOpenUploadModal(false)}>
+              <Modal.Body>
+                <div className="space-y-6">
+                  {!videoUpload && <div>
+                    <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                      Photo
+                    </p>
+                    <input
+                      type="file"
+                      class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                      onChange={(event) => {
+                        setImageUpload(event.target.files[0]);
+                      }} />
+                  </div>}
+                  {!imageUpload && <div>
+                    <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                      Video
+                    </p>
+                    <input
+                      type="file"
+                      class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                      onChange={(event) => {
+                        setVideoUpload(event.target.files[0]);
+                      }}
+                    />
+                  </div>}
+                  {imageUpload && <button
+                    class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
+                    onClick={() => {
+                      uploadFile
+                      setAcceptUpload(true)
+                    }
+                    }
+                  >
+                    {" "}
+                    Upload
+                  </button>}
+                  {videoUpload && <button
+                    class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
+                    onClick={() => {
+                      uploadFile
+                      setAcceptUpload(true)
+                    }
+                    }
+                  >
+                    {" "}
+                    Upload
+                  </button>}
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                {acceptUpload ? <Button class="bg-green-500 text-white rounded" onClick={() => {
+                  setOpenUploadModal(false)
+                  handleCreateNewPost();
+                  clearInput();
+                  setAcceptUpload(false)
+                }}>Accept</Button> :
+                  <Button class="bg-green-500 text-white rounded opacity-50 cursor-not-allowed">Accept</Button>}
+                <Button color="gray" onClick={() => {
+                  setOpenUploadModal(false)
+                  setVideoUpload("");
+                  setImageUpload("");
+                }}>
+                  Decline
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </div>
           {posts?.map((elem) => {
             return (
@@ -488,8 +438,8 @@ const Posts = () => {
                         </li>
                         <li>
                           <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                              <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3" />
+                            <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
+                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3" />
                             </svg>
                             <span class="flex-1 ms-3 whitespace-nowrap">Logout</span>
                           </a>
@@ -572,30 +522,6 @@ const Posts = () => {
                           </video>
                         )}
                         <div class="mt-4 flex items-center px-4 py-6 my-6 mx-6">
-                          <div class="flex mr-12 text-gray-700 text-sm mr-6 hover:bg-red-300" onClick={() => { createLike(elem.id) }}>
-                            <svg
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              class="w-10 h-10 mr-1"
-                              stroke="currentColor"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                              />
-                            </svg>
-                            <span>111</span>
-                            {/* {
-                            like.map((likePost, i) => {
-                              likePost.post_id == elem.id && setCounter(counter + 1) 
-                              console.log(counter);
-                              return <span>{counter}</span>
-                            })} */}
-                          </div>
-
-
                           <div class="flex mr-2 text-gray-700 text-sm mr-6 hover:bg-blue-300">
                             <svg
                               fill="none"
@@ -603,11 +529,8 @@ const Posts = () => {
                               class="w-10 h-10 mr-1"
                               stroke="currentColor"
                               onClick={() => {
-                                setOpenModal(elem.id);
                                 getPostComment(elem.id);
                                 { elem.id != postId ? setPostId(elem.id) : setPostId("") }
-                                setInfo(elem.comment)
-                                console.log(userId);
                               }}
                             >
                               <path
@@ -659,169 +582,10 @@ const Posts = () => {
                               </svg>
                             </div>
                           )}
-
-                          {
-                            // <button class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
-                            //   onClick={() => {
-                            //     getPostComment(elem.id);
-                            //     setShow(elem.user_id);
-                            //     setPostId(elem.id)
-                            //   }}
-                            // >
-                            //   showComment
-                            // </button>
-                          }
-
-                          <br />
                           <>
-
-
                           </>
-                          {/* <Modal show={openModal}  onClose={() => { setOpenModal("") }}>
-                              <Modal.Header>Comments</Modal.Header>
-                              <Modal.Body>
-                                <div className="space-y-6">
-                       {  console.log(info)}
-                                   {// get if there is a value
-                                    info?.map((comments, i) => {
-                                      return (
-                                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                         {comments.firstname}
-                                        
-                                        </p>
-                                      );
-                                    })} 
-                                  <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                    {elem.id}
-                                  </p>
-                                </div>
-                              </Modal.Body>
-                              <Modal.Footer>
-                              </Modal.Footer>
-                            </Modal> */}
-                          {/* {
-                            show&&<div id="default-modal" tabindex="-1" aria-hidden="true" class=" overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-40 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                            <div class="relative p-4 w-full max-w-2xl max-h-full">
-                              
-                                <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                 
-                                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                            Terms of Service
-                                        </h3>
-                                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">
-                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                            </svg>
-                                            <span class="sr-only">Close modal</span>
-                                        </button>
-                                    </div>
-                            
-                                    <div class="p-4 md:p-5 space-y-4">
-                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                            With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-                                        </p>
-                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                            The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.
-                                        </p>
-                                    </div>
-                                 
-                                    <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                        <button data-modal-hide="default-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>
-                                        <button data-modal-hide="default-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                          } */}
-                          <br />
-
-                          {elem.user_id == userId && update ? (
-                            <>
-                              {" "}
-                              <input
-                                type="text"
-                                placeholder="body"
-                                class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-                                onChange={(e) => {
-                                  setBody(e.target.value);
-                                }}
-                              />
-                              <input
-                                type="text"
-                                placeholder="file"
-                                class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-                                onChange={(event) => {
-                                  setImageUpload(event.target.files[0]);
-                                }}
-                              />
-                              <input
-                                type="text"
-                                placeholder="file"
-                                class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-                                onChange={(event) => {
-                                  setVideoUpload(event.target.files[0]);
-                                }}
-                              />
-                              <button
-                                class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
-                                onClick={() => {
-                                  // handleUpdatePost(elem.id);
-                                  uploadFile(
-                                    elem.id,
-                                    "update_img",
-                                    "update_vid"
-                                  );
-                                }}
-                              >
-                                UpdateInformtion
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              {elem.user_id == userId && (
-                                <div class="hover:bg-green-300">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-6 h-6"
-                                    onClick={() => {
-                                      setUpdate(!update);
-                                    }}
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-                                    />
-                                  </svg>
-                                </div>
-                                // <button
-                                //   class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
-                                //   onClick={() => {
-                                //     setUpdate(!update);
-                                //   }}
-                                // >
-                                //   update
-                                // </button>
-                              )}
-                            </>
-                          )}
                         </div>
                       </>
-                      {/* {elem.user_id == userId && (
-                        <button
-                          class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-red-600 rounded-lg hover:bg-red-500 focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-80"
-                          onClick={() => {
-                            handleDeletePost(elem.id);
-                          }}
-                        >
-                          deletePost
-                        </button>
-                      )} */}
                       <div>
                         {elem.id == postId &&
                           // get if there is a value
@@ -879,56 +643,9 @@ const Posts = () => {
                                   <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
                                     {comment?.comment}
                                   </p>
-                                  {console.log(comment.commenter, userId)}
                                   {comment.commenter == userId && (
 
                                     <div class="flex items-center justify-between">
-                                      {/* <><button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button" onClick={() => { 
-                                        dropDown == comment.id ? setDropDown("") : setDropDown(comment.id) }}>
-                                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
-                                          <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-                                        </svg>
-                                      </button>
-
-
-                                      {dropDown == comment.id && <div id="dropdownDots" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
-                                          <li>
-                                            <a onClick={() => {
-                                              updateComment(comment.id, elem.id);
-                                              setDropDown("")
-                                              setCommId(comment.id);
-                                            }} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">update</a>
-                                          </li>
-                                          <li>
-                                            <a onClick={() => {
-                                              setDropDown("");
-                                              deleteComment(comment.id, elem.id);
-                                            }} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">delete</a>
-                                          </li>
-                                        </ul>
-                                      </div>}</> */}
-                                      {/* <button
-                                            class=" text-xs bg-green-900 font-medium rounded-lg hover:bg-green-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
-                                            onClick={() => {
-                                              updateComment(comment.id, elem.id);
-
-                                              console.log(comment);
-                                              //updateComment(comment.id, elem.id)
-                                              setCommId(comment.id);
-                                            }}
-                                          >
-                                            update
-                                          </button>
-                                          <button
-                                            class=" text-xs bg-red-900 font-medium rounded-lg hover:bg-red-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"
-                                            onClick={() => {
-                                              console.log(comment.id);
-                                              deleteComment(comment.id, elem.id);
-                                            }}
-                                          >
-                                            delete
-                                          </button> */}
                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" onClick={() => {
                                         setCommId(comment.id);
                                       }} >
@@ -1015,7 +732,6 @@ const Posts = () => {
                           type="button"
                           class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
                           onClick={() => {
-                            // createNewMessage();
                           }}
                         >
                           <span class="font-bold" onClick={() => {
@@ -1034,29 +750,6 @@ const Posts = () => {
                           </svg>
                         </button> : <button class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-red-500 hover:bg-red-400 focus:outline-none" onClick={() => setShow("")}>close</button>}
                       </div>}
-                      {/* {elem.id == show && (
-                        <input
-                          type="text"
-                          placeholder="Body"
-                          class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
-                          onChange={(e) => {
-                            setAddCommentValue(e.target.value);
-                          }}
-                        />
-                      )} */}
-                      {/* {elem.id == show && (
-                        <button
-                          class="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
-                          onClick={() => {
-                            {
-                              createComment(elem.id);
-                              setShow("");
-                            }
-                          }}
-                        >
-                          Add
-                        </button>
-                      )} */}
                     </div>{" "}
                   </div>
                 </div>
