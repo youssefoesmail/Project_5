@@ -50,7 +50,7 @@ function App() {
           <Route path="/reels" element={<Reel />} />
           <Route path="/personal" element={<Personal />} />
           <Route path="/post" element={<Posts />} />
-          <Route path="/Home" element={isLoggedIn ? <Home /> : <Login />} />
+          <Route path="/" element={isLoggedIn ? <Home /> : <Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/comments" element={<Comments />} />
           <Route path="/followers" element={<FollowPost />} />
