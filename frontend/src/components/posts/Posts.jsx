@@ -480,10 +480,9 @@ const Posts = () => {
                               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9h0M9 9h0m12 3a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM7 13c0 1 .5 2.4 1.5 3.2a5.5 5.5 0 0 0 7 0c1-.8 1.5-2.2 1.5-3.2 0 0-2 1-5 1s-5-1-5-1Z" />
                             </svg>
                             <Dropdown label="Games" inline>
-                              <Dropdown.Item >Dashboard</Dropdown.Item>
-                              <Dropdown.Item>Settings</Dropdown.Item>
-                              <Dropdown.Item>Earnings</Dropdown.Item>
-                              <Dropdown.Item>Sign out</Dropdown.Item>
+                              <Dropdown.Item href="https://main--peaceful-granita-c2011d.netlify.app/" target="_blank">Hangman</Dropdown.Item>
+                              <Dropdown.Item href="https://tic-tac-toe-forgame.netlify.app/" target="_blank">Tic Tac Toe (X-O)</Dropdown.Item>
+                              <Dropdown.Item href="https://projectonequizgmae.netlify.app/" target="_blank">Quiz Game</Dropdown.Item>
                             </Dropdown>
                           </a>
                         </li>
