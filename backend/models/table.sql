@@ -31,7 +31,7 @@ CREATE TABLE posts (
   video VARCHAR,
   body VARCHAR,
   user_id INTEGER,
-  photo VARCHAR,
+  pic VARCHAR,
   created_at TIMESTAMP DEFAULT NOW(),
   FOREIGN KEY (user_id) REFERENCES users(id),
   is_deleted SMALLINT DEFAULT 0
