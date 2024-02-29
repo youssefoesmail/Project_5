@@ -23,7 +23,49 @@ const UsersPage = () => {
   });
   const dispatch = useDispatch();
   const { id } = useParams();
+
+
+  const createFollow= ()=>{
+    axios.post(`http://localhost:5000/followers/${id}`, {
+      headers: {
+        authorization: `Bearer ${auth.token}`,
+      }
+    }).then((result) => {
+      console.log(result);
+      dispatch(updateCounter());
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
+  const removeFollow =()=>{
+    axios.delete(`http://localhost:5000/followers/${id}`,{
+      headers: {
+        authorization: `Bearer ${auth.token}`,
+      }
+    }).then((result) => {
+      dispatch(updateCounter());
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
   useEffect(() => {
+    axios
+      .get(`http://localhost:5000/followers`, {
+        headers: {
+          authorization: `Bearer ${auth.token}`
+        }
+      })
+      .then((result) => {
+        console.log("followers", result.data.result);
+        dispatch(setFollowers(result.data.result));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     axios
       .get(`http://localhost:5000/posts/followers/${id}`, {
         headers: {
@@ -56,32 +98,7 @@ const UsersPage = () => {
   }, []);
   console.log(auth.token);
 
-  const createFollow= ()=>{
-    axios.post(`http://localhost:5000/followers/${id}`, {
-      headers: {
-        authorization: `Bearer ${auth.token}`,
-      }
-    }).then((result) => {
-      console.log(result);
-      dispatch(updateCounter());
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
-
-  const removeFollow =()=>{
-    axios.delete(`http://localhost:5000/followers/${id}`,{
-      headers: {
-        authorization: `Bearer ${auth.token}`,
-      }
-    }).then((result) => {
-      dispatch(updateCounter());
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
+  
 
   console.log("posts",posts);
   return (
