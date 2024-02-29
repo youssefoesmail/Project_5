@@ -87,10 +87,10 @@ Now app ready to use
 - [SocketIo](https://socket.io/)-socket io
 
 ## Main Features <a name="user_story"></a>
-
+<div>
 <img src="https://i.ibb.co/Phdsrkv/NotNull.png" alt="Diagram" width="400px" height="400px">
-
 <img src="https://i.ibb.co/Phdsrkv/NotNull.png" alt="Diagram" width="400px" height="400px">
+</div>
 
 ## User Story <a name = "#user_story"></a>
 
