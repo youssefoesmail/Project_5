@@ -9,15 +9,12 @@ import {
   uploadBytes,
   getDownloadURL,
   listAll,
-  list,
 } from "firebase/storage";
 import { setUserInfo } from "../redux/personalPage/personal";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
-import { Button, Modal,FileInput, Label } from 'flowbite-react';
-import { useNavigate } from "react-router-dom";
+import { Button, Modal, } from 'flowbite-react';
 const Story = () => {
-  const navigate=useNavigate();
   const [storyUpload, setStoryUpload] = useState(null);
   const [storyUrls, setStoryUrls] = useState([] || null);
   const storyListRef = ref(storage, "storyImages/");
@@ -124,31 +121,6 @@ const Story = () => {
     return false
   }
   
-  const handleCreateNewStory = () => {
-    axios
-    .post(
-      `http://localhost:5000/story`,
-      {
-        photo: storyImageUrls[storyImageUrls.length - 1],
-        video: storyVideoUrls[storyVideoUrls.length - 1],
-      },
-      {
-        headers: {
-          authorization: `Bearer ${auth.token}`,
-        },
-      }
-    )
-    .then((result) => {
-      console.log(result.data.result);
-      dispatch(createNewStory(result.data.result));
-      
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-    setOpenModal(false)
-  };
-console.log(story);
   return (
     <div>
      
@@ -272,17 +244,20 @@ console.log(story);
                   <Modal show={showModal} onClose={() => setShowModal(false)}>
         <Modal.Body>
           <div className="space-y-6">
-            {function1(show2) &&(
-            <img src={slide.video} />
-            )}
+            
+          <img 
+                  class="object-cover w-full h-96 rounded-xl lg:w-4/5"
+                  src={show2}
+                  
+                />
+            
           </div>
         </Modal.Body>
         <Modal.Footer>
        
-          <Button onClick={() => setShowModal(false)}>I accept</Button>
           
           <Button color="gray" onClick={() => setShowModal(false)}>
-            Decline
+            Close
           </Button>
         </Modal.Footer>
       </Modal>
