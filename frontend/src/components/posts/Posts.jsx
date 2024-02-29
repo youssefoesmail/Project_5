@@ -51,6 +51,7 @@ const Posts = () => {
   const [info, setInfo] = useState(null)
   const [dropDown, setDropDown] = useState("")
   const [counter, setCounter] = useState(0)
+  const [openUploadModal, setOpenUploadModal] = useState(false);
 
 
 
@@ -378,7 +379,43 @@ const Posts = () => {
         <div class="lg:flex-col  lg:items-center">
           <Story />
           <div class="flex bg-white shadow-lg rounded-lg mx-4 md:mx-auto my-56 max-w-md md:max-w-2xl marginElement">
-            <div class="flex items-start px-4 py-6">
+            <button class="px-6 py-2 font-medium tracking-wide w-full text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80" onClick={() => setOpenUploadModal(true)}>
+              Create New Post
+            </button>
+
+            <Modal show={openUploadModal} onClose={() => setOpenUploadModal(false)}>
+              <Modal.Body>
+                <div className="space-y-6">
+                  <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                    Photo
+                  </p>
+                  <input
+                  type="file"
+                  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                  onChange={(event) => {
+                    setImageUpload(event.target.files[0]);
+                  }}/>
+                  <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                    Video
+                  </p>
+                  <input
+                  type="file"
+                  class="block  mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                  onChange={(event) => {
+                    setVideoUpload(event.target.files[0]);
+                  }}
+                />
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button onClick={() => setOpenUploadModal(false)}>I accept</Button>
+                <Button color="gray" onClick={() => setOpenUploadModal(false)}>
+                  Decline
+                </Button>
+              </Modal.Footer>
+            </Modal>
+
+            {/* <div class="flex items-start px-4 py-6">
               <div class="flex items-center justify-between">
                 <input
                   type="text"
@@ -423,7 +460,7 @@ const Posts = () => {
                   Upload
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
           {posts?.map((elem) => {
             return (
@@ -488,8 +525,8 @@ const Posts = () => {
                         </li>
                         <li>
                           <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                              <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3" />
+                            <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
+                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3" />
                             </svg>
                             <span class="flex-1 ms-3 whitespace-nowrap">Logout</span>
                           </a>
