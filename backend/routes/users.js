@@ -11,3 +11,4 @@ userRouter.get("*", (req, res) => {
 userRouter.put("/:id",updateData);
 
 module.exports = userRouter;
+ 
