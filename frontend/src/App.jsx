@@ -45,15 +45,30 @@ function App() {
       <div>
         <h1 className="text-blue-500"></h1>
         <Routes>
-          <Route path="/message" element={<Message />} />
-          <Route path="/users/:id" element={<UsersPage />} />
-          <Route path="/reels" element={<Reel />} />
-          <Route path="/personal" element={<Personal />} />
-          <Route path="/post" element={<Posts />} />
+          <Route
+            path="/message"
+            element={isLoggedIn ? <Message /> : <Login />}
+          />
+          <Route
+            path="/users/:id"
+            element={isLoggedIn ? <UsersPage /> : <Login />}
+          />
+          <Route path="/reels" element={isLoggedIn ? <Reel /> : <Login />} />
+          <Route
+            path="/personal"
+            element={isLoggedIn ? <Personal /> : <Login />}
+          />
+          <Route path="/post" element={isLoggedIn ? <Posts /> : <Login />} />
           <Route path="/" element={isLoggedIn ? <Home /> : <Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/comments" element={<Comments />} />
-          <Route path="/followers" element={<FollowPost />} />
+          <Route
+            path="/comments"
+            element={isLoggedIn ? <Comments /> : <Login />}
+          />
+          <Route
+            path="/followers"
+            element={isLoggedIn ? <FollowPost /> : <Login />}
+          />
         </Routes>
       </div>
     </>
