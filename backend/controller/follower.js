@@ -88,7 +88,7 @@ const getFollowersUser = (req, res) => {
 
 const userFollower = (req, res) => {
   const following_user_id = req.token.userId;
-  const query = `SELECT * FROM follows INNER JOIN users ON users.id=follows.followed_user_id WHERE following_user_id=$1`;
+  const query = `SELECT * FROM follows INNER JOIN users ON users.id=follows.followed_user_id WHERE following_user_id=$1 AND is_deleted=0`;
   const value = [following_user_id];
   pool
     .query(query, value)
