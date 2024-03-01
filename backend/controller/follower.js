@@ -9,7 +9,7 @@ const getAllFollowers = (req, res) => {
         result: result.rows
       });
     })
-    .then((err) => {
+    .catch((err) => {
       res.status(500).json({
         success: false,
         message: "server error"
