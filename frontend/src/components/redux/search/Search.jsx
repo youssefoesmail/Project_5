@@ -5,14 +5,15 @@ const searchSlice = createSlice({
     search: [],pool:false,
   },
   reducers: {
-
+    setPool:(state,action)=>{
+      state.pool= action.payload;
+    },
     setUsers: (state, action) => {
       state.search = action.payload;
-      state.pool= localStorage.setItem("show", true);
     }
   }
 });
 
 
-export const { setUsers } = searchSlice.actions;
+export const { setUsers,setPool } = searchSlice.actions;
 export default searchSlice.reducer;

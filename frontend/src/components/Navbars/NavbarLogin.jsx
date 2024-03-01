@@ -16,7 +16,7 @@ import img from "../images/NotNull-logos_transparent.png";
 import { setLogin, setUserId } from "../redux/auth/userSlice";
 import axios from "axios";
 import { useState, Fragment } from "react";
-import { setUsers } from "../redux/search/Search";
+import { setPool, setUsers } from "../redux/search/Search";
 import { Link } from "react-router-dom";
 const NavbarLogin = () => {
   const dispatch = useDispatch();
@@ -39,7 +39,7 @@ const NavbarLogin = () => {
       const response = await fetch(`http://localhost:5000/users/?name=${name}`);
 
       const parseResponse = await response.json();
-
+      dispatch(setPool(true))
       dispatch(setUsers(parseResponse));
     } catch (err) {
       console.error(err.message);

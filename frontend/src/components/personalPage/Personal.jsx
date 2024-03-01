@@ -23,6 +23,7 @@ import { storage } from "../firebase";
 import { v4 } from "uuid";
 import { setFollowers } from "../redux/followers/followers";
 import { Button, Modal } from "flowbite-react";
+import { setPool } from "../redux/search/Search";
 
 const Personal = () => {
   const dispatch = useDispatch();
@@ -40,8 +41,8 @@ const Personal = () => {
       };
     }
   );
-  const [first, setFirst] = useState(!pool)
 
+  const [first, setFirst] = useState(true)
   const [openModal, setOpenModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [onModal, setOnModal] = useState(false);
@@ -243,8 +244,8 @@ const [show, setShow] = useState(false)
             </Button>
           </Modal.Footer>
         </Modal>
-{ first&&
-        <Modal dismissible show={true} onClose={() => setFirst(false)}>
+
+        <Modal dismissible show={pool} onClose={() => setPool(false)}>
         <Modal.Header>Terms of Service</Modal.Header>
         <Modal.Body>
           <div className="space-y-6">
@@ -272,13 +273,12 @@ const [show, setShow] = useState(false)
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => setFirst(false)}>I accept</Button>
-          <Button color="gray" onClick={() => setFirst(false)}>
-            Decline
+          <Button color="gray" onClick={() => setPool(false)}>
+            Back
           </Button>
         </Modal.Footer>
       </Modal>
-}
+
         <main className="flex flex-col items-center justify-center w-full ">
           <div className="container px-6 py-16 mx-auto text-center">
             <div className="container ">
