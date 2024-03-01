@@ -4,7 +4,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost, setUsers } from "../redux/users/usersSlice";
 import Navbar from "../Navbars/NavbarLogin";
-import { Avatar, Card, Badge } from "flowbite-react";
+import { Avatar, Card, Badge,Button, Modal } from "flowbite-react";
 import {
   createNewFollowed,
   deleteFollowers,
@@ -15,8 +15,9 @@ import {
 import { HiCheck, HiClock } from "react-icons/hi";
 import { IoPersonAddSharp, IoPersonOutline } from "react-icons/io5";
 
+
 const UsersPage = () => {
-  const { posts, users, auth, followers, counter,amount } = useSelector((state) => {
+  const { posts, users, auth, followers, counter,amount ,search} = useSelector((state) => {
     return {
       followers: state.followers.followers,
       auth: state.auth,
@@ -25,9 +26,14 @@ const UsersPage = () => {
       users: state.users.users,
       counter: state.followers.counter,
       amount:state.followers.amount,
-
+      search:state.search.search
     };
   });
+
+
+
+
+  console.log(search);
   const dispatch = useDispatch();
   const { id } = useParams();
 
@@ -188,6 +194,7 @@ const UsersPage = () => {
           </div>
         </main>
 
+
         <div className="bg-white py-24 sm:py-32">
           <div className="mx-auto grid max-w-7xl gap-x-8 gap-y-20 px-6 lg:px-8 xl:grid-cols-3">
             <div class="max-w-2xl">
@@ -222,6 +229,8 @@ const UsersPage = () => {
               role="list"
               className="grid gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-16 xl:col-span-2"
             >
+
+
               {posts?.map((elem) => {
                 return (
                   <>
