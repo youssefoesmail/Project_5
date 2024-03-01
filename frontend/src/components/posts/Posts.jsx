@@ -14,7 +14,7 @@ import {
 import { ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
-import { setUserId, token } from "../redux/auth/userSlice";
+import userSlice, { setUserId, token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
@@ -56,18 +56,15 @@ const Posts = () => {
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
-  const { posts, auth, comment, userId, users, like } = useSelector((state) => {
+  const { posts, auth, comment, userId, personal } = useSelector((state) => {
     return {
       auth: state.auth,
       posts: state.posts.posts,
       comment: state.posts.comment,
       userId: state.auth.userId,
-      users: state.posts.users,
-      like: state.posts.like
+      personal: state.personal.personal
     };
   });
-
-  console.log();
 
   const ShareButtons = (shareUrl) => {
     return (
@@ -261,6 +258,18 @@ const Posts = () => {
     });
   };
 
+  const personalPage = () => {
+    axios
+      .get(`http://localhost:5000/users/${auth.userId}`)
+      .then((result) => {
+        dispatch(setUserInfo(result.data.result[0]));
+        console.log(result.data.result[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     listAll(imagesListRef).then((response) => {
       response.items.forEach((item) => {
@@ -276,6 +285,7 @@ const Posts = () => {
         });
       });
     });
+    personalPage()
   }, []);
 
   useEffect(() => {
@@ -397,10 +407,10 @@ const Posts = () => {
                               href="/users"
                               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                             >
-                              {elem.photo ? (
+                              {personal.photo ? (
                                 <img
                                   class="object-cover w-16 h-16 rounded-full"
-                                  src={elem.photo}
+                                  src={personal.photo}
                                   alt=""
                                 />
                               ) : (
@@ -411,7 +421,7 @@ const Posts = () => {
                                 />
                               )}
                               <span class="ms-3">
-                                {elem.firstname} {elem.lastname}
+                                {personal.firstname} {personal.lastname}
                               </span>
                             </a>
                           </Link>
