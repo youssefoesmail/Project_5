@@ -500,6 +500,12 @@ const Posts = () => {
                               >
                                 Quiz Game
                               </Dropdown.Item>
+                              <Dropdown.Item
+                                href="https://main--resplendent-moxie-139999.netlify.app/"
+                                target="_blank"
+                              >
+                                Card Game
+                              </Dropdown.Item>
                             </Dropdown>
                           </a>
                         </li>
