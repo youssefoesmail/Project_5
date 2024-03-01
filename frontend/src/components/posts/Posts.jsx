@@ -67,6 +67,8 @@ const Posts = () => {
     };
   });
 
+  console.log();
+
   const ShareButtons = (shareUrl) => {
     return (
       <div>
@@ -530,7 +532,7 @@ const Posts = () => {
                     </div>
                   </aside>
                 </div>
-                <div class="flex bg-white drop-shadow-5x2 rounded-lg my-8 w-1/1">
+                <div class="flex bg-white drop-shadow-2xl rounded-lg my-6 w-4/4">
                   <div class="flex flex-col px-80 py-6 my-6 mx-1">
                     <div className="" key={elem.id}>
                       <>
@@ -542,11 +544,11 @@ const Posts = () => {
                               dispatch(setUserId(elem.user_id));
                             }}
                           >
-                            {elem.pic ? (
+                            {elem.photo ? (
                               <div class="flex items-center gap-x-2">
                                 <img
                                   class="object-cover w-16 h-16 rounded-full"
-                                  src={elem.pic || pic}
+                                  src={elem.photo}
                                   alt=""
                                 />
 
@@ -689,11 +691,11 @@ const Posts = () => {
                                         dispatch(setUserId(elem.user_id));
                                       }}
                                     >
-                                      {comment.pic ? (
+                                      {comment.photo ? (
                                         <div class="flex items-center gap-x-2">
                                           <img
                                             class="object-cover w-8 h-8 rounded-full"
-                                            src={comment.pic}
+                                            src={comment.photo}
                                             alt=""
                                           />
 
