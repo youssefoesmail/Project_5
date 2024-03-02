@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../redux/homepage/users";
+import NavbarLogin from "../Navbars/NavbarLogin";
+import FooterDown from "../FooterDown/FooterDown";
 const Home = () => {
   const dispatch = useDispatch();
   const { user, auth } = useSelector((state) => {
@@ -31,6 +33,8 @@ const Home = () => {
     console.log(user);
   }, []);
   return (
+    <>
+    <NavbarLogin/>
     <div class="container my-12 py-12 mx-auto px-4 md:px-6 lg:px-12">
       <section class="mb-20 text-gray-800">
         <div class="block rounded-lg shadow-lg bg-white">
@@ -118,6 +122,8 @@ const Home = () => {
         </div>
       </section>
     </div>
+    <FooterDown/>
+    </>
   );
 };
 

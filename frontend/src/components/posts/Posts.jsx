@@ -32,6 +32,8 @@ import {
   WhatsappIcon,
   TelegramIcon
 } from "react-share";
+import FooterDown from "../FooterDown/FooterDown";
+import NavbarLogin from "../Navbars/NavbarLogin";
 
 const Posts = () => {
   //setUserPostId
@@ -56,9 +58,11 @@ const Posts = () => {
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
-  const { posts, auth, comment, userId, users, like } = useSelector((state) => {
+  const { posts, auth, comment, userId, users, like,photo,nameUsers } = useSelector((state) => {
     return {
       auth: state.auth,
+      photo: state.personal.personal.photo,
+      nameUsers: state.personal.personal,
       posts: state.posts.posts,
       comment: state.posts.comment,
       userId: state.auth.userId,
@@ -300,11 +304,19 @@ const Posts = () => {
       });
   }, []);
   return (
+    <>
+    <NavbarLogin/>
     <div class="bg-white dark:bg-gray-900" className="postUI">
       <div class="container px-6 py-10 mx-auto">
         <div class="lg:flex-col  lg:items-center">
           <Story />
-          <div class="flex bg-white shadow-lg rounded-lg mx-4 md:mx-auto my-56 max-w-md md:max-w-2xl marginElement">
+          
+          <div class=" bg-white shadow-lg rounded-lg mx-4 md:mx-auto my-56 max-w-md md:max-w-2xl marginElement">
+          <div class="mb-6">
+    <label for="large-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Post Here</label>
+    <input type="text" id="large-input" class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+</div>
+          
             <button
               class="px-6 py-2 font-medium tracking-wide w-full text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-lg hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-80"
               onClick={() => setOpenUploadModal(true)}
@@ -397,21 +409,14 @@ const Posts = () => {
                               href="/users"
                               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                             >
-                              {elem.photo ? (
+                              
                                 <img
                                   class="object-cover w-16 h-16 rounded-full"
-                                  src={elem.photo}
+                                  src={photo}
                                   alt=""
                                 />
-                              ) : (
-                                <img
-                                  class="object-cover w-16 h-16 rounded-full"
-                                  src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
-                                  alt=""
-                                />
-                              )}
                               <span class="ms-3">
-                                {elem.firstname} {elem.lastname}
+                                {nameUsers.firstname} {nameUsers.lastname}
                               </span>
                             </a>
                           </Link>
@@ -875,6 +880,8 @@ const Posts = () => {
         </div>
       </div>
     </div>
+    <FooterDown/>
+    </>
   );
 };
 

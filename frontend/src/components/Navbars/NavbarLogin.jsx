@@ -18,8 +18,10 @@ import axios from "axios";
 import { useState, Fragment } from "react";
 import { setPool, setUsers } from "../redux/search/Search";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const NavbarLogin = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const { photo, nameUsers, isLoggedIn, token, search } = useSelector(
     (state) => {
@@ -125,7 +127,7 @@ const NavbarLogin = () => {
             <div class="hidden sm:ml-6 sm:block">
               <div class="flex space-x-4">
                 <a
-                  href="#"
+                  href="/personal"
                   class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
                   aria-current="page"
                 >
@@ -175,10 +177,10 @@ const NavbarLogin = () => {
               >
                 <Dropdown.Header>
                   <span className="block text-sm">
-                    {name.firstname} {name.lastname}{" "}
+                    {nameUsers.firstname} {nameUsers.lastname}{" "}
                   </span>
                   <span className="block truncate text-sm font-medium">
-                    {name.email}{" "}
+                    {nameUsers.email}{" "}
                   </span>
                 </Dropdown.Header>
                 <Dropdown.Item>Dashboard</Dropdown.Item>
@@ -190,6 +192,7 @@ const NavbarLogin = () => {
                     dispatch(setUserId(""));
                     dispatch(setLogin(""));
                     localStorage.clear();
+                    navigate("/")
                   }}
                 >
                   Sign out
