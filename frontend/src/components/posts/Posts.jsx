@@ -59,6 +59,7 @@ const Posts = () => {
   const imagesListRef = ref(storage, "images/");
   const videoListRef = ref(storage, "videos/");
 
+
   const { posts, auth, comment, userId, users, like,photo,nameUsers } = useSelector((state) => {
     return {
       auth: state.auth,
@@ -420,7 +421,7 @@ const Posts = () => {
                               href="/users"
                               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                             >
-                             
+
                                 <img
                                   class="object-cover w-16 h-16 rounded-full"
                                   src={personal.photo}
