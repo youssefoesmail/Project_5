@@ -14,7 +14,7 @@ import {
 import { ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
-import { setUserId, token } from "../redux/auth/userSlice";
+import userSlice, { setUserId, token } from "../redux/auth/userSlice";
 import axios from "axios";
 import Story from "../Story/Story";
 import { Link } from "react-router-dom";
@@ -34,6 +34,7 @@ import {
 } from "react-share";
 import FooterDown from "../FooterDown/FooterDown";
 import NavbarLogin from "../Navbars/NavbarLogin";
+import personal from "../redux/personalPage/personal";
 
 const Posts = () => {
   //setUserPostId
@@ -66,12 +67,9 @@ const Posts = () => {
       posts: state.posts.posts,
       comment: state.posts.comment,
       userId: state.auth.userId,
-      users: state.posts.users,
-      like: state.posts.like
+      personal: state.personal.personal
     };
   });
-
-  console.log();
 
   const ShareButtons = (shareUrl) => {
     return (
@@ -265,6 +263,18 @@ const Posts = () => {
     });
   };
 
+  const personalPage = () => {
+    axios
+      .get(`http://localhost:5000/users/${auth.userId}`)
+      .then((result) => {
+        dispatch(setUserInfo(result.data.result[0]));
+        console.log(result.data.result[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     listAll(imagesListRef).then((response) => {
       response.items.forEach((item) => {
@@ -280,6 +290,7 @@ const Posts = () => {
         });
       });
     });
+    personalPage()
   }, []);
 
   useEffect(() => {
@@ -409,14 +420,14 @@ const Posts = () => {
                               href="/users"
                               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                             >
-                              
+                             
                                 <img
                                   class="object-cover w-16 h-16 rounded-full"
-                                  src={photo}
+                                  src={personal.photo}
                                   alt=""
                                 />
                               <span class="ms-3">
-                                {nameUsers.firstname} {nameUsers.lastname}
+                                {personal.firstname} {personal.lastname}
                               </span>
                             </a>
                           </Link>
@@ -504,6 +515,12 @@ const Posts = () => {
                                 target="_blank"
                               >
                                 Quiz Game
+                              </Dropdown.Item>
+                              <Dropdown.Item
+                                href="https://main--resplendent-moxie-139999.netlify.app/"
+                                target="_blank"
+                              >
+                                Card Game
                               </Dropdown.Item>
                             </Dropdown>
                           </a>
