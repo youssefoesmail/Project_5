@@ -17,9 +17,9 @@ import { setLogin, setUserId } from "../redux/auth/userSlice";
 import axios from "axios";
 import { useState, Fragment } from "react";
 import { setPool, setUsers } from "../redux/search/Search";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const NavbarLogin = () => {
+  const history = useNavigate();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -30,18 +30,18 @@ const NavbarLogin = () => {
         nameUsers: state.personal.personal,
         token: state.auth.token,
         isLoggedIn: state.auth.isLoggedIn,
-        search: state.search.search      };
+        search: state.search.search
+      };
     }
   );
 
-  
   const onSubmitForm = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch(`http://localhost:5000/users/?name=${name}`);
 
       const parseResponse = await response.json();
-      dispatch(setPool(true))
+      dispatch(setPool(true));
       dispatch(setUsers(parseResponse));
     } catch (err) {
       console.error(err.message);
@@ -55,33 +55,51 @@ const NavbarLogin = () => {
             <div class="flex flex-shrink-0 items-center px-auto">
               <Avatar img={img} size="xl" />
 
-              <form class="flex max-w-md mx-auto">   
-    <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-    <div class="relative">
-        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-            </svg>
-        </div>
-        <input value={name}
-              onChange={(e) => setName(e.target.value)}
-              type="search" id="default-search" class="block w-full p-4  px-16 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Name..." required />
-        <button onClick={onSubmitForm} class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
-    </div>
-</form>
-
-
-
-
+              <form class="flex max-w-md mx-auto">
+                <label
+                  for="default-search"
+                  class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+                >
+                  Search
+                </label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg
+                      class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    type="search"
+                    id="default-search"
+                    class="block w-full p-4  px-16 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Search Name..."
+                    required
+                  />
+                  <button
+                    onClick={onSubmitForm}
+                    class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    Search
+                  </button>
+                </div>
+              </form>
             </div>
-
-            
           </div>
           <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-
-            
-
-
             <button
               type="button"
               class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -121,13 +139,12 @@ const NavbarLogin = () => {
                 />
               </svg>
             </button>
-            
           </div>
           <div class=" inline justify-center sm:items-stretch sm:justify-start">
             <div class="hidden sm:ml-6 sm:block">
               <div class="flex space-x-4">
                 <a
-                  href="/personal"
+                  href="/post"
                   class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
                   aria-current="page"
                 >
@@ -143,8 +160,6 @@ const NavbarLogin = () => {
             </div>
           </div>
 
-          
-          
           <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <button
               type="button"
@@ -167,7 +182,6 @@ const NavbarLogin = () => {
                 />
               </svg>
             </button>
-            
 
             <div class="relative ml-3">
               <Dropdown
@@ -183,7 +197,9 @@ const NavbarLogin = () => {
                     {nameUsers.email}{" "}
                   </span>
                 </Dropdown.Header>
-                <Dropdown.Item>Dashboard</Dropdown.Item>
+                <Dropdown.Item onClick={()=>{
+                  history("/personal")
+                }}>Dashboard</Dropdown.Item>
                 <Dropdown.Item>Settings</Dropdown.Item>
                 <Dropdown.Item>Earnings</Dropdown.Item>
                 <Dropdown.Divider />
@@ -192,7 +208,7 @@ const NavbarLogin = () => {
                     dispatch(setUserId(""));
                     dispatch(setLogin(""));
                     localStorage.clear();
-                    navigate("/")
+                    history("/home");
                   }}
                 >
                   Sign out
@@ -232,8 +248,6 @@ const NavbarLogin = () => {
           </a>
         </div>
       </div>
-
-      
     </nav>
   );
 };

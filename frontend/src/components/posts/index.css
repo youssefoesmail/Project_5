@@ -1,0 +1,16 @@
+#input {
+  margin-left: 165px;
+  width: 860px;
+  height: 300px;
+}
+#navbar-login {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  margin-bottom: 10px;
+}
+#story {
+  padding-top: 80px;
+}
