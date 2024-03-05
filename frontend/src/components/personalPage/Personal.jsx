@@ -24,9 +24,12 @@ import { v4 } from "uuid";
 import { setFollowers } from "../redux/followers/followers";
 import { Button, Modal } from "flowbite-react";
 import { setPool } from "../redux/search/Search";
+import FooterDown from "../FooterDown/FooterDown";
+import { useNavigate } from "react-router-dom";
 
 const Personal = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { auth, personal, post, followers, cover, photo,search,pool } = useSelector(
     (state) => {
       return {
@@ -42,6 +45,8 @@ const Personal = () => {
     }
   );
 
+  console.log(followers ,"folleors");
+  console.log("post",post);
   const [first, setFirst] = useState(true)
   const [openModal, setOpenModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -460,19 +465,17 @@ const [show, setShow] = useState(false)
                     Check all Posts that posted
                   </h1>
                   <p className="mt-6 text-lg leading-8 text-gray-600">
-                    Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure
-                    qui lorem cupidatat commodo. Elit sunt amet fugiat veniam
-                    occaecat fugiat aliqua.
+                    Our NotNull team is so happy in reagrds to your posts on our special media space
                   </p>
                   <div className="mt-10 flex items-center justify-center gap-x-6">
                     <a
-                      href="#"
+                      href="/post"
                       className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
                       Get started
                     </a>
                     <a
-                      href="#"
+                      href="/post"
                       className="text-sm font-semibold leading-6 text-gray-900"
                     >
                       Learn more <span aria-hidden="true">→</span>
@@ -495,17 +498,20 @@ const [show, setShow] = useState(false)
                           imgSrc={elem.video}
                           horizontal
                         >
-                          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            {elem.body}
-                          </h5>
-                          <p className="font-normal text-gray-700 dark:text-gray-400">
-                            Anim aute id magna aliqua ad ad non deserunt sunt.
-                            Qui irure qui lorem cupidatat commodo. Elit sunt
-                            amet fugiat veniam occaecat fugiat aliqua.
-                          </p>
                           <div className="flex flex-wrap gap-2">
                             <Badge icon={HiCheck}>{elem.created_at}</Badge>
                           </div>
+                          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                            {elem.body}
+                          </h5>
+                          <img
+                            class="object-cover justify-items-center object-center lg:mx-6 w-full h-96 rounded-lg lg:h-[36rem]"
+                            alt=""
+                            width="230px"
+                            height="150px"
+                            src={elem.pic}
+                          />
+                          
                         </Card>
                       </div>
                     </li>
@@ -513,16 +519,18 @@ const [show, setShow] = useState(false)
                 );
               })}
 
-              <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+              
+            </ul>
+            <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
                 post our next round of funding.{" "}
                 <a href="#" className="font-semibold text-indigo-600">
                   <span class="absolute inset-0" aria-hidden="true"></span>Read
                   more <span aria-hidden="true">&rarr;</span>
                 </a>
               </div>
-            </ul>
           </div>
         </div>
+        <FooterDown/>
       </div>
     </>
   );
