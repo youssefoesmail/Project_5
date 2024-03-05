@@ -32,6 +32,7 @@ import {
   WhatsappIcon,
   TelegramIcon
 } from "react-share";
+import Navbar from "../Navbars/NavbarLogin";
 
 const Posts = () => {
   //setUserPostId
@@ -311,6 +312,9 @@ const Posts = () => {
   }, []);
   return (
     <div class="bg-white dark:bg-gray-900" className="postUI">
+      <div class="ml-60">
+        <Navbar />
+      </div>
       <div class="container px-6 py-10 mx-auto">
         <div class="lg:flex-col  lg:items-center">
           <Story />
@@ -850,7 +854,7 @@ const Posts = () => {
                               id="send"
                               type="button"
                               class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
-                              onClick={() => {}}
+                              onClick={() => { }}
                             >
                               <span
                                 class="font-bold"
