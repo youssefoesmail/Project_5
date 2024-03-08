@@ -1,5 +1,5 @@
 <p align="center">
-<a href="[https://www.meraki-academy.org](https://main--notnullsocailspace.netlify.app/)" target="_blank" rel="noopener noreferrer">
+<a href="https://main--notnullsocailspace.netlify.app" target="_blank" rel="noopener noreferrer">
  <img width="400px" height="400px" src="https://i.ibb.co/tKwsXkY/Not-Null-logos-black.png" alt="Project logo">
  </a>
 </p>
